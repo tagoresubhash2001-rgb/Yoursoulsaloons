@@ -1,0 +1,6 @@
+{
+  "name": "YOUR SOUL — Salon & Academy",
+  "description": "Editorial luxury salon services and professional beauty academy training. Switch effortlessly between salon appointments and accredited masterclasses.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

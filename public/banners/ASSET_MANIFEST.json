@@ -1,0 +1,237 @@
+{
+  "system": "YOUR SOUL Asset Registry & Responsive Manifest",
+  "version": "3.1.0",
+  "theme": "Premium Photographic Artistry × Apple-Inspired Interaction × Hebeleten Editorial Layout",
+  "logo": {
+    "path": "/assets/aistudio/OurSoul_Beauty_Salon_Logo_b48198f6.png",
+    "aspectRatio": "3.00",
+    "dimensions": "2172x724",
+    "alt": "YOUR SOUL — Hair | Beauty | Nails | Makeup Official Logo",
+    "format": "image/png",
+    "backgroundRequirement": "Protected on light neutral ground (#FAF8F5 / #F2EDE5) for optimal contrast"
+  },
+  "typographyStandard": {
+    "headings": "Cormorant Garamond (Light / Regular 400-500, tight optical tracking -0.025em, line-height 1.08-1.15)",
+    "body": "Plus Jakarta Sans (Light / Regular 300-400, relaxed line-height 1.65-1.75, standard tracking)",
+    "kickers": "Plus Jakarta Sans (Medium 500, uppercase, wide tracking 0.18em, 11-12px)",
+    "captions": "Cormorant Garamond (Italic 400, 12-13px, natural color #7A6F62)"
+  },
+  "banners": [
+    {
+      "slotNumber": 1,
+      "slotId": "salon_home_hero",
+      "route": "/salon",
+      "division": "salon",
+      "page": "home",
+      "filename": "salon_home_hero.jpg",
+      "path": "/banners/salon_home_hero.jpg",
+      "aspectRatio": "16:9",
+      "dimensions": "1920x1080",
+      "kicker": "Your Soul Salon · Haute Coiffure & Dermal Sanctuary",
+      "title": "The Art of Refined Beauty & Personal Harmony",
+      "subtitle": "An architectural sanctuary devoted to bespoke hair sculpting, advanced dermal therapy, and holistic self-renewal.",
+      "brief": "Premium salon interior with stylist gently styling client, arch mirrors, warm natural lighting, and luxurious atmosphere",
+      "alt": "Luxury modern salon interior with professional stylist styling client hair in front of an elegant arch mirror",
+      "caption": "Sanctuary Interior — Styling Suite & Travertine Stations",
+      "focalPoint": {
+        "mobile": "50% 32%",
+        "tablet": "50% 36%",
+        "desktop": "50% 38%"
+      },
+      "responsiveDelivery": {
+        "sizes": "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1280px",
+        "loading": "eager",
+        "fetchPriority": "high"
+      }
+    },
+    {
+      "slotNumber": 2,
+      "slotId": "salon_about_banner",
+      "route": "/salon/about",
+      "division": "salon",
+      "page": "about",
+      "filename": "salon_about_banner.jpg",
+      "path": "/banners/salon_about_banner.jpg",
+      "aspectRatio": "16:9",
+      "dimensions": "1920x1080",
+      "kicker": "Our Heritage & Philosophy",
+      "title": "Crafted on Principles of Reverence, Purity, and Mastery",
+      "subtitle": "From a single studio atelier to an enduring standard for conscious beauty and individualized care.",
+      "brief": "Authentic salon team and creative founders working in professional atelier dialogue",
+      "alt": "Professional salon team and founders in an authentic creative atelier styling session",
+      "caption": "The Atelier Dialogue — Founders and Senior Art Directors",
+      "focalPoint": {
+        "mobile": "50% 28%",
+        "tablet": "50% 32%",
+        "desktop": "50% 35%"
+      },
+      "responsiveDelivery": {
+        "sizes": "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1280px",
+        "loading": "eager",
+        "fetchPriority": "high"
+      }
+    },
+    {
+      "slotNumber": 3,
+      "slotId": "salon_services_banner",
+      "route": "/salon/services",
+      "division": "salon",
+      "page": "services",
+      "filename": "salon_services_banner.jpg",
+      "path": "/banners/salon_services_banner.jpg",
+      "aspectRatio": "16:9",
+      "dimensions": "1920x1080",
+      "kicker": "Curated Treatments",
+      "title": "Precision Craftsmanship for Hair, Skin, and Senses",
+      "subtitle": "Every treatment is an intentional ritual combining botanical science, French balayage technique, and custom scalp rejuvenation.",
+      "brief": "Close-up professional hairstyling, precision haircutting, blow-dry styling, and ritual hair care",
+      "alt": "Close-up professional hairstyling with shears, blow-dry styling, and botanical hair care",
+      "caption": "Handcrafted Precision — Balayage & Botanical Dermal Treatment",
+      "focalPoint": {
+        "mobile": "50% 35%",
+        "tablet": "50% 38%",
+        "desktop": "50% 40%"
+      },
+      "responsiveDelivery": {
+        "sizes": "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1280px",
+        "loading": "eager",
+        "fetchPriority": "high"
+      }
+    },
+    {
+      "slotNumber": 4,
+      "slotId": "salon_contact_banner",
+      "route": "/salon/contact",
+      "division": "salon",
+      "page": "contact",
+      "filename": "salon_contact_banner.jpg",
+      "path": "/banners/salon_contact_banner.jpg",
+      "aspectRatio": "16:9",
+      "dimensions": "1920x1080",
+      "kicker": "Reservations & Concierge",
+      "title": "Begin Your Consultation at Our Sanctuary",
+      "subtitle": "Private suites, unhurried appointments, and warm architectural hospitality in the city center.",
+      "brief": "Welcoming salon reception, consultation lounge, and architectural interior with warm lighting",
+      "alt": "Welcoming salon reception and consultation lounge with warm natural lighting",
+      "caption": "Guest Lounge & Private Consultation Alcove",
+      "focalPoint": {
+        "mobile": "50% 45%",
+        "tablet": "50% 48%",
+        "desktop": "50% 50%"
+      },
+      "responsiveDelivery": {
+        "sizes": "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1280px",
+        "loading": "eager",
+        "fetchPriority": "high"
+      }
+    },
+    {
+      "slotNumber": 5,
+      "slotId": "academy_home_hero",
+      "route": "/academy",
+      "division": "academy",
+      "page": "home",
+      "filename": "academy_home_hero.jpg",
+      "path": "/banners/academy_home_hero.jpg",
+      "aspectRatio": "16:9",
+      "dimensions": "1920x1080",
+      "kicker": "Your Soul Academy · Professional Beauty Education",
+      "title": "Educating the Next Generation of Global Beauty Innovators",
+      "subtitle": "Masterclasses, certified diplomas, and intensive hands-on clinic training led by active industry directors.",
+      "brief": "Professional beauty academy training studio with educators and students in masterclass session",
+      "alt": "Professional beauty academy studio with students and master trainers in session",
+      "caption": "Main Studio Lab — Individual Master Styling Workstations",
+      "focalPoint": {
+        "mobile": "50% 30%",
+        "tablet": "50% 35%",
+        "desktop": "50% 40%"
+      },
+      "responsiveDelivery": {
+        "sizes": "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1280px",
+        "loading": "eager",
+        "fetchPriority": "high"
+      }
+    },
+    {
+      "slotNumber": 6,
+      "slotId": "academy_about_banner",
+      "route": "/academy/about",
+      "division": "academy",
+      "page": "about",
+      "filename": "academy_about_banner.jpg",
+      "path": "/banners/academy_about_banner.jpg",
+      "aspectRatio": "16:9",
+      "dimensions": "1920x1080",
+      "kicker": "Faculty & Pedagogy",
+      "title": "Taught by Practicing Masters, Grounded in Real Artistry",
+      "subtitle": "Our instructors remain active runway directors, trichology researchers, and acclaimed salon founders.",
+      "brief": "Beauty educator demonstrating hands-on styling techniques to student apprentice",
+      "alt": "Master beauty educator demonstrating live hairstyling technique to apprentices",
+      "caption": "The Masterclass Floor — Direct Mentorship and Real-Time Critique",
+      "focalPoint": {
+        "mobile": "50% 28%",
+        "tablet": "50% 32%",
+        "desktop": "50% 35%"
+      },
+      "responsiveDelivery": {
+        "sizes": "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1280px",
+        "loading": "eager",
+        "fetchPriority": "high"
+      }
+    },
+    {
+      "slotNumber": 7,
+      "slotId": "academy_services_banner",
+      "route": "/academy/services",
+      "division": "academy",
+      "page": "services",
+      "filename": "academy_services_banner.jpg",
+      "path": "/banners/academy_services_banner.jpg",
+      "aspectRatio": "16:9",
+      "dimensions": "1920x1080",
+      "kicker": "Curriculum & Diplomas",
+      "title": "Rigorous Programs Engineered for Industry Leadership",
+      "subtitle": "From foundation hair precision to clinical aesthetic sciences and high-fashion runway makeup.",
+      "brief": "Professional cosmetology training kit, precision styling shears, and makeup artistry palette",
+      "alt": "Cosmetology training equipment, professional brushes, and masterclass styling kit",
+      "caption": "Clinical Aesthetics Lab — Student Practical Training",
+      "focalPoint": {
+        "mobile": "50% 42%",
+        "tablet": "50% 45%",
+        "desktop": "50% 48%"
+      },
+      "responsiveDelivery": {
+        "sizes": "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1280px",
+        "loading": "eager",
+        "fetchPriority": "high"
+      }
+    },
+    {
+      "slotNumber": 8,
+      "slotId": "academy_contact_banner",
+      "route": "/academy/contact",
+      "division": "academy",
+      "page": "contact",
+      "filename": "academy_contact_banner.jpg",
+      "path": "/banners/academy_contact_banner.jpg",
+      "aspectRatio": "16:9",
+      "dimensions": "1920x1080",
+      "kicker": "Admissions & Campus Visits",
+      "title": "Take the First Step Toward Your Professional Career",
+      "subtitle": "Book a campus tour, meet with an admissions advisor, or schedule a portfolio review session.",
+      "brief": "Modern academy admissions center, architectural studio lobby, and consultation space",
+      "alt": "Modern academy admissions gallery and welcoming student consultation lounge",
+      "caption": "Admissions Hall & Student Exhibition Gallery",
+      "focalPoint": {
+        "mobile": "50% 40%",
+        "tablet": "50% 45%",
+        "desktop": "50% 48%"
+      },
+      "responsiveDelivery": {
+        "sizes": "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1280px",
+        "loading": "eager",
+        "fetchPriority": "high"
+      }
+    }
+  ]
+}

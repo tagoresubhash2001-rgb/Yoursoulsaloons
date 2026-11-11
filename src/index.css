@@ -1,0 +1,419 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Cormorant Garamond", Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  /* Brand Coordinated Palette (Phase 2 Design System Specifications) */
+  --color-cream: #F8F5EF;
+  --color-warm-ivory: #F2EADF;
+  --color-deep-navy: #173451;
+  --color-navy-hover: #0F253B;
+  --color-terracotta: #E85D1A;
+  --color-terracotta-hover: #CF4E12;
+  --color-charcoal: #25282C;
+  --color-muted-brass: #B69A70;
+  --color-hairline: #DFD6CB;
+  
+  /* Backwards compatibility aliases */
+  --color-brand-orange: #E85D1A;
+  --color-brand-orange-hover: #CF4E12;
+  --color-brand-blue: #173451;
+  --color-brand-blue-hover: #0F253B;
+  --color-brand-gold: #B69A70;
+  --color-warm-paper: #F8F5EF;
+  --color-warm-card: #F2EADF;
+  --color-warm-border: #DFD6CB;
+  --color-ink-primary: #25282C;
+  --color-ink-secondary: #524B43;
+}
+
+@layer base {
+  :root {
+    /* Brand Color Variables */
+    --brand-cream: #F8F5EF;
+    --brand-ivory: #F2EADF;
+    --brand-navy: #173451;
+    --brand-navy-hover: #0F253B;
+    --brand-terracotta: #E85D1A;
+    --brand-terracotta-hover: #CF4E12;
+    --brand-charcoal: #25282C;
+    --brand-brass: #B69A70;
+    --brand-border: #DFD6CB;
+    
+    --brand-orange: #E85D1A;
+    --brand-orange-hover: #CF4E12;
+    --brand-blue: #173451;
+    --brand-blue-hover: #0F253B;
+    --radius-btn: 10px;
+    --radius-card: 16px;
+
+    /* ==========================================================================
+       FLUID EDITORIAL TYPOGRAPHY SCALE (375px -> 1920px)
+       Calculated continuously: min_vw = 375px (23.4375rem), max_vw = 1920px (120rem)
+       Formula: clamp(min, intercept + slope * 100vw, max)
+       ========================================================================== */
+    --fluid-display: clamp(2.375rem, 1.768rem + 2.589vw, 4.875rem); /* 38px -> 78px */
+    --fluid-h1: clamp(2.125rem, 1.609rem + 2.201vw, 4.25rem);       /* 34px -> 68px */
+    --fluid-h2: clamp(1.625rem, 1.291rem + 1.424vw, 3rem);         /* 26px -> 48px */
+    --fluid-h3: clamp(1.3125rem, 1.115rem + 0.841vw, 2.125rem);    /* 21px -> 34px */
+    --fluid-h4: clamp(1.125rem, 1.034rem + 0.388vw, 1.5rem);       /* 18px -> 24px */
+  }
+
+  html {
+    scroll-behavior: smooth;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: #FAF8F5;
+    color: #14171A;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Standardized Typographical Hierarchy for Luxury Editorial Aesthetic */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    color: #14171A;
+    text-wrap: balance;
+  }
+
+  h1 {
+    font-size: var(--fluid-h1);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+  }
+
+  h2 {
+    font-size: var(--fluid-h2);
+    line-height: 1.14;
+    letter-spacing: -0.02em;
+  }
+
+  h3 {
+    font-size: var(--fluid-h3);
+    line-height: 1.22;
+    letter-spacing: -0.015em;
+  }
+
+  h4 {
+    font-size: var(--fluid-h4);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  p {
+    font-family: var(--font-sans);
+    line-height: 1.68;
+    color: #524B43;
+  }
+
+  button, input, textarea, select {
+    font-family: var(--font-sans);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  html.reduce-motion *,
+  html.reduce-motion ::before,
+  html.reduce-motion ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Reusable Editorial Typographic Utilities */
+@layer utilities {
+  .text-fluid-display {
+    font-size: var(--fluid-display);
+  }
+
+  .text-fluid-h1 {
+    font-size: var(--fluid-h1);
+  }
+
+  .text-fluid-h2 {
+    font-size: var(--fluid-h2);
+  }
+
+  .text-fluid-h3 {
+    font-size: var(--fluid-h3);
+  }
+
+  .text-fluid-h4 {
+    font-size: var(--fluid-h4);
+  }
+
+  .font-editorial-display {
+    font-family: var(--font-serif);
+    font-size: var(--fluid-display);
+    font-weight: 400;
+    line-height: 1.06;
+    letter-spacing: -0.028em;
+    text-wrap: balance;
+  }
+
+  .font-editorial-heading {
+    font-family: var(--font-serif);
+    font-size: var(--fluid-h2);
+    font-weight: 400;
+    line-height: 1.14;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  .font-editorial-subhead {
+    font-family: var(--font-serif);
+    font-size: var(--fluid-h3);
+    font-weight: 400;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  .font-editorial-quote {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.38;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  .font-editorial-lead {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    line-height: 1.7;
+    letter-spacing: -0.01em;
+  }
+
+  .font-editorial-kicker {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+
+  .font-editorial-caption {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.45;
+  }
+
+  /* ==========================================================================
+     STANDARDIZED ROUNDED RECTANGULAR BUTTON SYSTEM (8–12px radius, 44px min-height)
+     ========================================================================== */
+  .btn-base {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    border-radius: 10px;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: center;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    padding: 0.6875rem 1.375rem;
+  }
+
+  .btn-base:focus-visible {
+    outline: 2px solid #D95A1E;
+    outline-offset: 2px;
+  }
+
+  .btn-base:active {
+    transform: scale(0.98);
+  }
+
+  .btn-base:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  /* Primary Brand Action (Vibrant Brand Orange #E85D1A) */
+  .btn-brand-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    border-radius: 10px;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 0.6875rem 1.375rem;
+    background-color: #E85D1A;
+    color: #FAF8F5;
+    border: 1px solid transparent;
+    box-shadow: 0 2px 8px rgba(232, 93, 26, 0.25);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+  }
+
+  .btn-brand-primary:hover {
+    background-color: #F06E30;
+    color: #14171A;
+    box-shadow: 0 6px 16px rgba(232, 93, 26, 0.35);
+    transform: translateY(-1px);
+  }
+
+  .btn-brand-primary:active {
+    transform: scale(0.98);
+  }
+
+  /* Secondary Brand Action (Deep Luxury Brand Navy Blue) */
+  .btn-brand-navy {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    border-radius: 10px;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 0.6875rem 1.375rem;
+    background-color: #0E2E54;
+    color: #FAF8F5;
+    border: 1px solid transparent;
+    box-shadow: 0 2px 8px rgba(14, 46, 84, 0.2);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+  }
+
+  .btn-brand-navy:hover {
+    background-color: #081D36;
+    box-shadow: 0 6px 16px rgba(14, 46, 84, 0.28);
+    transform: translateY(-1px);
+  }
+
+  .btn-brand-navy:active {
+    transform: scale(0.98);
+  }
+
+  /* Secondary Outline (Deep Navy Stroke on Warm Paper) */
+  .btn-brand-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    border-radius: 10px;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 0.6875rem 1.375rem;
+    background-color: transparent;
+    color: #0E2E54;
+    border: 1.5px solid #0E2E54;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+  }
+
+  .btn-brand-outline:hover {
+    background-color: #0E2E54;
+    color: #FAF8F5;
+    transform: translateY(-1px);
+  }
+
+  .btn-brand-outline:active {
+    transform: scale(0.98);
+  }
+
+  /* Frosted Glass Overlay Secondary (for on-image hero banners) */
+  .btn-hero-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    border-radius: 10px;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 0.6875rem 1.375rem;
+    background-color: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    color: #FAF8F5;
+    border: 1.5px solid rgba(255, 255, 255, 0.45);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+  }
+
+  .btn-hero-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.28);
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-1px);
+  }
+
+  .btn-hero-secondary:active {
+    transform: scale(0.98);
+  }
+
+  /* Continuous Marquee Animations */
+  @keyframes marquee {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes marquee-reverse {
+    0% {
+      transform: translateX(-50%);
+    }
+    100% {
+      transform: translateX(0%);
+    }
+  }
+
+  .animate-marquee {
+    animation: marquee 38s linear infinite;
+  }
+
+  .animate-marquee-reverse {
+    animation: marquee-reverse 38s linear infinite;
+  }
+
+  /* Universal Thick Black Border for All Cards */
+  .card-thick-border {
+    border: 2px solid #14171A !important;
+  }
+}

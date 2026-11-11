@@ -1,0 +1,191 @@
+{
+  "entities": {
+    "Appointment": {
+      "title": "Appointment",
+      "description": "Represents a customer appointment booking request at YOUR SOUL Salon.",
+      "type": "object",
+      "properties": {
+        "bookingId": {
+          "type": "string",
+          "description": "Unique booking reference ID (e.g. YS-BK-123456).",
+          "maxLength": 64,
+          "minLength": 4,
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        },
+        "customerName": {
+          "type": "string",
+          "description": "Full name of the customer booking the appointment.",
+          "maxLength": 100,
+          "minLength": 2
+        },
+        "customerPhone": {
+          "type": "string",
+          "description": "Valid Indian mobile telephone number.",
+          "maxLength": 20,
+          "minLength": 10
+        },
+        "customerEmail": {
+          "type": "string",
+          "description": "Optional email address of the customer.",
+          "maxLength": 120
+        },
+        "serviceId": {
+          "type": "string",
+          "description": "Identifier of the selected salon service or category.",
+          "maxLength": 64,
+          "minLength": 2
+        },
+        "serviceName": {
+          "type": "string",
+          "description": "Display name of the selected salon service.",
+          "maxLength": 120,
+          "minLength": 2
+        },
+        "appointmentDate": {
+          "type": "string",
+          "description": "Date of appointment in ISO YYYY-MM-DD format.",
+          "maxLength": 10,
+          "minLength": 10,
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "dayOfWeek": {
+          "type": "string",
+          "description": "Day of the week (e.g. Monday, Sunday).",
+          "maxLength": 20,
+          "minLength": 3
+        },
+        "slotId": {
+          "type": "string",
+          "description": "Hourly slot identifier from slot-01 to slot-12.",
+          "maxLength": 20,
+          "minLength": 6,
+          "pattern": "^slot-[0-9]{2}$"
+        },
+        "startTime": {
+          "type": "string",
+          "description": "Start time in IST (e.g. 09:00 AM).",
+          "maxLength": 20,
+          "minLength": 7
+        },
+        "endTime": {
+          "type": "string",
+          "description": "End time in IST (e.g. 10:00 AM).",
+          "maxLength": 20,
+          "minLength": 7
+        },
+        "slotKey": {
+          "type": "string",
+          "description": "Unique compound key of date and slot start (e.g. 2026-11-12_09:00).",
+          "maxLength": 30,
+          "minLength": 15,
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{2}:[0-9]{2}$"
+        },
+        "timezone": {
+          "type": "string",
+          "description": "Appointment timezone (Asia/Kolkata).",
+          "maxLength": 32,
+          "minLength": 5
+        },
+        "additionalMessage": {
+          "type": "string",
+          "description": "Optional client notes or treatment requests.",
+          "maxLength": 1000
+        },
+        "bookingStatus": {
+          "type": "string",
+          "description": "Status of the reservation.",
+          "enum": ["pending", "confirmed", "cancelled"]
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the booking was initiated."
+        }
+      },
+      "required": [
+        "bookingId",
+        "customerName",
+        "customerPhone",
+        "serviceId",
+        "serviceName",
+        "appointmentDate",
+        "dayOfWeek",
+        "slotId",
+        "startTime",
+        "endTime",
+        "slotKey",
+        "timezone",
+        "bookingStatus",
+        "createdAt"
+      ]
+    },
+    "SlotReservation": {
+      "title": "SlotReservation",
+      "description": "Atomic reservation lock on a single date-and-slot index to prevent double-bookings.",
+      "type": "object",
+      "properties": {
+        "slotKey": {
+          "type": "string",
+          "description": "Unique date and slot key identifier (document ID).",
+          "maxLength": 30,
+          "minLength": 15,
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{2}:[0-9]{2}$"
+        },
+        "bookingId": {
+          "type": "string",
+          "description": "Associated booking document ID.",
+          "maxLength": 64,
+          "minLength": 4,
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        },
+        "appointmentDate": {
+          "type": "string",
+          "description": "Date of the reserved slot in YYYY-MM-DD format.",
+          "maxLength": 10,
+          "minLength": 10,
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "slotId": {
+          "type": "string",
+          "description": "Hourly slot ID (e.g. slot-01).",
+          "maxLength": 20,
+          "minLength": 6,
+          "pattern": "^slot-[0-9]{2}$"
+        },
+        "status": {
+          "type": "string",
+          "description": "Reservation status locking this slot.",
+          "enum": ["pending", "confirmed", "cancelled"]
+        },
+        "customerPhone": {
+          "type": "string",
+          "description": "Mobile number of customer holding this reservation.",
+          "maxLength": 20,
+          "minLength": 10
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when reservation was recorded."
+        }
+      },
+      "required": [
+        "slotKey",
+        "bookingId",
+        "appointmentDate",
+        "slotId",
+        "status",
+        "customerPhone",
+        "createdAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/appointments/{bookingId}": {
+      "schema": "Appointment",
+      "description": "Collection of all customer appointment requests."
+    },
+    "/slot_reservations/{slotKey}": {
+      "schema": "SlotReservation",
+      "description": "Collection of atomic date-and-time slot reservation locks."
+    }
+  }
+}
