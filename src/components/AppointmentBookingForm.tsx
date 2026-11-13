@@ -92,23 +92,38 @@ export const AppointmentBookingForm: React.FC<AppointmentBookingFormProps> = ({
 
   // Real-time subscription to reservations for the selected date
   useEffect(() => {
+    let active = true;
     setLoadingSlots(true);
     // Reset selected slot if changing date
     setSelectedSlot(null);
 
+    const fallbackTimer = window.setTimeout(() => {
+      if (active) {
+        setLoadingSlots(false);
+      }
+    }, 6000);
+
     const unsubscribe = subscribeToDateReservations(
       selectedDate,
       (updatedReservations) => {
+        if (!active) return;
+        window.clearTimeout(fallbackTimer);
         setReservations(updatedReservations);
         setLoadingSlots(false);
       },
       (err) => {
+        if (!active) return;
+        window.clearTimeout(fallbackTimer);
         console.warn('Realtime reservation listener fallback:', err);
         setLoadingSlots(false);
       }
     );
 
-    return () => unsubscribe();
+    return () => {
+      active = false;
+      window.clearTimeout(fallbackTimer);
+      unsubscribe();
+    };
   }, [selectedDate]);
 
   // Get active service display name

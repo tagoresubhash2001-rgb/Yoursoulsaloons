@@ -1,9 +1,10 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import {
+  Firestore,
+  initializeFirestore,
   getFirestore,
   doc,
-  getDoc,
   getDocFromServer,
   runTransaction,
   collection,
@@ -15,8 +16,27 @@ import {
 import firebaseConfig from '../firebase-applet-config.json';
 
 // 1. Initialize Firebase and Firestore Enterprise instance
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+
+function createFirestoreInstance(): Firestore {
+  if (typeof window !== 'undefined') {
+    try {
+      return initializeFirestore(
+        app,
+        {
+          experimentalForceLongPolling: true,
+          ignoreUndefinedProperties: true,
+        },
+        firebaseConfig.firestoreDatabaseId
+      );
+    } catch {
+      return getFirestore(app, firebaseConfig.firestoreDatabaseId);
+    }
+  }
+  return getFirestore(app, firebaseConfig.firestoreDatabaseId);
+}
+
+export const db = createFirestoreInstance();
 export const auth = getAuth(app);
 
 // 2. Validate Connection to Firestore on initial boot
@@ -238,11 +258,29 @@ export async function reserveAppointmentSlot(
         createdAt: nowIso,
       };
 
-      // 3. Write customer appointment document
+      // 3. Write customer appointment document (omit undefined optional fields)
       const appointmentPayload: AppointmentBookingRequest = {
-        ...data,
+        bookingId: data.bookingId,
+        customerName: data.customerName,
+        customerPhone: data.customerPhone,
+        serviceId: data.serviceId,
+        serviceName: data.serviceName,
+        appointmentDate: data.appointmentDate,
+        dayOfWeek: data.dayOfWeek,
+        slotId: data.slotId,
+        startTime: data.startTime,
+        endTime: data.endTime,
+        slotKey: data.slotKey,
+        timezone: data.timezone,
+        bookingStatus: data.bookingStatus,
         createdAt: nowIso,
       };
+      if (data.customerEmail) {
+        appointmentPayload.customerEmail = data.customerEmail;
+      }
+      if (data.additionalMessage) {
+        appointmentPayload.additionalMessage = data.additionalMessage;
+      }
 
       transaction.set(reservationRef, reservationPayload);
       transaction.set(appointmentRef, appointmentPayload);
