@@ -105,7 +105,7 @@ const PAGE_DESCRIPTIONS: Record<DivisionMode, Record<PageRoute, string>> = {
     home: 'Accredited beauty and cosmetology diplomas taught by active runway directors, master colorists, and clinical estheticians.',
     about: 'Discover the master educators of Your Soul Academy. Practical hands-on mentorship, low 1:8 student-to-teacher ratio, and commercial clinic experience.',
     services: 'Comprehensive cosmetology diplomas, precision cutting certifications, and masterclasses in advanced balayage and clinical esthetics.',
-    contact: 'Schedule an admissions tour or portfolio interview at Your Soul Academy. Request syllabi and speak with financial advisors.',
+    contact: 'Schedule an admissions tour or portfolio interview at Your Soul Academy. Request the syllabus and speak with our admissions team.',
   },
 };
 

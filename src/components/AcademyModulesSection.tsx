@@ -16,7 +16,6 @@ import {
   Check,
   CheckCircle2,
   ChevronDown,
-  Clock,
   Copy,
   FileDown,
   GraduationCap,
@@ -182,18 +181,6 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                         {/* Structured Metadata Specs */}
                         <div className="space-y-2.5 pt-3 border-t border-surface-2 text-xs">
                           <div className="flex items-start gap-2">
-                            <Clock className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
-                            <div>
-                              <span className="font-mono text-[10px] uppercase tracking-wider text-subtle block">
-                                Duration
-                              </span>
-                              <span className="text-dark font-medium leading-snug block">
-                                {item.duration}
-                              </span>
-                            </div>
-                          </div>
-
-                          <div className="flex items-start gap-2">
                             <BookOpen className="h-3.5 w-3.5 text-accent shrink-0 mt-0.5" />
                             <div>
                               <span className="font-mono text-[10px] uppercase tracking-wider text-subtle block">
@@ -328,12 +315,9 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                       </div>
                     </div>
 
-                    {/* CARD FOOTER: COURSE FEE NOTE + PRIMARY CTA */}
+                    {/* CARD FOOTER: CONTACT LINE + PRIMARY CTA */}
                     <div className="p-5 sm:p-6 pt-4 bg-surface border-t border-border space-y-3">
-                      <div className="flex items-center justify-between text-[11px] font-mono">
-                        <span className="text-subtle uppercase tracking-wider">Course Fee</span>
-                        <span className="text-accent font-semibold">{item.courseFeeNote}</span>
-                      </div>
+                      <p className="text-center text-xs font-semibold text-accent">Contact for more details</p>
 
                       <motion.button
                         type="button"

@@ -66,8 +66,6 @@ export interface AcademyCourse {
   discipline: 'Hair Artistry' | 'Dermal Science' | 'Makeup & High Fashion' | 'Comprehensive Cosmetology';
   title: string;
   level: 'Foundation' | 'Advanced Masterclass' | 'Professional Diploma';
-  duration: string;
-  intake: string;
   practicalHours: string;
   eligibility: string;
   certification: string;
@@ -125,7 +123,6 @@ export interface AcademyLearningMode {
   levelBadge: string;
   description: string;
   includesPreviousNote?: string;
-  duration: string;
   learningFormat: string;
   availableCourses: string[];
   curriculumGroups: AcademyCurriculumGroup[];
@@ -133,7 +130,6 @@ export interface AcademyLearningMode {
   practicalTraining: string;
   certification: string;
   eligibility: string;
-  courseFeeNote: string;
   benefits: string[];
   /** Photo shown on the Academy home page */
   photo: SiteImage;

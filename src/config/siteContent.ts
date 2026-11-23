@@ -543,7 +543,7 @@ export const FAQS: FAQItem[] = [
     id: 'faq-9',
     category: 'academy',
     question: 'What admissions and enrollment assistance is available for programs?',
-    answer: 'Our admissions desk provides personalized counseling on course prerequisites, curriculum schedules, kit materials, and scholarship qualification windows.',
+    answer: 'Our admissions desk provides personalized counseling on course prerequisites, curriculum schedules and kit materials.',
     tags: ['Admissions', 'Enrollment', 'Counseling']
   },
   {
@@ -653,7 +653,6 @@ export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
     levelBadge: 'Beginner Level',
     description:
       'Learn the foundations and perform basic salon services safely and hygienically across hair, skin, and body care.',
-    duration: 'Contact for details',
     learningFormat: 'In-Studio Foundational Theory + Guided Demonstration',
     availableCourses: [
       'Salon Hygiene, Sterilization & Safety Etiquette',
@@ -706,7 +705,6 @@ export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
       'Supervised studio practice on essential salon prep, patch testing, CTM routines, basic cuts, waxing, and manicure/pedicure procedures.',
     certification: 'YOUR SOUL Academy Certificate of Completion — Basic (Salon Assistant Level)',
     eligibility: 'Open to absolute beginners with passion for beauty; no prior salon experience required.',
-    courseFeeNote: 'Contact for details',
     benefits: [
       'Build safe, hygienic salon habits from day one',
       'Master essential Hair, Skin & Body fundamentals',
@@ -726,7 +724,6 @@ export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
     description:
       'Independently perform the most popular salon services on real clients with strong product knowledge and client communication.',
     includesPreviousNote: 'Includes everything in Basic',
-    duration: 'Contact for details',
     learningFormat: 'Classroom Science + Supervised Real-Client Floor Sessions',
     availableCourses: [
       'Skin Concerns, Fruit/Gold/D-Tan Facials & Rica Waxing',
@@ -782,7 +779,6 @@ export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
       'Hands-on execution of popular salon facials, global hair colour, layered cuts, fades, spa therapies, and real-client consultations.',
     certification: 'YOUR SOUL Academy Diploma — Standard (Junior Stylist / Beautician Level)',
     eligibility: 'Beginners enrolling in full career track or Basic-level learners advancing to independent client services.',
-    courseFeeNote: 'Contact for details',
     benefits: [
       'Perform high-demand salon services independently',
       'Understand colour levels, tones & skincare ingredients',
@@ -802,7 +798,6 @@ export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
     description:
       'Master premium treatments, chemical hair services, therapeutic body work, and occasion/bridal styling.',
     includesPreviousNote: 'Includes everything in Basic & Standard',
-    duration: 'Contact for details',
     learningFormat: 'Specialist Workshops + Chemical Lab + Live Model Clinic',
     availableCourses: [
       'O3+, HydraFacial, Pigmentation, Acne & Anti-Ageing Plans',
@@ -853,7 +848,6 @@ export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
       'Live model execution across balayage, keratin/botox, HydraFacial/O3+, therapeutic massage, occasion makeup, and saree draping.',
     certification: 'YOUR SOUL Academy Specialist Diploma — Advanced (Stylist / Specialist Level)',
     eligibility: 'Aspiring specialists enrolling directly in comprehensive training or practicing junior stylists upgrading skills.',
-    courseFeeNote: 'Contact for details',
     benefits: [
       'Command high-value chemical colour & texture services',
       'Deliver targeted clinical-grade facial & scalp plans',
@@ -873,7 +867,6 @@ export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
     description:
       'Graduate with the skill, speed and confidence of a professional with 1+ year of salon experience, backed by live salon internship.',
     includesPreviousNote: 'Includes everything in Basic, Standard & Advanced',
-    duration: 'Contact for details',
     learningFormat: 'Master Mentorship + Clinical Science + Live Salon Internship',
     availableCourses: [
       'Skin Science, Chemical Peels, Microdermabrasion & First Aid',
@@ -934,7 +927,6 @@ export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
       'Mandatory live salon internship at Your Soul serving real clients, verified service logbook, timed assessments, and commercial portfolio shoot.',
     certification: 'YOUR SOUL Academy Master Certification — Expert (Senior Stylist Industry Level)',
     eligibility: 'Career-focused candidates targeting senior stylist placement, freelance bridal mastery, or salon ownership.',
-    courseFeeNote: 'Contact for details',
     benefits: [
       'Graduate with 1+ year equivalent speed & floor confidence',
       'Complete live salon internship at Your Soul with real clients',
@@ -948,7 +940,7 @@ export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
 ];
 
 // Skill-by-skill comparison of the four learning modes (✓ = covered at this level, — = not covered).
-// Built only from the curriculum above; duration and fee show "Contact for details" until confirmed by the salon.
+// Built only from the curriculum above. Topic rows only.
 export const ACADEMY_COMPARISON_ROWS: AcademyComparisonRow[] = [
   {
     criteria: 'Skin Care',
@@ -1019,20 +1011,6 @@ export const ACADEMY_COMPARISON_ROWS: AcademyComparisonRow[] = [
     standard: 'Junior Stylist / Beautician',
     advanced: 'Stylist',
     expert: 'Senior Stylist (1 year+ level)',
-  },
-  {
-    criteria: 'Course duration',
-    basic: 'Contact for details',
-    standard: 'Contact for details',
-    advanced: 'Contact for details',
-    expert: 'Contact for details',
-  },
-  {
-    criteria: 'Course fee',
-    basic: 'Contact for details',
-    standard: 'Contact for details',
-    advanced: 'Contact for details',
-    expert: 'Contact for details',
   },
 ];
 

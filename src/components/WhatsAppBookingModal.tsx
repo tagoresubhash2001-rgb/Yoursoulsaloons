@@ -52,7 +52,6 @@ export const WhatsAppBookingModal: React.FC<Props> = ({ preset, onClose }) => {
   const [phone, setPhone] = useState('');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
-  const [batch, setBatch] = useState('');
   const [note, setNote] = useState(preset?.note ?? '');
   const [errors, setErrors] = useState<Errors>({});
   const [sent, setSent] = useState<{ url: string; message: string; ref?: string } | null>(null);
@@ -126,7 +125,7 @@ export const WhatsAppBookingModal: React.FC<Props> = ({ preset, onClose }) => {
     }
     const ref = kind === 'service' ? generateBookingRef() : undefined;
     const serviceData = { service, category: categoryFor(service), name, phone: cleanPhone!, date, time, note, ref };
-    const courseData = { course, name, phone: cleanPhone!, batch, note };
+    const courseData = { course, name, phone: cleanPhone!, note };
     const url = kind === 'service' ? buildWhatsAppLink('service', serviceData) : buildWhatsAppLink('course', courseData);
     const message = kind === 'service' ? buildWhatsAppMessage('service', serviceData) : buildWhatsAppMessage('course', courseData);
     openWhatsAppLink(url); // synchronous inside the submit gesture → not blocked as a pop-up
@@ -293,12 +292,7 @@ export const WhatsAppBookingModal: React.FC<Props> = ({ preset, onClose }) => {
                         {errorText('time')}
                       </div>
                     </div>
-                  ) : (
-                    <div>
-                      <label htmlFor={`${uid}-batch`} className={labelClass}>Preferred batch / start <span className="normal-case tracking-normal font-normal text-subtle">(optional)</span></label>
-                      <input id={`${uid}-batch`} value={batch} onChange={(e) => setBatch(e.target.value)} placeholder="e.g. January weekday batch" className={fieldClass} />
-                    </div>
-                  )}
+                  ) : null}
 
                   <div>
                     <label htmlFor={`${uid}-note`} className={labelClass}>Note <span className="normal-case tracking-normal font-normal text-subtle">(optional)</span></label>

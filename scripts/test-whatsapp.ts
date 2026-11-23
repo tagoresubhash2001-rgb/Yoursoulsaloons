@@ -19,10 +19,11 @@ check(withRef.split('\n').at(-1) === 'Ref: YS-BK-123456', 'service Ref is the la
 check(withRef.includes('Category: Women'), 'Women category');
 check(/^YS-BK-\d{6}$/.test(generateBookingRef()), 'generateBookingRef format YS-BK-######');
 
-const crs = buildWhatsAppMessage('course', { course: 'Expert – Senior Stylist', name: 'Ravi', phone: '9876543210', batch: '  ', note: undefined });
+const crs = buildWhatsAppMessage('course', { course: 'Expert – Senior Stylist', name: 'Ravi', phone: '9876543210', note: undefined });
 check(crs.split('\n')[0] === '*New Course Enquiry – Your Soul Academy*', 'course title');
 check(crs.includes('Type: Academy Course') && crs.includes('Course: Expert – Senior Stylist'), 'course type + level');
-check(!crs.includes('Preferred Batch') && !crs.includes('Note:'), 'blank batch / note omitted');
+check(!crs.includes('Note:'), 'blank note omitted');
+check(!/batch|fee|duration/i.test(crs), 'course message has no batch / fee / duration line');
 check(!crs.includes('Ref:'), 'course enquiry has no Ref');
 
 const url = buildWhatsAppLink('course', { course: 'Basic – Salon Assistant', name: 'A', phone: '9876543210' });

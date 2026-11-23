@@ -331,7 +331,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenBookingModal }) => {
                   <div>
                     <div className="flex items-center justify-between text-xs text-subtle font-mono">
                       <span className="uppercase tracking-wider text-accent font-semibold">{course.discipline}</span>
-                      <span>{course.duration}</span>
                     </div>
                     <h4 className="mt-3 font-serif text-2xl text-dark leading-snug">
                       {course.title}

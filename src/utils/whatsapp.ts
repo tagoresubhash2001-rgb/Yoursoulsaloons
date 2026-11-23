@@ -39,7 +39,6 @@ export interface CourseEnquiryData {
   course: string;
   name: string;
   phone: string;
-  batch?: string;
   note?: string;
 }
 
@@ -107,7 +106,6 @@ export function buildWhatsAppMessage<T extends WhatsAppMessageType>(type: T, dat
         ['Course', d.course],
         ['Name', d.name],
         ['Phone', d.phone],
-        ['Preferred Batch / Start', d.batch],
         ['Note', d.note],
       ]);
     }

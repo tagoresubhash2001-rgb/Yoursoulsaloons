@@ -48,7 +48,6 @@ interface EditorialCourseGroup {
   title: string;
   subtitle: string;
   description: string;
-  duration: string;
   practicalHours: string;
   image: SiteImage;
   features: string[];
@@ -184,7 +183,6 @@ const ACADEMY_EDITORIAL_GROUPS: EditorialCourseGroup[] = [
     title: 'Diploma in Precision Haircutting & Modern Architecture',
     subtitle: 'Comprehensive Geometric Cutting & Live Clinic Apprenticeship',
     description: 'A complete immersion in classic geometric precision, freehand carving, disconnection methods, and modern European scissor ergonomics. Over 320 hours of supervised client clinic training with a 1:8 mentor-to-student ratio.',
-    duration: '16 Weeks · Full Time',
     practicalHours: '320 Clinic Hours',
     image: IMAGES.courseHaircut,
     features: [
@@ -201,7 +199,6 @@ const ACADEMY_EDITORIAL_GROUPS: EditorialCourseGroup[] = [
     title: 'Masterclass in Advanced Balayage & Color Correction',
     subtitle: 'Chemical Bleach Physics & High-Stakes Correction Strategy',
     description: 'Master the physics of hair lightening, developer titration, French freehand sweeps, foilayage placement, root melting, and reversing accidental bands or uneven tones on live clients.',
-    duration: '8 Weeks · Part Time / Weekend',
     practicalHours: '120 Hands-On Hours',
     image: IMAGES.courseColour,
     features: [
@@ -218,7 +215,6 @@ const ACADEMY_EDITORIAL_GROUPS: EditorialCourseGroup[] = [
     title: 'Professional Diploma in Clinical Esthetics & Dermal Therapy',
     subtitle: 'Biological Skin Science & Advanced Facial Sculpting',
     description: 'Combines physiological skin biology, active peptide chemistry, sculptural buccal massage, ultrasound machines, and medical-grade clinic sanitation protocols.',
-    duration: '20 Weeks · Full Time',
     practicalHours: '400 Practical Clinic Hours',
     image: IMAGES.courseEsthetics,
     features: [
@@ -235,7 +231,6 @@ const ACADEMY_EDITORIAL_GROUPS: EditorialCourseGroup[] = [
     title: 'Bridal & Editorial High-Fashion Makeup Masterclass',
     subtitle: 'Second-Skin Complexion Artistry & Runway Moodboards',
     description: 'Master the craft of second-skin complexion work, tear-proof bridal setting, studio lighting response, camera flash calibration, and building a high-ticket bridal roster.',
-    duration: '6 Weeks · Intensive',
     practicalHours: '90 Hands-on Studio Hours',
     image: IMAGES.courseMakeup,
     features: [
@@ -470,8 +465,6 @@ export const ServicesListing: React.FC<ServicesListingProps> = ({
                     }`}
                   >
                     <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-accent">
-                      <span className="font-semibold uppercase tracking-wider">{item.duration}</span>
-                      <span>·</span>
                       <span className="text-subtle">{item.subtitle}</span>
                     </div>
 

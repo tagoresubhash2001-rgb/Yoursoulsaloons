@@ -59,6 +59,7 @@ if (!baseArg) await new Promise((ok) => server.listen(0, ok));
 const origin = baseArg ?? `http://localhost:${server.address().port}`;
 
 const found = new Map(); // url → Set(where)
+const photoUses = new Map(); // photo (size suffix stripped) → ['route #n', …] — one entry per <img> element at 1280px
 const add = (u, where) => {
   if (!u || u.startsWith('data:')) return;
   const abs = new URL(u, origin);
@@ -116,6 +117,15 @@ try {
         return out.filter(Boolean);
       });
       for (const u of urls) add(u, `page:${route}@${width}px`);
+      if (width === 1280) {
+        const imgs = await page.evaluate(() => [...document.querySelectorAll('img')].map((i) => new URL(i.currentSrc || i.src, location.href).pathname));
+        imgs.forEach((src, n) => {
+          if (src.includes('/brand/')) return; // the logo is intentionally in header + footer
+          const key = src.replace(/-\d+\.(webp|jpe?g|png)$/i, '');
+          if (!photoUses.has(key)) photoUses.set(key, []);
+          photoUses.get(key).push(`${route} #${n + 1}`);
+        });
+      }
     }
     await page.close();
   }
@@ -145,14 +155,20 @@ for (const r of redirects) {
 if (!baseArg) server.close();
 
 const bad = results.filter((r) => !r.ok);
+const dupes = [...photoUses.entries()].filter(([, uses]) => uses.length > 1);
 console.log(`\nIMAGE CHECK${baseArg ? ` (LIVE: ${baseArg})` : ''} — ${results.length} unique image URLs (${rendered ? 'static scan + 8 routes rendered at 360px & 1280px' : 'static scan only'})\n`);
 for (const r of results) console.log(`${r.ok ? '200 ✓' : `${r.status} ✗`}  ${r.type.padEnd(12)} ${r.path}${r.kebab ? '' : '   ← not lowercase-kebab-case'}`);
 console.log(`\nREDIRECTS (old URLs) — ${redirectResults.length}`);
 for (const r of redirectResults) console.log(`${r.ok ? '✓' : '✗'} ${r.status} ${r.from} → ${r.to} (${r.targetStatus})`);
 const badRedirects = redirectResults.filter((r) => !r.ok);
-if (bad.length || badRedirects.length) {
+if (photoUses.size) {
+  console.log(`\nPHOTO → LOCATION (every <img> on all 8 routes at 1280px; logo excluded) — ${photoUses.size} photos`);
+  for (const [k, uses] of [...photoUses.entries()].sort()) console.log(`${uses.length > 1 ? '✗ DUPLICATE' : '✓'} ${k}  →  ${uses.join(', ')}`);
+}
+if (bad.length || badRedirects.length || dupes.length) {
+  if (dupes.length) console.error(`\n✗ ${dupes.length} photo(s) used more than once: ${dupes.map(([k]) => k).join(', ')}`);
   console.error(`\n✗ ${bad.length} broken image(s), ${badRedirects.length} broken redirect(s)`);
   for (const r of bad) console.error(`   ${r.path} (status ${r.status}, ${r.type}) used at: ${r.where.slice(0, 3).join(', ')}`);
   process.exit(1);
 }
-console.log(`\n✓ All ${results.length} images return 200 with an image content-type; all ${redirectResults.length} old URLs redirect correctly.`);
+console.log(`\n✓ All ${results.length} images return 200 with an image content-type; all ${redirectResults.length} old URLs redirect correctly.${photoUses.size ? ` No photo appears twice (${photoUses.size} photos across 8 routes).` : ''}`);

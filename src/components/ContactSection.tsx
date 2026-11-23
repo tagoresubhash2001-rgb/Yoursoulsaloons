@@ -41,7 +41,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ mode }) => {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [interest, setInterest] = useState<string>(COURSE_LEVELS[0].label);
-  const [intake, setIntake] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -68,7 +67,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ mode }) => {
       course: interest || COURSE_LEVELS[0].label,
       name: fullName,
       phone: cleanPhone,
-      batch: intake,
       note: [message.trim(), email.trim() ? `Email: ${email.trim()}` : ''].filter(Boolean).join(' · '),
     };
     const payload = {
@@ -267,7 +265,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ mode }) => {
                     Enrollment &amp; Studio Interview
                   </h3>
                   <p className="mt-2 text-xs sm:text-sm text-muted leading-relaxed">
-                    Speak with our academic team to discuss prerequisites, financial assistance options, and upcoming semester cohorts.
+                    Speak with our academic team to discuss prerequisites and choose the right level for you.
                   </p>
                 </div>
 
@@ -409,19 +407,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ mode }) => {
                       </select>
                     </div>
 
-                    <div>
-                      <label htmlFor="academy-intake" className="block text-xs font-medium uppercase tracking-wider text-text-soft mb-1">
-                        Anticipated Start Quarter
-                      </label>
-                      <input
-                        id="academy-intake"
-                        type="text"
-                        value={intake}
-                        onChange={(e) => setIntake(e.target.value)}
-                        placeholder="e.g. Upcoming Autumn Cohort"
-                        className="w-full rounded-[8px] card-thick-border border-border bg-light px-4 py-2.5 text-sm text-dark focus:outline-hidden min-h-[44px]"
-                      />
-                    </div>
 
                     <div>
                       <label htmlFor="academy-msg" className="block text-xs font-medium uppercase tracking-wider text-text-soft mb-1">
