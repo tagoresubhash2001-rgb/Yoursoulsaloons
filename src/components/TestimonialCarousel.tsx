@@ -79,7 +79,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
 
   return (
     <section
-      className="w-full py-20 sm:py-28 border-t border-[#E8E1D7] bg-[#FAF8F5] overflow-hidden"
+      className="w-full py-20 sm:py-28 border-t border-surface-2 bg-light overflow-hidden"
       onKeyDown={handleKeyDown}
       tabIndex={0}
       aria-label="Client and Student Testimonials Carousel"
@@ -89,10 +89,10 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
         <ScrollReveal direction="up" distance={20} duration={0.65}>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
             <div>
-              <span className="font-editorial-kicker text-xs text-[#7D7164]">
+              <span className="font-editorial-kicker text-xs text-subtle">
                 {currentMode === 'salon' ? 'Sanctuary Stories · Verified Reviews' : 'Alumni Voices · Career Impact'}
               </span>
-              <h2 className="mt-2 font-editorial-heading text-3xl sm:text-4xl lg:text-5xl text-[#14171A]">
+              <h2 className="mt-2 font-editorial-heading text-3xl sm:text-4xl lg:text-5xl text-dark">
                 {currentMode === 'salon'
                   ? 'Client Reflections & Craft Endorsements'
                   : 'Graduate Journeys & Commercial Success'}
@@ -100,14 +100,14 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
             </div>
 
             {/* Segmented Filter Controls (Interactive Buttons) */}
-            <div className="flex items-center gap-1.5 p-1 bg-[#ECE5DA] rounded-[10px] border border-[#DDD3C6] self-start md:self-auto">
+            <div className="flex items-center gap-1.5 p-1 bg-surface-2 rounded-[10px] border border-border self-start md:self-auto">
               <button
                 type="button"
                 onClick={() => handleFilterChange('all')}
-                className={`px-3.5 py-1.5 text-xs font-mono uppercase tracking-wider rounded-[8px] transition-all min-h-[36px] cursor-pointer ${
+                className={`px-3.5 py-1.5 text-xs font-mono uppercase tracking-wider rounded-[8px] transition-all min-h-[44px] cursor-pointer ${
                   filter === 'all'
-                    ? 'bg-[#FAF8F5] text-[#14171A] shadow-xs font-semibold'
-                    : 'text-[#5C5349] hover:text-[#14171A]'
+                    ? 'bg-light text-dark shadow-xs font-semibold'
+                    : 'text-muted hover:text-dark'
                 }`}
               >
                 All Stories
@@ -115,10 +115,10 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
               <button
                 type="button"
                 onClick={() => handleFilterChange('salon')}
-                className={`px-3.5 py-1.5 text-xs font-mono uppercase tracking-wider rounded-[8px] transition-all min-h-[36px] cursor-pointer ${
+                className={`px-3.5 py-1.5 text-xs font-mono uppercase tracking-wider rounded-[8px] transition-all min-h-[44px] cursor-pointer ${
                   filter === 'salon'
-                    ? 'bg-[#0E2E54] text-white shadow-xs font-semibold'
-                    : 'text-[#5C5349] hover:text-[#14171A]'
+                    ? 'bg-accent text-white shadow-xs font-semibold'
+                    : 'text-muted hover:text-dark'
                 }`}
               >
                 Salon Clients
@@ -126,10 +126,10 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
               <button
                 type="button"
                 onClick={() => handleFilterChange('academy')}
-                className={`px-3.5 py-1.5 text-xs font-mono uppercase tracking-wider rounded-[8px] transition-all min-h-[36px] cursor-pointer ${
+                className={`px-3.5 py-1.5 text-xs font-mono uppercase tracking-wider rounded-[8px] transition-all min-h-[44px] cursor-pointer ${
                   filter === 'academy'
-                    ? 'bg-[#D95A1E] text-white shadow-xs font-semibold'
-                    : 'text-[#5C5349] hover:text-[#14171A]'
+                    ? 'bg-primary text-white shadow-xs font-semibold'
+                    : 'text-muted hover:text-dark'
                 }`}
               >
                 Academy Alumni
@@ -142,11 +142,11 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
         <div className="relative mx-auto max-w-5xl">
           <motion.div
             whileHover={{ y: -3, transition: { duration: 0.25 } }}
-            className="relative min-h-[340px] sm:min-h-[300px] md:min-h-[280px] rounded-[18px] card-thick-border border-2 border-[#14171A] bg-[#FBF9F7] p-8 sm:p-12 md:p-14 shadow-xs hover:shadow-xl hover:border-[#0E2E54] transition-all"
+            className="relative min-h-[340px] sm:min-h-[300px] md:min-h-[280px] rounded-[18px] card-thick-border border-border bg-light p-8 sm:p-12 md:p-14 shadow-xs hover:shadow-xl hover:border-accent transition-all"
           >
             {/* Ambient Background Watermark Quote Icon */}
             <div
-              className="absolute top-6 right-8 text-[#E8E1D7]/60 pointer-events-none"
+              className="absolute top-6 right-8 text-surface-2/60 pointer-events-none"
               aria-hidden="true"
             >
               <Quote className="h-20 w-20 stroke-[1]" />
@@ -165,50 +165,50 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
                 >
                   {/* Rating & Category Line */}
                   <div>
-                    <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-[#7D7164] mb-4">
-                      <div className="flex items-center gap-1 text-[#D95A1E]">
+                    <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-subtle mb-4">
+                      <div className="flex items-center gap-1 text-primary">
                         {[...Array(currentTestimonial.rating)].map((_, i) => (
                           <Star key={i} className="h-4 w-4 fill-current" />
                         ))}
                       </div>
 
-                      <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-[#524B43]">
+                      <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-muted">
                         <span>{currentTestimonial.category === 'salon' ? 'Salon Experience' : 'Academy Graduate'}</span>
-                        <span aria-hidden="true" className="text-[#C4B9AC]">·</span>
-                        <span className="text-[#0E2E54] font-medium">{currentTestimonial.serviceOrCourse}</span>
+                        <span aria-hidden="true" className="text-border-strong">·</span>
+                        <span className="text-accent font-medium">{currentTestimonial.serviceOrCourse}</span>
                       </div>
                     </div>
 
                     {/* Editorial Serif Quote */}
-                    <blockquote className="font-serif italic text-xl sm:text-2xl md:text-3xl text-[#14171A] leading-relaxed max-w-3xl">
+                    <blockquote className="font-serif italic text-xl sm:text-2xl md:text-3xl text-dark leading-relaxed max-w-3xl">
                       “{currentTestimonial.quote}”
                     </blockquote>
                   </div>
 
                   {/* Author Metadata */}
-                  <div className="mt-8 pt-6 border-t border-[#EAE3D9] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="mt-8 pt-6 border-t border-surface-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                       <div className="flex items-center gap-2.5">
-                        <span className="font-medium text-base text-[#14171A]">
+                        <span className="font-medium text-base text-dark">
                           {currentTestimonial.name}
                         </span>
                         {currentTestimonial.verified && (
                           <span
-                            className="inline-flex items-center gap-1 text-[11px] font-mono text-[#0E2E54] bg-[#0E2E54]/8 px-2 py-0.5 rounded-md"
+                            className="inline-flex items-center gap-1 text-[11px] font-mono text-accent bg-accent/8 px-2 py-0.5 rounded-md"
                             title="Verified Guest / Graduate"
                           >
-                            <CheckCircle2 className="h-3 w-3 text-[#D95A1E]" />
+                            <CheckCircle2 className="h-3 w-3 text-primary" />
                             <span>Verified</span>
                           </span>
                         )}
                       </div>
 
-                      <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-[#524B43] font-light">
+                      <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted font-light">
                         <span>{currentTestimonial.role}</span>
-                        <span aria-hidden="true" className="text-[#C4B9AC]">·</span>
+                        <span aria-hidden="true" className="text-border-strong">·</span>
                         <span>{currentTestimonial.location}</span>
-                        <span aria-hidden="true" className="text-[#C4B9AC]">·</span>
-                        <span className="font-mono text-[11px] text-[#7D7164]">{currentTestimonial.date}</span>
+                        <span aria-hidden="true" className="text-border-strong">·</span>
+                        <span className="font-mono text-[11px] text-subtle">{currentTestimonial.date}</span>
                       </div>
                     </div>
 
@@ -220,7 +220,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
                           ? onOpenBookingModal()
                           : onOpenBookingModal(undefined, 'crs-1')
                       }
-                      className="self-start sm:self-auto text-xs font-mono uppercase tracking-wider text-[#0E2E54] hover:text-[#D95A1E] transition-colors py-1 cursor-pointer font-medium"
+                      className="self-start sm:self-auto min-h-[44px] inline-flex items-center text-xs font-mono uppercase tracking-wider text-accent hover:text-primary transition-colors py-1 cursor-pointer font-medium"
                     >
                       {currentTestimonial.category === 'salon'
                         ? 'Reserve Similar Ritual →'
@@ -245,14 +245,17 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
                     if (diff !== 0) paginate(diff);
                   }}
                   aria-label={`Go to testimonial ${idx + 1}`}
-                  className={`h-2 transition-all rounded-full cursor-pointer ${
-                    idx === activeIndex
-                      ? 'w-8 bg-[#0E2E54]'
-                      : 'w-2 bg-[#D5CABC] hover:bg-[#8C7A65]'
-                  }`}
-                />
+                  aria-current={idx === activeIndex ? 'true' : undefined}
+                  className="group/dot h-11 min-w-[24px] px-1 flex items-center justify-center cursor-pointer"
+                >
+                  <span
+                    className={`block h-2 transition-all duration-250 rounded-full ${
+                      idx === activeIndex ? 'w-8 bg-accent' : 'w-2 bg-border group-hover/dot:bg-subtle'
+                    }`}
+                  />
+                </button>
               ))}
-              <span className="ml-3 font-mono text-xs text-[#7D7164] tabular-nums">
+              <span className="ml-3 font-mono text-xs text-subtle tabular-nums">
                 {activeIndex + 1} / {filteredTestimonials.length}
               </span>
             </div>
@@ -263,7 +266,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
                 type="button"
                 onClick={() => paginate(-1)}
                 aria-label="Previous testimonial"
-                className="h-11 w-11 rounded-[10px] border border-[#DFD6CB] bg-[#FAF8F5] text-[#14171A] hover:bg-[#0E2E54] hover:text-white hover:border-[#0E2E54] flex items-center justify-center transition-colors cursor-pointer shadow-2xs focus-visible:outline-2 focus-visible:outline-[#D95A1E]"
+                className="h-11 w-11 rounded-[10px] border border-border bg-light text-dark hover:bg-accent hover:text-white hover:border-accent flex items-center justify-center transition-colors cursor-pointer shadow-2xs focus-visible:outline-2 focus-visible:outline-primary"
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
@@ -271,7 +274,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
                 type="button"
                 onClick={() => paginate(1)}
                 aria-label="Next testimonial"
-                className="h-11 w-11 rounded-[10px] border border-[#DFD6CB] bg-[#FAF8F5] text-[#14171A] hover:bg-[#0E2E54] hover:text-white hover:border-[#0E2E54] flex items-center justify-center transition-colors cursor-pointer shadow-2xs focus-visible:outline-2 focus-visible:outline-[#D95A1E]"
+                className="h-11 w-11 rounded-[10px] border border-border bg-light text-dark hover:bg-accent hover:text-white hover:border-accent flex items-center justify-center transition-colors cursor-pointer shadow-2xs focus-visible:outline-2 focus-visible:outline-primary"
               >
                 <ChevronRight className="h-5 w-5" />
               </button>

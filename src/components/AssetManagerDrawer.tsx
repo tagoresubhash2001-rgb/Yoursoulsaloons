@@ -67,7 +67,7 @@ export const AssetManagerDrawer: React.FC = () => {
         role="dialog"
         aria-modal="true"
         aria-labelledby="asset-drawer-title"
-        className="fixed inset-0 z-50 flex justify-end bg-[#14171A]/60 backdrop-blur-xs"
+        className="fixed inset-0 z-50 flex justify-end bg-dark/60 backdrop-blur-xs"
         onClick={(e) => {
           if (e.target === e.currentTarget) setIsAssetDrawerOpen(false);
         }}
@@ -77,19 +77,19 @@ export const AssetManagerDrawer: React.FC = () => {
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
           transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full max-w-2xl bg-[#FAF8F5] text-[#14171A] h-full shadow-2xl flex flex-col border-l border-[#DCD3C7]"
+          className="relative w-full max-w-2xl bg-light text-dark h-full shadow-2xl flex flex-col border-l border-border"
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-[#E8E0D5] bg-[#F2EDE5]">
+          <div className="flex items-center justify-between p-6 border-b border-surface-2 bg-surface">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center border border-[#14171A] bg-[#14171A] text-[#FAF8F5]">
+              <div className="flex h-9 w-9 items-center justify-center border border-dark bg-dark text-light">
                 <SlidersHorizontal className="h-4 w-4" />
               </div>
               <div>
-                <h2 id="asset-drawer-title" className="font-editorial-heading text-xl text-[#14171A] font-medium">
+                <h2 id="asset-drawer-title" className="font-editorial-heading text-xl text-dark font-medium">
                   Photo Asset Slot Inspector &amp; Route Registry
                 </h2>
-                <p className="text-xs text-[#7D7164] font-mono">
+                <p className="text-xs text-subtle font-mono">
                   8 Mandatory Banners · Verified Local Photography &amp; Focal Points
                 </p>
               </div>
@@ -98,7 +98,7 @@ export const AssetManagerDrawer: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsAssetDrawerOpen(false)}
-              className="p-2 text-[#7D7164] hover:text-[#14171A] cursor-pointer transition-colors"
+              className="p-2 text-subtle hover:text-dark cursor-pointer transition-colors"
               aria-label="Close inspector"
             >
               <X className="h-5 w-5" />
@@ -106,13 +106,13 @@ export const AssetManagerDrawer: React.FC = () => {
           </div>
 
           {/* Tab Filters */}
-          <div className="flex items-center justify-between px-6 py-3 border-b border-[#E8E0D5] bg-[#FAF8F5] text-xs">
+          <div className="flex items-center justify-between px-6 py-3 border-b border-surface-2 bg-light text-xs">
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => setActiveTab('all')}
                 className={`px-3 py-1.5 font-mono uppercase tracking-wider text-[11px] cursor-pointer transition-colors ${
-                  activeTab === 'all' ? 'bg-[#14171A] text-[#FAF8F5]' : 'bg-[#EAE2D7] text-[#5C5349]'
+                  activeTab === 'all' ? 'bg-dark text-light' : 'bg-surface-2 text-muted'
                 }`}
               >
                 All 8 Slots
@@ -121,7 +121,7 @@ export const AssetManagerDrawer: React.FC = () => {
                 type="button"
                 onClick={() => setActiveTab('salon')}
                 className={`px-3 py-1.5 rounded-[8px] font-mono uppercase tracking-wider text-[11px] cursor-pointer transition-colors ${
-                  activeTab === 'salon' ? 'bg-[#0E2E54] text-[#FAF8F5]' : 'bg-[#EAE2D7] text-[#5C5349] hover:text-[#0E2E54]'
+                  activeTab === 'salon' ? 'bg-accent text-light' : 'bg-surface-2 text-muted hover:text-accent'
                 }`}
               >
                 Salon (/salon/*)
@@ -130,7 +130,7 @@ export const AssetManagerDrawer: React.FC = () => {
                 type="button"
                 onClick={() => setActiveTab('academy')}
                 className={`px-3 py-1.5 rounded-[8px] font-mono uppercase tracking-wider text-[11px] cursor-pointer transition-colors ${
-                  activeTab === 'academy' ? 'bg-[#D95A1E] text-[#FAF8F5]' : 'bg-[#EAE2D7] text-[#5C5349] hover:text-[#D95A1E]'
+                  activeTab === 'academy' ? 'bg-primary text-light' : 'bg-surface-2 text-muted hover:text-primary'
                 }`}
               >
                 Academy (/academy/*)
@@ -140,7 +140,7 @@ export const AssetManagerDrawer: React.FC = () => {
             <button
               type="button"
               onClick={resetSlots}
-              className="flex items-center gap-1.5 text-[11px] font-mono text-[#7D7164] hover:text-red-700 cursor-pointer"
+              className="flex items-center gap-1.5 text-[11px] font-mono text-subtle hover:text-red-700 cursor-pointer"
             >
               <RefreshCw className="h-3 w-3" />
               <span>Reset Overrides</span>
@@ -148,10 +148,10 @@ export const AssetManagerDrawer: React.FC = () => {
           </div>
 
           {/* Instruction Note */}
-          <div className="p-4 mx-6 mt-4 border border-[#DFD6CB] bg-[#F2EDE5] text-xs text-[#524B43] flex items-start gap-3">
-            <Info className="h-4 w-4 text-[#B89B7D] shrink-0 mt-0.5" />
+          <div className="p-4 mx-6 mt-4 border border-border bg-surface text-xs text-muted flex items-start gap-3">
+            <Info className="h-4 w-4 text-brass shrink-0 mt-0.5" />
             <div>
-              <span className="font-semibold text-[#14171A]">Verified Photographic Manifest: </span>
+              <span className="font-semibold text-dark">Verified Photographic Manifest: </span>
               All 8 slots are mapped to their respective routes with calibrated breakpoint focal points (Mobile, Tablet, Desktop) for optimal portrait and landscape framing.
             </div>
           </div>
@@ -172,25 +172,25 @@ export const AssetManagerDrawer: React.FC = () => {
                   id={`slot-${banner.slotId}`}
                   className={`border p-5 transition-all ${
                     isHighlighted
-                      ? 'border-[#14171A] bg-[#F4EFEB] ring-1 ring-[#14171A]'
-                      : 'border-[#E0D7CB] bg-[#FBF9F7]'
+                      ? 'border-dark bg-surface ring-1 ring-dark'
+                      : 'border-border bg-light'
                   }`}
                 >
                   <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                     <div>
-                      <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-[#7D7164]">
-                        <span className="font-bold text-[#14171A]">SLOT #{banner.slotNumber.toString().padStart(2, '0')}</span>
+                      <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-subtle">
+                        <span className="font-bold text-dark">SLOT #{banner.slotNumber.toString().padStart(2, '0')}</span>
                         <span>·</span>
-                        <span className="uppercase text-[#634E35] font-semibold">
+                        <span className="uppercase text-muted font-semibold">
                           {banner.division === 'salon' ? 'Salon Division' : 'Academy Division'}
                         </span>
                         <span>·</span>
-                        <span className="px-1.5 py-0.5 bg-[#E6DDD1] text-[#14171A] font-bold rounded-xs">
+                        <span className="px-1.5 py-0.5 bg-surface-2 text-dark font-bold rounded-xs">
                           {banner.route}
                         </span>
                       </div>
 
-                      <h3 className="mt-1 font-editorial-heading text-lg text-[#14171A]">
+                      <h3 className="mt-1 font-editorial-heading text-lg text-dark">
                         {banner.title}
                       </h3>
                     </div>
@@ -201,38 +201,38 @@ export const AssetManagerDrawer: React.FC = () => {
                         onClick={() => handleNavigateToRoute(banner)}
                         className={`inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-mono uppercase tracking-wider cursor-pointer transition-colors ${
                           isCurrentRoute
-                            ? 'bg-[#14171A] text-[#FAF8F5]'
-                            : 'bg-[#EAE2D7] hover:bg-[#14171A] hover:text-[#FAF8F5] text-[#14171A]'
+                            ? 'bg-dark text-light'
+                            : 'bg-surface-2 hover:bg-dark hover:text-light text-dark'
                         }`}
                         title={`Navigate to ${banner.route}`}
                       >
                         <Eye className="h-3 w-3" />
                         <span>{isCurrentRoute ? 'Active Page' : 'Go to Page'}</span>
                       </button>
-                      <span className="text-[10px] font-mono tracking-widest uppercase border border-[#D5CABC] px-2 py-0.5 bg-[#FAF8F5] text-[#5C5349]">
+                      <span className="text-[10px] font-mono tracking-widest uppercase border border-border px-2 py-0.5 bg-light text-muted">
                         {banner.aspectRatio} · {banner.recommendedResolution}
                       </span>
                     </div>
                   </div>
 
                   {/* Thumbnail / Artwork Preview with Active Breakpoint Focal Point */}
-                  <div className="mt-3 relative aspect-[16/9] w-full border border-[#D6CBBF] overflow-hidden bg-[#181B20]">
+                  <div className="mt-3 relative aspect-[16/9] w-full border border-border overflow-hidden bg-dark">
                     <img
                       src={customSlots[banner.slotId] || banner.imageSrc}
                       alt={banner.altText}
                       style={{ objectPosition: activeFocal }}
                       className="w-full h-full object-cover transition-all duration-300"
                     />
-                    <div className="absolute bottom-2 left-2 bg-[#14171A]/90 text-[#FAF8F5] px-2 py-0.5 text-[10px] font-mono flex items-center gap-2">
+                    <div className="absolute bottom-2 left-2 bg-dark/90 text-light px-2 py-0.5 text-[10px] font-mono flex items-center gap-2">
                       <span>{banner.imageSrc}</span>
-                      <span className="text-[#B89B7D]">·</span>
+                      <span className="text-brass">·</span>
                       <span>Focal ({bp}): {activeFocal}</span>
                     </div>
                   </div>
 
                   {/* Responsive Focal Point Breakpoint Switcher */}
-                  <div className="mt-2.5 flex items-center justify-between text-xs bg-[#EAE2D7]/60 px-3 py-1.5 border border-[#DFD6CB]">
-                    <span className="font-mono text-[11px] text-[#6E6457]">Preview Breakpoint Focal:</span>
+                  <div className="mt-2.5 flex items-center justify-between text-xs bg-surface-2/60 px-3 py-1.5 border border-border">
+                    <span className="font-mono text-[11px] text-subtle">Preview Breakpoint Focal:</span>
                     <div className="flex items-center gap-1.5 font-mono text-[10px]">
                       {(['mobile', 'tablet', 'desktop'] as const).map((mode) => (
                         <button
@@ -241,8 +241,8 @@ export const AssetManagerDrawer: React.FC = () => {
                           onClick={() => setPreviewBreakpoint((prev) => ({ ...prev, [banner.slotId]: mode }))}
                           className={`px-2 py-0.5 uppercase tracking-wider cursor-pointer ${
                             bp === mode
-                              ? 'bg-[#14171A] text-[#FAF8F5]'
-                              : 'bg-[#FAF8F5] text-[#5C5349] hover:bg-[#DFD6CB]'
+                              ? 'bg-dark text-light'
+                              : 'bg-light text-muted hover:bg-border'
                           }`}
                         >
                           {mode}: {banner.focalPoint[mode]}
@@ -251,41 +251,41 @@ export const AssetManagerDrawer: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="mt-3 text-xs text-[#524B43] space-y-1">
+                  <div className="mt-3 text-xs text-muted space-y-1">
                     <div>
-                      <span className="font-mono text-[#7D7164]">LOCAL PRODUCTION ASSET:</span>{' '}
-                      <code className="bg-[#EAE2D7] px-1.5 py-0.5 font-mono text-[11px] text-[#14171A]">
-                        public/banners/{banner.slotId}.jpg (1920 × 1080)
+                      <span className="font-mono text-subtle">LOCAL PRODUCTION ASSET:</span>{' '}
+                      <code className="bg-surface-2 px-1.5 py-0.5 font-mono text-[11px] text-dark">
+                        {banner.imageSrc ?? 'public/images/'} (WebP, 768/1280/1920w)
                       </code>
                     </div>
                     <div>
-                      <span className="font-mono text-[#7D7164]">MAPPED ROUTE:</span>{' '}
-                      <span className="font-mono text-[#14171A] font-semibold">{banner.route}</span>
-                      <span className="mx-2 text-[#C4B9AC]">·</span>
-                      <span className="font-mono text-[#7D7164]">DIVISION:</span>{' '}
+                      <span className="font-mono text-subtle">MAPPED ROUTE:</span>{' '}
+                      <span className="font-mono text-dark font-semibold">{banner.route}</span>
+                      <span className="mx-2 text-border-strong">·</span>
+                      <span className="font-mono text-subtle">DIVISION:</span>{' '}
                       <span className="capitalize">{banner.division}</span>
                     </div>
                     <div>
-                      <span className="font-mono text-[#7D7164]">PHOTO BRIEF:</span> {banner.altText}
+                      <span className="font-mono text-subtle">PHOTO BRIEF:</span> {banner.altText}
                     </div>
                   </div>
 
                   {/* Input for custom URL / local path */}
-                  <div className="mt-4 pt-3 border-t border-[#EAE3D9] flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                  <div className="mt-4 pt-3 border-t border-surface-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                     <input
                       type="text"
                       value={currentUrl}
                       onChange={(e) =>
                         setInputUrls((prev) => ({ ...prev, [banner.slotId]: e.target.value }))
                       }
-                      placeholder="Paste image URL (https://...) or local path (/banners/...)"
-                      className="flex-1 rounded-[8px] border border-[#D5CABC] bg-[#FAF8F5] px-3 py-1.5 text-xs text-[#14171A] focus:border-[#D95A1E] focus:ring-1 focus:ring-[#D95A1E] focus:outline-hidden"
+                      placeholder="Paste image URL (https://...) or local path (/images/...)"
+                      className="flex-1 rounded-[8px] border border-border bg-light px-3 py-1.5 text-xs text-dark focus:border-primary focus:ring-1 focus:ring-primary focus:outline-hidden"
                     />
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
                         onClick={() => handleSaveSlot(banner.slotId)}
-                        className="btn-brand-primary min-h-[36px] px-3 py-1 text-xs"
+                        className="btn-brand-primary min-h-[44px] px-3 py-1 text-xs"
                       >
                         {successSaved === banner.slotId ? 'Saved!' : 'Apply'}
                       </button>
@@ -293,7 +293,7 @@ export const AssetManagerDrawer: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => handleClearSlot(banner.slotId)}
-                          className="px-2.5 py-1.5 rounded-[8px] text-xs font-medium text-[#7D7164] hover:text-red-700 border border-[#D5CABC] cursor-pointer whitespace-nowrap min-h-[36px]"
+                          className="px-2.5 py-1.5 rounded-[8px] text-xs font-medium text-subtle hover:text-red-700 border border-border cursor-pointer whitespace-nowrap min-h-[44px]"
                           title="Revert to architectural plate"
                         >
                           Revert
@@ -314,12 +314,12 @@ export const AssetManagerDrawer: React.FC = () => {
           </div>
 
           {/* Footer */}
-          <div className="p-4 border-t border-[#E8E0D5] bg-[#F2EDE5] flex items-center justify-between text-xs text-[#7D7164]">
+          <div className="p-4 border-t border-surface-2 bg-surface flex items-center justify-between text-xs text-subtle">
             <span className="font-mono text-[11px]">YOUR SOUL ASSET REGISTRY v2.0</span>
             <button
               type="button"
               onClick={() => setIsAssetDrawerOpen(false)}
-              className="btn-brand-navy min-h-[38px] px-4 py-2 text-xs"
+              className="btn-brand-navy min-h-[44px] px-4 py-2 text-xs"
             >
               Done Inspecting
             </button>

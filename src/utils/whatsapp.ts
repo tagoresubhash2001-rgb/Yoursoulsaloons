@@ -13,6 +13,51 @@ export function getBusinessWhatsAppNumber(): string {
   return (envNumber?.trim() || '919553888432').replace(/[^0-9]/g, '');
 }
 
+// ----------------------------------------------------------------------------
+// CORE HELPERS — every WhatsApp link on the site is built through these.
+// ----------------------------------------------------------------------------
+
+/** Build a wa.me click-to-chat URL with an optional pre-filled message. */
+export function buildWhatsAppLink(message?: string): string {
+  const base = `https://wa.me/${getBusinessWhatsAppNumber()}`;
+  return message ? `${base}?text=${encodeURIComponent(message)}` : base;
+}
+
+/** Spread onto any <a> that opens WhatsApp: new tab, no opener access. */
+export const WHATSAPP_LINK_PROPS = { target: '_blank', rel: 'noopener noreferrer' } as const;
+
+/** "Hi Your Soul, I'd like to book: <Service> (<Category>). Please share available slots." */
+export function buildBookingMessage(serviceName?: string, category?: string): string {
+  if (!serviceName) {
+    return "Hi Your Soul, I'd like to book an appointment. Please share available slots.";
+  }
+  const cat = category && category !== serviceName ? ` (${category})` : '';
+  return `Hi Your Soul, I'd like to book: ${serviceName}${cat}. Please share available slots.`;
+}
+
+export function buildBookingLink(serviceName?: string, category?: string): string {
+  return buildWhatsAppLink(buildBookingMessage(serviceName, category));
+}
+
+/** Academy course / admissions enquiry message. */
+export function buildCourseEnquiryMessage(courseName?: string, discipline?: string): string {
+  if (!courseName) {
+    return "Hi Your Soul Academy, I'd like to enquire about your courses. Please share upcoming batch dates and admission details.";
+  }
+  const d = discipline ? ` (${discipline})` : '';
+  return `Hi Your Soul Academy, I'd like to enquire about: ${courseName}${d}. Please share upcoming batch dates and admission details.`;
+}
+
+export function buildCourseEnquiryLink(courseName?: string, discipline?: string): string {
+  return buildWhatsAppLink(buildCourseEnquiryMessage(courseName, discipline));
+}
+
+/** Open WhatsApp in a new tab. Call synchronously inside a click/submit handler so pop-up blockers allow it. */
+export function openWhatsApp(message?: string): void {
+  if (typeof window === 'undefined') return;
+  window.open(buildWhatsAppLink(message), '_blank', 'noopener,noreferrer');
+}
+
 export function validateIndianPhone(phoneStr: string): boolean {
   const clean = phoneStr.replace(/[\s\-+()]/g, '');
   if (/^[6-9]\d{9}$/.test(clean)) return true;
@@ -73,7 +118,7 @@ export function buildAcademyEnquiryWhatsAppUrl(
     `Thank you.\n` +
     `YOUR SOUL Academy Applicant`;
 
-  const url = `https://wa.me/${businessNumber}?text=${encodeURIComponent(rawMessage)}`;
+  const url = buildWhatsAppLink(rawMessage);
   return { url, rawMessage, businessNumber };
 }
 
@@ -111,7 +156,7 @@ export function buildServiceEnquiryWhatsAppUrl(
     `\nPlease share consultation availability and treatment details.\n\n` +
     `Thank you.`;
 
-  const url = `https://wa.me/${businessNumber}?text=${encodeURIComponent(rawMessage)}`;
+  const url = buildWhatsAppLink(rawMessage);
   return { url, rawMessage, businessNumber };
 }
 
@@ -158,6 +203,6 @@ export function buildWhatsAppClickToChatUrl(
 ): WhatsAppPayloadResult {
   const businessNumber = getBusinessWhatsAppNumber();
   const rawMessage = buildWhatsAppAppointmentMessage(booking);
-  const url = `https://wa.me/${businessNumber}?text=${encodeURIComponent(rawMessage)}`;
+  const url = buildWhatsAppLink(rawMessage);
   return { url, rawMessage, businessNumber };
 }

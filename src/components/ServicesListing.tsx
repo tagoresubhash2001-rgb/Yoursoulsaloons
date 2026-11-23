@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { DivisionMode } from '../types';
 import { FeaturePill } from './FeaturePill';
-import { buildServiceEnquiryWhatsAppUrl, buildAcademyEnquiryWhatsAppUrl } from '../utils/whatsapp';
-import { ArrowRight, Clock, CheckCircle2, MessageCircle } from 'lucide-react';
+import { buildBookingLink, buildBookingMessage, buildCourseEnquiryLink, buildCourseEnquiryMessage, openWhatsApp, WHATSAPP_LINK_PROPS } from '../utils/whatsapp';
+import { WhatsAppIcon } from './WhatsAppIcon';
+import { ACADEMY_SYLLABUS_PDF_PATH } from '../config/siteContent';
+import { ArrowRight, Clock, CheckCircle2, Phone, FileText } from 'lucide-react';
 import { motion } from 'motion/react';
 import { ScrollReveal } from './ScrollReveal';
+import { IMAGES, SiteImage } from '../config/images';
 
 interface ServicesListingProps {
   mode: DivisionMode;
@@ -12,15 +15,18 @@ interface ServicesListingProps {
   onSelectCourse: (courseId: string) => void;
 }
 
+type SalonGroup = 'Hair' | 'Colour' | 'Bridal & Makeup' | 'Skin & Scalp' | 'Nails';
+const SALON_GROUPS: Array<'All' | SalonGroup> = ['All', 'Hair', 'Colour', 'Bridal & Makeup', 'Skin & Scalp', 'Nails'];
+
 interface EditorialServiceCategory {
   id: string;
+  group: SalonGroup;
   serviceId: string;
   category: string;
   subtitle: string;
   description: string;
   duration: string;
-  image: string;
-  alt: string;
+  image: SiteImage;
   features: string[];
   ctaLabel: string;
 }
@@ -33,8 +39,7 @@ interface EditorialCourseGroup {
   description: string;
   duration: string;
   practicalHours: string;
-  image: string;
-  alt: string;
+  image: SiteImage;
   features: string[];
   ctaLabel: string;
 }
@@ -42,13 +47,13 @@ interface EditorialCourseGroup {
 const SALON_EDITORIAL_CATEGORIES: EditorialServiceCategory[] = [
   {
     id: 'grp-hair-cut',
+    group: 'Hair',
     serviceId: 'srv-1',
     category: 'Hair Design & Architectural Haircuts',
     subtitle: 'Precision French Atelier & Vidal Sassoon Sculpting',
     description: 'Every haircut is sculpted to your individual bone structure, hairline whorls, and hair density. We combine dry geometric analysis before washing with hand-honed shears, concluding with an unhurried blowout that maintains shape effortlessly for weeks.',
     duration: '75 min',
-    image: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=900&q=75&fm=webp',
-    alt: 'Master stylist performing precision haircutting in modern luxury salon',
+    image: IMAGES.svcHaircut,
     features: [
       'Micro-Texture Diagnostic',
       'Sensory Scalp Clarifying Ritual',
@@ -59,13 +64,13 @@ const SALON_EDITORIAL_CATEGORIES: EditorialServiceCategory[] = [
   },
   {
     id: 'grp-hair-colour',
+    group: 'Colour',
     serviceId: 'srv-3',
     category: 'Colour Chemistry & French Balayage',
     subtitle: 'Freehand Highlighting & Low-Damage Formulations',
     description: 'Artisanal hand-painted dimensional balayage, subtle root melting, and acidic toner glazes calibrated for dark and warm undertones. Formulated with ammonia-free European pigments and bond rebuilders that safeguard hair vitality and mirror shine.',
     duration: '180 min',
-    image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=900&q=75&fm=webp',
-    alt: 'Master colorist hand-painting dimensional French balayage highlights',
+    image: IMAGES.svcColour,
     features: [
       'Porosity Pre-Balancing Treatment',
       'Organic Clay-Based Lightener',
@@ -76,13 +81,13 @@ const SALON_EDITORIAL_CATEGORIES: EditorialServiceCategory[] = [
   },
   {
     id: 'grp-bridal',
+    group: 'Bridal & Makeup',
     serviceId: 'srv-8',
     category: 'Bridal Makeup & Haute Occasion Styling',
     subtitle: '4K Camera Longevity & Personalized Dupatta Draping',
     description: 'Comprehensive styling exploration for wedding celebrations (Sangeet, Muhurtham, and Reception). We ensure waterproof HD airbrush longevity, custom veil and dupatta draping, and jewelry setting designed to withstand ceremony lights and cameras.',
     duration: '120 min',
-    image: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=900&q=75&fm=webp',
-    alt: 'Luxury bridal hair and makeup artistry session in private studio suite',
+    image: IMAGES.svcBridal,
     features: [
       'Pre-Wedding Dermal Preparation',
       'HD Camera Flash Calibration',
@@ -93,13 +98,13 @@ const SALON_EDITORIAL_CATEGORIES: EditorialServiceCategory[] = [
   },
   {
     id: 'grp-extensions',
+    group: 'Hair',
     serviceId: 'srv-1',
     category: 'Seamless Hair Extensions & Volume',
     subtitle: '100% Remy Human Hair Integration',
     description: 'Undetectable tape-in, micro-ring, and invisible weft human hair integration that adds natural volume, length, and movement without mechanical tension on native follicles. Each set is individually toned and texturized to blend seamlessly.',
     duration: '120 min',
-    image: 'https://images.unsplash.com/photo-1560869713-7d0a29430803?auto=format&fit=crop&w=900&q=75&fm=webp',
-    alt: 'Luxurious long natural hair extensions styling',
+    image: IMAGES.svcExtensions,
     features: [
       'Exact Shade & Texture Blending',
       '100% Remy Human Hair',
@@ -110,13 +115,13 @@ const SALON_EDITORIAL_CATEGORIES: EditorialServiceCategory[] = [
   },
   {
     id: 'grp-dermal',
+    group: 'Skin & Scalp',
     serviceId: 'srv-5',
     category: 'Cellular Dermal Care & Sculptural Facials',
     subtitle: 'Lymphatic Gua Sha & Buccal Facial Sculpting',
     description: 'Deep pore ultrasound infusions, probiotic herbal enzyme resurfacing, and sculpting buccal massage that release facial clenching, drain lymphatic congestion, and restore glowing cellular barrier hydration.',
     duration: '90 min',
-    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=900&q=75&fm=webp',
-    alt: 'Restorative cellular dermal treatment with facial lymphatic massage',
+    image: IMAGES.svcDermal,
     features: [
       'Double Botanical Oil Cleanse',
       'Sculptural Buccal Facial Massage',
@@ -127,13 +132,13 @@ const SALON_EDITORIAL_CATEGORIES: EditorialServiceCategory[] = [
   },
   {
     id: 'grp-trichology',
+    group: 'Skin & Scalp',
     serviceId: 'srv-7',
     category: 'Trichology Scalp Therapy & Basalt Basins',
     subtitle: 'Volcanic Clay Exfoliation & Japanese Head Spa',
     description: 'Microscopic trichoscope imaging paired with detoxifying volcanic ash, ozone micro-steam, and warmed Icelandic basalt stones positioned along the neck and shoulders in our quiet basin sanctuary.',
     duration: '60 min',
-    image: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=900&q=75&fm=webp',
-    alt: 'Restorative Japanese head spa basin and scalp detoxification treatment',
+    image: IMAGES.svcTrichology,
     features: [
       'Digital Trichoscope Diagnostic',
       'Volcanic Ash Scalp Peel',
@@ -144,13 +149,13 @@ const SALON_EDITORIAL_CATEGORIES: EditorialServiceCategory[] = [
   },
   {
     id: 'grp-nails',
+    group: 'Nails',
     serviceId: 'srv-5',
     category: 'Nail Atelier & Sterile Dry Manicures',
     subtitle: 'Russian Cuticle Precision & BIAB Gel Overlays',
     description: 'Hospital-grade autoclave sterilization, precision electric filing, Builder-In-A-Bottle (BIAB) nail strengthening, and minimalist editorial nail art designed for durable, chip-resistant wear.',
     duration: '60 min',
-    image: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&w=900&q=75&fm=webp',
-    alt: 'Precision dry manicure and BIAB gel overlay application',
+    image: IMAGES.svcNails,
     features: [
       'Autoclave Pouched Implements',
       'Russian Precision E-File Method',
@@ -170,8 +175,7 @@ const ACADEMY_EDITORIAL_GROUPS: EditorialCourseGroup[] = [
     description: 'A complete immersion in classic geometric precision, freehand carving, disconnection methods, and modern European scissor ergonomics. Over 320 hours of supervised client clinic training with a 1:8 mentor-to-student ratio.',
     duration: '16 Weeks · Full Time',
     practicalHours: '320 Clinic Hours',
-    image: '/banners/academy_services_banner.jpg',
-    alt: 'Cosmetology students practicing precision sectioning and haircutting',
+    image: IMAGES.courseHaircut,
     features: [
       'Cranial Anatomy & Line Geometry',
       'Lines, Graduation & Layering',
@@ -188,8 +192,7 @@ const ACADEMY_EDITORIAL_GROUPS: EditorialCourseGroup[] = [
     description: 'Master the physics of hair lightening, developer titration, French freehand sweeps, foilayage placement, root melting, and reversing accidental bands or uneven tones on live clients.',
     duration: '8 Weeks · Part Time / Weekend',
     practicalHours: '120 Hands-On Hours',
-    image: '/banners/academy_about_banner.jpg',
-    alt: 'Master colorist demonstrating French balayage highlights formulation',
+    image: IMAGES.courseColour,
     features: [
       'Lightener Chemistry & Lipid Protection',
       'French Freehand Balayage Placement',
@@ -206,8 +209,7 @@ const ACADEMY_EDITORIAL_GROUPS: EditorialCourseGroup[] = [
     description: 'Combines physiological skin biology, active peptide chemistry, sculptural buccal massage, ultrasound machines, and medical-grade clinic sanitation protocols.',
     duration: '20 Weeks · Full Time',
     practicalHours: '400 Practical Clinic Hours',
-    image: '/banners/academy_home_hero.jpg',
-    alt: 'Clinical esthetics students learning facial lymphatic drainage',
+    image: IMAGES.courseEsthetics,
     features: [
       'Epidermal Biology & Histology',
       'Active Peptides, AHAs & Retinoids',
@@ -224,8 +226,7 @@ const ACADEMY_EDITORIAL_GROUPS: EditorialCourseGroup[] = [
     description: 'Master the craft of second-skin complexion work, tear-proof bridal setting, studio lighting response, camera flash calibration, and building a high-ticket bridal roster.',
     duration: '6 Weeks · Intensive',
     practicalHours: '90 Hands-on Studio Hours',
-    image: '/banners/academy_contact_banner.jpg',
-    alt: 'High-fashion editorial makeup demonstration in masterclass studio',
+    image: IMAGES.courseMakeup,
     features: [
       'Undertone Calibration & Complexion',
       'Tear-Proof Bridal Setting Protocols',
@@ -242,20 +243,23 @@ export const ServicesListing: React.FC<ServicesListingProps> = ({
   onSelectCourse,
 }) => {
   const isSalon = mode === 'salon';
+  const [activeGroup, setActiveGroup] = useState<'All' | SalonGroup>('All');
+  const visibleSalon =
+    activeGroup === 'All' ? SALON_EDITORIAL_CATEGORIES : SALON_EDITORIAL_CATEGORIES.filter((c) => c.group === activeGroup);
 
   return (
-    <section className="w-full py-16 md:py-24 bg-[#FAF8F5]">
+    <section className="w-full py-16 md:py-24 bg-light">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-20 md:space-y-28">
         
         {/* Section Header */}
         <ScrollReveal direction="up" distance={20} duration={0.6} className="text-center max-w-3xl mx-auto space-y-3">
-          <span className="font-editorial-kicker text-xs text-[#7D7164]">
+          <span className="font-editorial-kicker text-xs text-subtle">
             {isSalon ? 'Haute Coiffure & Dermal Menu' : 'Accredited Curriculum & Syllabi'}
           </span>
-          <h2 className="font-editorial-heading text-3xl sm:text-4xl md:text-5xl text-[#14171A]">
+          <h2 className="font-editorial-heading text-3xl sm:text-4xl md:text-5xl text-dark">
             {isSalon ? 'Curated Atelier Services & Rituals' : 'Professional Beauty Education Programs'}
           </h2>
-          <p className="font-editorial-lead text-sm sm:text-base text-[#524B43]">
+          <p className="font-editorial-lead text-sm sm:text-base text-muted">
             {isSalon
               ? 'Every appointment begins with an unhurried diagnostic texture and scalp assessment. Tailored formulations, European discipline, and cruelty-free botanicals.'
               : 'Accredited diplomas and intensive masterclasses combining geometric hair theory, biological skin science, and live commercial clinic apprenticeships.'}
@@ -268,8 +272,22 @@ export const ServicesListing: React.FC<ServicesListingProps> = ({
             Section B: Right Image | Left Content + 4 Feature Pills + CTA
             ========================================================================= */}
         {isSalon && (
+          <div
+            role="toolbar"
+            aria-label="Filter services by category"
+            className="sticky top-[84px] sm:top-[104px] z-30 -mx-4 px-4 py-3 bg-light/90 backdrop-blur-md flex gap-2 overflow-x-auto sm:flex-wrap sm:justify-center [scrollbar-width:none] !-mt-10 md:!-mt-16"
+          >
+            {SALON_GROUPS.map((g) => (
+              <button key={g} type="button" aria-pressed={activeGroup === g} onClick={() => setActiveGroup(g)} className="chip shrink-0">
+                {g}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {isSalon && (
           <div className="space-y-20 md:space-y-28">
-            {SALON_EDITORIAL_CATEGORIES.map((item, index) => {
+            {visibleSalon.map((item, index) => {
               const isEven = index % 2 === 0; // Section A: Image Left, Section B: Image Right
 
               return (
@@ -289,23 +307,25 @@ export const ServicesListing: React.FC<ServicesListingProps> = ({
                   >
                     <motion.div
                       whileHover={{ y: -6, transition: { duration: 0.25, ease: 'easeOut' } }}
-                      className="group relative rounded-[18px] overflow-hidden card-thick-border border-2 border-[#14171A] bg-[#EAE1D5] aspect-[4/3] shadow-xs hover:shadow-xl transition-all duration-300"
+                      className="group relative rounded-[18px] overflow-hidden card-thick-border border-border bg-surface-2 aspect-[4/3] shadow-xs hover:shadow-xl transition-all duration-300"
                     >
                       <img
-                        src={item.image}
-                        alt={item.alt}
-                        width={900}
-                        height={675}
-                        referrerPolicy="no-referrer"
+                        src={item.image.src}
+                        srcSet={item.image.srcSet}
+                        sizes="(max-width: 1024px) 100vw, 600px"
+                        alt={item.image.alt}
+                        width={item.image.width}
+                        height={item.image.height}
                         decoding="async"
-                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+                        style={{ objectPosition: item.image.position }}
+                        className="card-media w-full h-full object-cover"
                         loading="lazy"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#14171A]/40 via-transparent to-transparent pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-dark/40 via-transparent to-transparent pointer-events-none" />
                       
                       {/* Duration Unboxed Badge */}
-                      <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-[8px] bg-[#FAF8F5]/90 backdrop-blur-md text-[11px] font-mono text-[#14171A] border border-[#DFD6CB] shadow-xs">
-                        <Clock className="h-3.5 w-3.5 text-[#E85D1A]" />
+                      <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-[8px] bg-light/90 backdrop-blur-md text-[11px] font-mono text-dark border border-border shadow-xs">
+                        <Clock className="h-3.5 w-3.5 text-primary" />
                         <span>{item.duration}</span>
                       </div>
                     </motion.div>
@@ -321,21 +341,21 @@ export const ServicesListing: React.FC<ServicesListingProps> = ({
                       isEven ? 'order-2 lg:order-2' : 'order-2 lg:order-1'
                     }`}
                   >
-                    <span className="font-editorial-kicker text-xs text-[#E85D1A] font-semibold block">
+                    <span className="font-editorial-kicker text-xs text-primary font-semibold block">
                       {item.subtitle}
                     </span>
 
-                    <h3 className="font-editorial-heading text-2xl sm:text-3xl text-[#14171A]">
+                    <h3 className="font-editorial-heading text-2xl sm:text-3xl text-dark">
                       {item.category}
                     </h3>
 
-                    <p className="text-sm sm:text-base text-[#524B43] font-light leading-relaxed">
+                    <p className="text-sm sm:text-base text-muted font-light leading-relaxed">
                       {item.description}
                     </p>
 
                     {/* Four Compact Treatment / Feature Pills or Buttons */}
                     <div className="pt-2">
-                      <div className="text-[11px] font-mono uppercase tracking-wider text-[#7D7164] mb-2.5">
+                      <div className="text-[11px] font-mono uppercase tracking-wider text-subtle mb-2.5">
                         Included Rituals &amp; Techniques:
                       </div>
                       <div className="flex flex-wrap gap-2">
@@ -345,34 +365,27 @@ export const ServicesListing: React.FC<ServicesListingProps> = ({
                             label={feat}
                             variant={fIdx % 2 === 0 ? 'warm' : 'charcoal'}
                             size="md"
-                            onClick={() => onSelectService(item.serviceId)}
+                            onClick={() => openWhatsApp(buildBookingMessage(item.category, item.group))}
                           />
                         ))}
                       </div>
                     </div>
 
-                    {/* Primary Booking CTA + Direct WhatsApp Service Enquiry */}
+                    {/* Primary: book on WhatsApp · Secondary: call the salon */}
                     <div className="pt-3 flex flex-wrap items-center gap-3">
-                      <button
-                        type="button"
-                        onClick={() => onSelectService(item.serviceId)}
-                        className="btn-brand-primary min-h-[44px]"
+                      <a
+                        href={buildBookingLink(item.category, item.group)}
+                        {...WHATSAPP_LINK_PROPS}
+                        aria-label={`${item.ctaLabel} on WhatsApp (opens in a new tab)`}
+                        className="btn-brand-primary"
                       >
+                        <WhatsAppIcon className="h-4 w-4" />
                         <span>{item.ctaLabel}</span>
                         <ArrowRight className="h-4 w-4" />
-                      </button>
-
-                      <a
-                        href={buildServiceEnquiryWhatsAppUrl({
-                          serviceName: item.category,
-                          category: item.subtitle,
-                        }).url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-brand-outline min-h-[44px]"
-                      >
-                        <MessageCircle className="h-4 w-4" />
-                        <span>WhatsApp Enquiry</span>
+                      </a>
+                      <a href="tel:+919553888432" className="btn-brand-outline">
+                        <Phone className="h-4 w-4" />
+                        <span>Call 095538 88432</span>
                       </a>
                     </div>
                   </motion.div>
@@ -409,22 +422,25 @@ export const ServicesListing: React.FC<ServicesListingProps> = ({
                   >
                     <motion.div
                       whileHover={{ y: -6, transition: { duration: 0.25, ease: 'easeOut' } }}
-                      className="group relative rounded-[18px] overflow-hidden card-thick-border border-2 border-[#14171A] bg-[#EAE1D5] aspect-[4/3] shadow-xs hover:shadow-xl transition-all duration-300"
+                      className="group relative rounded-[18px] overflow-hidden card-thick-border border-border bg-surface-2 aspect-[4/3] shadow-xs hover:shadow-xl transition-all duration-300"
                     >
                       <img
-                        src={item.image}
-                        alt={item.alt}
-                        width={900}
-                        height={675}
+                        src={item.image.src}
+                        srcSet={item.image.srcSet}
+                        sizes="(max-width: 1024px) 100vw, 600px"
+                        alt={item.image.alt}
+                        width={item.image.width}
+                        height={item.image.height}
                         decoding="async"
-                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+                        style={{ objectPosition: item.image.position }}
+                        className="card-media w-full h-full object-cover"
                         loading="lazy"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#14171A]/40 via-transparent to-transparent pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-dark/40 via-transparent to-transparent pointer-events-none" />
 
                       {/* Practical Clinic Hours Badge */}
-                      <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-[8px] bg-[#FAF8F5]/90 backdrop-blur-md text-[11px] font-mono text-[#0E2E54] border border-[#DFD6CB] font-semibold shadow-xs">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-[#0E2E54]" />
+                      <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-[8px] bg-light/90 backdrop-blur-md text-[11px] font-mono text-accent border border-border font-semibold shadow-xs">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-accent" />
                         <span>{item.practicalHours}</span>
                       </div>
                     </motion.div>
@@ -440,23 +456,23 @@ export const ServicesListing: React.FC<ServicesListingProps> = ({
                       isEven ? 'order-2 lg:order-2' : 'order-2 lg:order-1'
                     }`}
                   >
-                    <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-[#0E2E54]">
+                    <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-accent">
                       <span className="font-semibold uppercase tracking-wider">{item.duration}</span>
                       <span>·</span>
-                      <span className="text-[#7D7164]">{item.subtitle}</span>
+                      <span className="text-subtle">{item.subtitle}</span>
                     </div>
 
-                    <h3 className="font-editorial-heading text-2xl sm:text-3xl text-[#14171A]">
+                    <h3 className="font-editorial-heading text-2xl sm:text-3xl text-dark">
                       {item.title}
                     </h3>
 
-                    <p className="text-sm sm:text-base text-[#524B43] font-light leading-relaxed">
+                    <p className="text-sm sm:text-base text-muted font-light leading-relaxed">
                       {item.description}
                     </p>
 
                     {/* Four Compact Treatment / Feature Pills or Buttons */}
                     <div className="pt-2">
-                      <div className="text-[11px] font-mono uppercase tracking-wider text-[#7D7164] mb-2.5">
+                      <div className="text-[11px] font-mono uppercase tracking-wider text-subtle mb-2.5">
                         Core Syllabus Modules &amp; Standards:
                       </div>
                       <div className="flex flex-wrap gap-2">
@@ -466,37 +482,32 @@ export const ServicesListing: React.FC<ServicesListingProps> = ({
                             label={feat}
                             variant={fIdx % 2 === 0 ? 'navy' : 'warm'}
                             size="md"
-                            onClick={() => onSelectCourse(item.courseId)}
+                            onClick={() => openWhatsApp(buildCourseEnquiryMessage(item.title, item.duration))}
                           />
                         ))}
                       </div>
                     </div>
 
-                    {/* Primary Admissions CTA + WhatsApp Course Enquiry */}
+                    {/* Primary: enquire on WhatsApp · Secondary: download the syllabus */}
                     <div className="pt-3 flex flex-wrap items-center gap-3">
-                      <button
-                        type="button"
-                        onClick={() => onSelectCourse(item.courseId)}
-                        className="btn-brand-navy min-h-[44px]"
+                      <a
+                        href={buildCourseEnquiryLink(item.title, item.duration)}
+                        {...WHATSAPP_LINK_PROPS}
+                        aria-label={`${item.ctaLabel} on WhatsApp (opens in a new tab)`}
+                        className="btn-brand-navy"
                       >
+                        <WhatsAppIcon className="h-4 w-4" />
                         <span>{item.ctaLabel}</span>
                         <ArrowRight className="h-4 w-4" />
-                      </button>
-
+                      </a>
                       <a
-                        href={buildAcademyEnquiryWhatsAppUrl({
-                          customerName: 'Prospective Student',
-                          customerPhone: 'Via WhatsApp',
-                          learningMode: 'Academy Diploma / Masterclass',
-                          courseName: item.title,
-                          enquiryDetails: `Interested in ${item.title} (${item.duration}). Please share upcoming batch dates and admissions details.`,
-                        }).url}
+                        href={ACADEMY_SYLLABUS_PDF_PATH}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="btn-brand-outline min-h-[44px]"
+                        className="btn-brand-outline"
                       >
-                        <MessageCircle className="h-4 w-4" />
-                        <span>Enquire on WhatsApp</span>
+                        <FileText className="h-4 w-4" />
+                        <span>Syllabus PDF</span>
                       </a>
                     </div>
                   </motion.div>

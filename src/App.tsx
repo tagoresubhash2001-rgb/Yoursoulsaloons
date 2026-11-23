@@ -7,6 +7,9 @@ import { Footer } from './components/Footer';
 import { PageSkeleton } from './components/Skeleton';
 import { usePageMetadata } from './hooks/usePageMetadata';
 import { motion, AnimatePresence } from 'motion/react';
+import { FloatingWhatsApp } from './components/FloatingWhatsApp';
+import { ACADEMY_COURSES, SALON_SERVICES } from './config/catalog';
+import { openWhatsApp, buildBookingMessage, buildCourseEnquiryMessage } from './utils/whatsapp';
 
 // Route-based and modal code splitting — defers heavy chunks (including Firebase SDK on ContactPage)
 const HomePage = lazy(() =>
@@ -29,7 +32,7 @@ const AssetManagerDrawer = lazy(() =>
 );
 
 function AppContent() {
-  const { mode, page, navigateToBooking, navigateTo } = useNavigation();
+  const { mode, page } = useNavigation();
 
   // Dynamically update document title and meta description per active mode and page
   usePageMetadata(mode, page);
@@ -38,16 +41,23 @@ function AppContent() {
   const [preselectedService, setPreselectedService] = useState<string | undefined>(undefined);
   const [preselectedCourse, setPreselectedCourse] = useState<string | undefined>(undefined);
 
-  // All appointment-related CTAs route directly to the single central booking form on Salon Contact page
+  // Every "Book" / "Enquire" CTA opens WhatsApp with a pre-filled message (no backend).
+  // Service / course IDs are resolved to their real names so the salon sees exactly what was chosen.
   const handleOpenBooking = useCallback(
     (serviceId?: string, courseId?: string) => {
       if (courseId) {
-        navigateTo('contact', 'academy');
-      } else {
-        navigateToBooking(serviceId);
+        const course = ACADEMY_COURSES.find((c) => c.id === courseId);
+        openWhatsApp(buildCourseEnquiryMessage(course?.title, course?.discipline));
+        return;
       }
+      if (serviceId) {
+        const service = SALON_SERVICES.find((s) => s.id === serviceId);
+        openWhatsApp(buildBookingMessage(service?.name, service?.category));
+        return;
+      }
+      openWhatsApp(mode === 'academy' ? buildCourseEnquiryMessage() : buildBookingMessage());
     },
-    [navigateTo, navigateToBooking]
+    [mode]
   );
 
   const handleCloseBooking = useCallback(() => {
@@ -57,11 +67,11 @@ function AppContent() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF8F5] text-[#14171A] selection:bg-[#EAE1D5] selection:text-[#14171A]">
+    <div className="min-h-screen flex flex-col bg-light text-dark selection:bg-surface-2 selection:text-dark">
       {/* Skip to Main Content Link (Accessibility) */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#14171A] focus:text-[#FAF8F5] text-xs uppercase tracking-wider"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-dark focus:text-light text-xs uppercase tracking-wider"
       >
         Skip to main content
       </a>
@@ -104,6 +114,9 @@ function AppContent() {
           />
         </Suspense>
       )}
+
+      {/* Floating WhatsApp booking button (all pages) */}
+      <FloatingWhatsApp mode={mode} />
 
       {/* Lazy-Loaded Asset Inspector Drawer */}
       <Suspense fallback={null}>

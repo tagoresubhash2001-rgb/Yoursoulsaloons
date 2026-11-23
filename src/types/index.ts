@@ -1,3 +1,5 @@
+import type { SiteImage } from '../config/images';
+
 export type DivisionMode = 'salon' | 'academy';
 
 export type PageRoute = 'home' | 'about' | 'services' | 'contact';
@@ -21,6 +23,7 @@ export interface BannerConfig {
   recommendedResolution: string;
   altText: string;
   imageSrc?: string;
+  imageSrcSet?: string;
   caption?: string;
   focalPoint: FocalPointConfig;
 }
@@ -43,6 +46,7 @@ export interface EditorialSectionData {
     aspectRatio: string;
     altText: string;
     imageSrc?: string;
+    imageSrcSet?: string;
     caption?: string;
   };
   imagePosition: 'left' | 'right';
@@ -131,8 +135,12 @@ export interface AcademyLearningMode {
   eligibility: string;
   courseFeeNote: string;
   benefits: string[];
-  image: string;
-  imageAlt: string;
+  /** Photo shown on the Academy home page */
+  photo: SiteImage;
+  /** Different photo shown on the Academy services page (no image is reused) */
+  servicesPhoto: SiteImage;
+  /** Photo used where this section appears on the Salon home page */
+  salonPhoto: SiteImage;
   accentColor: 'navy' | 'orange';
 }
 

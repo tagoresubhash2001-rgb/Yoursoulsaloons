@@ -32,7 +32,7 @@ export const BannerSlot: React.FC<BannerSlotProps> = memo(({
   const effectiveSrc = !imgError && (customUrl || banner.imageSrc);
 
   return (
-    <section className="relative w-full overflow-hidden bg-[#FAF8F5] px-4 sm:px-6 lg:px-8 py-3 sm:py-5">
+    <section className="relative w-full overflow-hidden bg-light px-4 sm:px-6 lg:px-8 py-3 sm:py-5">
       <div className="mx-auto max-w-7xl">
         
         {/* ====================================================================
@@ -43,7 +43,7 @@ export const BannerSlot: React.FC<BannerSlotProps> = memo(({
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="relative group w-full overflow-hidden rounded-[18px] sm:rounded-[22px] border border-[#DFD6CB] bg-[#173451] shadow-[0_12px_36px_rgba(23,52,81,0.1)] aspect-[2.4/1] lg:aspect-[2.5/1] min-h-[460px] sm:min-h-[490px] lg:min-h-[520px] max-h-[560px]"
+          className="relative group w-full overflow-hidden rounded-[18px] sm:rounded-[22px] border border-border bg-accent shadow-[0_12px_36px_rgba(23,52,81,0.1)] aspect-[2.4/1] lg:aspect-[2.5/1] min-h-[460px] sm:min-h-[490px] lg:min-h-[520px] max-h-[560px]"
           style={
             {
               '--focal-m': banner.focalPoint?.mobile || '50% 35%',
@@ -56,10 +56,11 @@ export const BannerSlot: React.FC<BannerSlotProps> = memo(({
           {effectiveSrc ? (
               <img
               src={effectiveSrc}
+              srcSet={customUrl ? undefined : banner.imageSrcSet}
+              sizes="(max-width: 1280px) 100vw, 1280px"
               alt={banner.altText}
-              width={1920}
-              height={1080}
-              referrerPolicy="no-referrer"
+              width={1280}
+              height={853}
               loading={priority ? 'eager' : 'lazy'}
               decoding="async"
               fetchPriority={priority ? 'high' : 'auto'}
@@ -71,23 +72,23 @@ export const BannerSlot: React.FC<BannerSlotProps> = memo(({
             />
           ) : (
             /* Architectural Fallback Canvas */
-            <div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-10 bg-[#0E1724] text-[#E2EDF5]">
+            <div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-10 bg-dark text-light">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono uppercase tracking-widest text-[#D95A1E]">
+                <span className="text-xs font-mono uppercase tracking-widest text-primary-bright">
                   SLOT-{banner.slotNumber}: {banner.slotId}
                 </span>
-                <span className="text-xs font-mono text-[#8C9AA8]">1920 × 1080 PX</span>
+                <span className="text-xs font-mono text-mist-dim">1920 × 1080 PX</span>
               </div>
             </div>
           )}
 
           {/* Directional Cinematic Scrim Overlay (Ensures WCAG AAA text legibility while preserving photographic vibrance) */}
           <div 
-            className="absolute inset-0 bg-gradient-to-t from-[#0A121E]/95 via-[#0A121E]/55 to-[#0A121E]/20" 
+            className="absolute inset-0 bg-gradient-to-t from-dark/95 via-dark/55 to-dark/20" 
             aria-hidden="true" 
           />
           <div 
-            className="absolute inset-0 bg-gradient-to-r from-[#0A121E]/75 via-transparent to-transparent hidden md:block" 
+            className="absolute inset-0 bg-gradient-to-r from-dark/75 via-transparent to-transparent hidden md:block" 
             aria-hidden="true" 
           />
 
@@ -106,7 +107,7 @@ export const BannerSlot: React.FC<BannerSlotProps> = memo(({
                 transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
                 className="flex items-center gap-2 mb-3.5 sm:mb-4"
               >
-                <span className="font-editorial-kicker text-xs font-semibold tracking-widest uppercase text-[#F3C7B0] drop-shadow-xs">
+                <span className="font-editorial-kicker text-xs font-semibold tracking-widest uppercase text-primary-soft drop-shadow-xs">
                   {banner.kicker}
                 </span>
               </motion.div>
@@ -128,7 +129,7 @@ export const BannerSlot: React.FC<BannerSlotProps> = memo(({
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.26, ease: [0.16, 1, 0.3, 1] }}
-                className="mt-4 font-editorial-lead text-sm sm:text-base lg:text-lg text-[#F2EDE5]/90 max-w-2xl leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.4)]"
+                className="mt-4 font-editorial-lead text-sm sm:text-base lg:text-lg text-surface/90 max-w-2xl leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.4)]"
               >
                 {banner.subtitle}
               </motion.p>
@@ -176,14 +177,14 @@ export const BannerSlot: React.FC<BannerSlotProps> = memo(({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
-                className="hidden md:flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-[#E2EDF5]/75 absolute bottom-8 right-10"
+                className="hidden md:flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-light/75 absolute bottom-8 right-10"
               >
                 <span>Scroll to Explore</span>
                 <motion.div
                   animate={{ y: [0, 4, 0] }}
                   transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
                 >
-                  <ArrowDown className="h-3.5 w-3.5 text-[#D95A1E]" />
+                  <ArrowDown className="h-3.5 w-3.5 text-primary-bright" />
                 </motion.div>
               </motion.div>
             )}

@@ -34,6 +34,8 @@ import { motion, AnimatePresence } from 'motion/react';
 interface AcademyModulesSectionProps {
   onExploreCourses?: () => void;
   showExploreButton?: boolean;
+  /** Which photo set to show — each page gets different photos so none repeat */
+  photoVariant?: 'home' | 'services' | 'salon';
 }
 
 interface EnquiryModalState {
@@ -43,7 +45,9 @@ interface EnquiryModalState {
 }
 
 export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
-  ({ onExploreCourses, showExploreButton = true }) => {
+  ({ onExploreCourses, showExploreButton = true, photoVariant = 'home' }) => {
+    const photoFor = (item: AcademyLearningMode) =>
+      photoVariant === 'services' ? item.servicesPhoto : photoVariant === 'salon' ? item.salonPhoto : item.photo;
     const [expandedSyllabusId, setExpandedSyllabusId] = useState<string | null>(null);
     const [modalState, setModalState] = useState<EnquiryModalState>({
       isOpen: false,
@@ -121,7 +125,7 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
     return (
       <section
         id="academy-learning-modes"
-        className="w-full py-20 sm:py-28 border-t border-[#DFD6CB] bg-[#FAF8F5] scroll-mt-24"
+        className="w-full py-20 sm:py-28 border-t border-border bg-light scroll-mt-24"
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-20">
           {/* =================================================================
@@ -134,18 +138,18 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
               duration={0.6}
               className="text-center max-w-3xl mx-auto mb-14 space-y-3"
             >
-              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#F2EADF] border border-[#DFD6CB]">
-                <GraduationCap className="h-3.5 w-3.5 text-[#E85D1A]" />
-                <span className="font-editorial-kicker text-[11px] text-[#0E2E54] font-semibold">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-surface border border-border">
+                <GraduationCap className="h-3.5 w-3.5 text-primary" />
+                <span className="font-editorial-kicker text-[11px] text-accent font-semibold">
                   Your Soul Academy · Hair | Skin | Body
                 </span>
               </div>
 
-              <h2 className="font-editorial-heading text-3xl sm:text-4xl lg:text-5xl text-[#14171A]">
+              <h2 className="font-editorial-heading text-3xl sm:text-4xl lg:text-5xl text-dark">
                 Four Structured Academy Learning Modes
               </h2>
 
-              <p className="font-editorial-lead text-sm sm:text-base text-[#524B43] leading-relaxed">
+              <p className="font-editorial-lead text-sm sm:text-base text-muted leading-relaxed">
                 Progress step by step from beginner foundations to senior salon mastery with live client internship. Select any learning mode below to explore its complete syllabus and reserve your seat via WhatsApp.
               </p>
             </ScrollReveal>
@@ -168,34 +172,37 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                       ease: [0.16, 1, 0.3, 1],
                     }}
                     whileHover={{ y: -6, transition: { duration: 0.22, ease: 'easeOut' } }}
-                    className="group h-full flex flex-col justify-between rounded-[18px] card-thick-border border-2 border-[#14171A] bg-[#FAF8F5] overflow-hidden shadow-xs hover:shadow-xl transition-shadow duration-300"
+                    className="group h-full flex flex-col justify-between rounded-[18px] card-thick-border border-border bg-light overflow-hidden shadow-xs hover:shadow-xl transition-shadow duration-300"
                   >
                     {/* TOP CONTENT AREA */}
                     <div className="flex flex-col flex-1">
                       {/* Consistent 16:10 Photographic Header */}
-                      <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#173451]">
+                      <div className="relative aspect-[16/10] w-full overflow-hidden bg-accent">
                         <img
-                          src={item.image}
-                          alt={item.imageAlt}
-                          width={800}
-                          height={500}
+                          src={photoFor(item).src}
+                          srcSet={photoFor(item).srcSet}
+                          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 300px"
+                          alt={photoFor(item).alt}
+                          width={photoFor(item).width}
+                          height={photoFor(item).height}
                           loading="lazy"
                           decoding="async"
-                          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                          style={{ objectPosition: photoFor(item).position }}
+                          className="card-media h-full w-full object-cover"
                         />
                         <div
-                          className="absolute inset-0 bg-gradient-to-t from-[#0A121E]/80 via-[#0A121E]/25 to-transparent"
+                          className="absolute inset-0 bg-gradient-to-t from-dark/80 via-dark/25 to-transparent"
                           aria-hidden="true"
                         />
                         <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between gap-2">
-                          <span className="font-mono text-[11px] uppercase tracking-widest text-[#F3C7B0] font-semibold">
+                          <span className="font-mono text-[11px] uppercase tracking-widest text-primary-soft font-semibold">
                             {item.moduleNumber}
                           </span>
                           <span
                             className={`px-2.5 py-0.5 rounded-[6px] text-[10px] font-mono font-semibold uppercase tracking-wider ${
                               isOrange
-                                ? 'bg-[#E85D1A] text-[#FAF8F5]'
-                                : 'bg-[#0E2E54] text-[#FAF8F5]'
+                                ? 'bg-primary text-light'
+                                : 'bg-accent text-light'
                             }`}
                           >
                             {item.levelBadge}
@@ -207,86 +214,86 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                       <div className="p-5 sm:p-6 flex flex-col flex-1 space-y-4">
                         {/* Title & Role Subtitle */}
                         <div>
-                          <h3 className="font-serif text-2xl sm:text-[26px] text-[#14171A] leading-tight">
+                          <h3 className="font-serif text-2xl sm:text-[26px] text-dark leading-tight">
                             {item.title}
                           </h3>
                           <p
                             className={`mt-1 text-xs font-mono font-semibold uppercase tracking-wider ${
-                              isOrange ? 'text-[#E85D1A]' : 'text-[#0E2E54]'
+                              isOrange ? 'text-primary' : 'text-accent'
                             }`}
                           >
                             {item.roleSubtitle}
                           </p>
                           {item.includesPreviousNote && (
-                            <p className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-medium text-[#0E2E54] bg-[#EFE8DF] px-2.5 py-0.5 rounded-[6px]">
-                              <Sparkles className="h-3 w-3 text-[#E85D1A]" />
+                            <p className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-medium text-accent bg-surface px-2.5 py-0.5 rounded-[6px]">
+                              <Sparkles className="h-3 w-3 text-primary" />
                               <span>{item.includesPreviousNote}</span>
                             </p>
                           )}
                         </div>
 
                         {/* Course Description */}
-                        <p className="text-xs sm:text-[13px] text-[#524B43] font-light leading-relaxed">
+                        <p className="text-xs sm:text-[13px] text-muted font-light leading-relaxed">
                           {item.description}
                         </p>
 
                         {/* Structured Metadata Specs */}
-                        <div className="space-y-2.5 pt-3 border-t border-[#EAE1D5] text-xs">
+                        <div className="space-y-2.5 pt-3 border-t border-surface-2 text-xs">
                           <div className="flex items-start gap-2">
-                            <Clock className="h-3.5 w-3.5 text-[#E85D1A] shrink-0 mt-0.5" />
+                            <Clock className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
                             <div>
-                              <span className="font-mono text-[10px] uppercase tracking-wider text-[#7D7164] block">
+                              <span className="font-mono text-[10px] uppercase tracking-wider text-subtle block">
                                 Duration
                               </span>
-                              <span className="text-[#14171A] font-medium leading-snug block">
+                              <span className="text-dark font-medium leading-snug block">
                                 {item.duration}
                               </span>
                             </div>
                           </div>
 
                           <div className="flex items-start gap-2">
-                            <BookOpen className="h-3.5 w-3.5 text-[#0E2E54] shrink-0 mt-0.5" />
+                            <BookOpen className="h-3.5 w-3.5 text-accent shrink-0 mt-0.5" />
                             <div>
-                              <span className="font-mono text-[10px] uppercase tracking-wider text-[#7D7164] block">
+                              <span className="font-mono text-[10px] uppercase tracking-wider text-subtle block">
                                 Training Methodology
                               </span>
-                              <span className="text-[#524B43] leading-snug block">
+                              <span className="text-muted leading-snug block">
                                 {item.trainingMethodology}
                               </span>
                             </div>
                           </div>
 
                           <div className="flex items-start gap-2">
-                            <Layers className="h-3.5 w-3.5 text-[#E85D1A] shrink-0 mt-0.5" />
+                            <Layers className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
                             <div>
-                              <span className="font-mono text-[10px] uppercase tracking-wider text-[#7D7164] block">
+                              <span className="font-mono text-[10px] uppercase tracking-wider text-subtle block">
                                 Practical Training
                               </span>
-                              <span className="text-[#524B43] leading-snug block">
+                              <span className="text-muted leading-snug block">
                                 {item.practicalTraining}
                               </span>
                             </div>
                           </div>
 
                           <div className="flex items-start gap-2">
-                            <Award className="h-3.5 w-3.5 text-[#0E2E54] shrink-0 mt-0.5" />
+                            <Award className="h-3.5 w-3.5 text-accent shrink-0 mt-0.5" />
                             <div>
-                              <span className="font-mono text-[10px] uppercase tracking-wider text-[#7D7164] block">
+                              <span className="font-mono text-[10px] uppercase tracking-wider text-subtle block">
                                 Certification
                               </span>
-                              <span className="text-[#14171A] font-medium leading-snug block">
+                              <span className="text-dark font-medium leading-snug block">
                                 {item.certification}
                               </span>
                             </div>
                           </div>
 
                           <div className="flex items-start gap-2">
-                            <Users className="h-3.5 w-3.5 text-[#E85D1A] shrink-0 mt-0.5" />
+                            <Users className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
                             <div>
-                              <span className="font-mono text-[10px] uppercase tracking-wider text-[#7D7164] block">
+                              <span className="font-mono text-[10px] uppercase tracking-wider text-subtle block">
                                 Eligibility
                               </span>
-                              <span className="text-[#524B43] leading-snug block">
+                              <span className="text-muted leading-snug block">
                                 {item.eligibility}
                               </span>
                             </div>
@@ -294,8 +301,8 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                         </div>
 
                         {/* Available Courses / Focus Tracks */}
-                        <div className="pt-3 border-t border-[#EAE1D5]">
-                          <span className="font-mono text-[10px] uppercase tracking-wider text-[#7D7164] block mb-2">
+                        <div className="pt-3 border-t border-surface-2">
+                          <span className="font-mono text-[10px] uppercase tracking-wider text-subtle block mb-2">
                             Available Courses &amp; Tracks
                           </span>
                           <div className="flex flex-wrap gap-1.5">
@@ -304,7 +311,7 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                                 key={grp.name}
                                 type="button"
                                 onClick={() => openEnquiryModal(item, `${grp.name} — ${item.title} Module`)}
-                                className="px-2.5 py-1 rounded-[7px] text-[11px] font-medium bg-[#F2EADF] text-[#14171A] border border-[#DFD6CB] hover:bg-[#0E2E54] hover:text-[#FAF8F5] hover:border-[#0E2E54] transition-colors cursor-pointer"
+                                className="min-h-[44px] px-3 py-1.5 rounded-[8px] text-[11px] font-medium bg-surface text-dark border border-border hover:bg-accent hover:text-light hover:border-accent transition-colors cursor-pointer"
                               >
                                 {grp.name}
                               </button>
@@ -318,7 +325,7 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                               setExpandedSyllabusId((prev) => (prev === item.id ? null : item.id))
                             }
                             aria-expanded={isExpanded}
-                            className="mt-2.5 inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-[#0E2E54] hover:text-[#E85D1A] transition-colors cursor-pointer font-semibold"
+                            className="mt-1 min-h-[44px] inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-accent hover:text-primary transition-colors cursor-pointer font-semibold"
                           >
                             <span>{isExpanded ? 'Hide Detailed Topics' : 'View Full Module Syllabus'}</span>
                             <ChevronDown
@@ -337,16 +344,16 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                                 transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                                 className="overflow-hidden"
                               >
-                                <div className="mt-3 p-3.5 rounded-[10px] bg-[#F2EDE5] border border-[#DFD6CB] space-y-3 text-xs">
+                                <div className="mt-3 p-3.5 rounded-[10px] bg-surface border border-border space-y-3 text-xs">
                                   {item.curriculumGroups.map((group) => (
                                     <div key={group.name}>
-                                      <div className="font-mono text-[10px] uppercase tracking-wider font-bold text-[#0E2E54] mb-1">
+                                      <div className="font-mono text-[10px] uppercase tracking-wider font-bold text-accent mb-1">
                                         {group.name}
                                       </div>
-                                      <ul className="space-y-1 text-[11px] text-[#3E3832]">
+                                      <ul className="space-y-1 text-[11px] text-text-soft">
                                         {group.topics.map((topic) => (
                                           <li key={topic} className="flex items-start gap-1.5">
-                                            <span className="text-[#E85D1A] font-bold mt-0.5">·</span>
+                                            <span className="text-primary font-bold mt-0.5">·</span>
                                             <span>{topic}</span>
                                           </li>
                                         ))}
@@ -360,17 +367,17 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                         </div>
 
                         {/* Benefits of the Learning Mode */}
-                        <div className="pt-3 border-t border-[#EAE1D5] space-y-1.5">
-                          <span className="font-mono text-[10px] uppercase tracking-wider text-[#7D7164] block">
+                        <div className="pt-3 border-t border-surface-2 space-y-1.5">
+                          <span className="font-mono text-[10px] uppercase tracking-wider text-subtle block">
                             Key Benefits
                           </span>
                           <ul className="space-y-1.5">
                             {item.benefits.map((benefit) => (
                               <li
                                 key={benefit}
-                                className="flex items-start gap-2 text-xs text-[#3E3832] leading-snug"
+                                className="flex items-start gap-2 text-xs text-text-soft leading-snug"
                               >
-                                <CheckCircle2 className="h-3.5 w-3.5 text-[#E85D1A] shrink-0 mt-0.5" />
+                                <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
                                 <span>{benefit}</span>
                               </li>
                             ))}
@@ -380,10 +387,10 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                     </div>
 
                     {/* CARD FOOTER: COURSE FEE NOTE + PRIMARY CTA */}
-                    <div className="p-5 sm:p-6 pt-4 bg-[#F2EDE5] border-t border-[#DFD6CB] space-y-3">
+                    <div className="p-5 sm:p-6 pt-4 bg-surface border-t border-border space-y-3">
                       <div className="flex items-center justify-between text-[11px] font-mono">
-                        <span className="text-[#7D7164] uppercase tracking-wider">Course Fee</span>
-                        <span className="text-[#0E2E54] font-semibold">{item.courseFeeNote}</span>
+                        <span className="text-subtle uppercase tracking-wider">Course Fee</span>
+                        <span className="text-accent font-semibold">{item.courseFeeNote}</span>
                       </div>
 
                       <motion.button
@@ -418,13 +425,13 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
               duration={0.6}
               className="text-center max-w-3xl mx-auto mb-10 space-y-2.5"
             >
-              <span className="font-editorial-kicker text-xs text-[#E85D1A] font-semibold">
+              <span className="font-editorial-kicker text-xs text-primary font-semibold">
                 Side-by-Side Curriculum Guide
               </span>
-              <h3 className="font-editorial-heading text-2xl sm:text-3xl lg:text-4xl text-[#14171A]">
+              <h3 className="font-editorial-heading text-2xl sm:text-3xl lg:text-4xl text-dark">
                 Compare All Four Academy Learning Modes
               </h3>
-              <p className="text-xs sm:text-sm text-[#524B43] leading-relaxed">
+              <p className="text-xs sm:text-sm text-muted leading-relaxed">
                 Evaluate duration, learning format, practical floor exposure, trainer interaction, flexibility, and certification across Basic, Standard, Advanced, and Expert tracks.
               </p>
             </ScrollReveal>
@@ -435,12 +442,12 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="hidden md:block rounded-[18px] card-thick-border border-2 border-[#14171A] bg-[#FAF8F5] shadow-sm overflow-hidden"
+              className="hidden md:block rounded-[18px] card-thick-border border-border bg-light shadow-sm overflow-hidden"
             >
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[780px] border-collapse text-left">
                   <thead>
-                    <tr className="bg-[#0E2E54] text-[#FAF8F5]">
+                    <tr className="bg-accent text-light">
                       <th
                         scope="col"
                         className="p-4 lg:p-5 text-xs font-mono uppercase tracking-wider w-[18%] border-r border-white/15"
@@ -453,11 +460,11 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                           scope="col"
                           className="p-4 lg:p-5 w-[20.5%] border-r border-white/15 last:border-r-0"
                         >
-                          <div className="text-[10px] font-mono uppercase tracking-widest text-[#F3C7B0]">
+                          <div className="text-[10px] font-mono uppercase tracking-widest text-primary-soft">
                             {m.moduleNumber}
                           </div>
                           <div className="font-serif text-xl text-white mt-0.5">{m.title}</div>
-                          <div className="text-[11px] font-sans font-normal text-[#E2EDF5]/80 mt-0.5">
+                          <div className="text-[11px] font-sans font-normal text-light/80 mt-0.5">
                             {m.levelBadge}
                           </div>
                         </th>
@@ -468,26 +475,26 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                     {ACADEMY_COMPARISON_ROWS.map((row, rIdx) => (
                       <tr
                         key={row.criteria}
-                        className={`border-t border-[#DFD6CB] transition-colors hover:bg-[#EFE8DF]/60 ${
-                          rIdx % 2 === 0 ? 'bg-[#FAF8F5]' : 'bg-[#F4EFE7]'
+                        className={`border-t border-border transition-colors hover:bg-surface/60 ${
+                          rIdx % 2 === 0 ? 'bg-light' : 'bg-surface'
                         }`}
                       >
                         <th
                           scope="row"
-                          className="p-4 lg:p-5 text-xs font-mono font-semibold uppercase tracking-wider text-[#0E2E54] align-top border-r border-[#DFD6CB]"
+                          className="p-4 lg:p-5 text-xs font-mono font-semibold uppercase tracking-wider text-accent align-top border-r border-border"
                         >
                           {row.criteria}
                         </th>
-                        <td className="p-4 lg:p-5 text-xs sm:text-[13px] text-[#3E3832] leading-relaxed align-top border-r border-[#DFD6CB]">
+                        <td className="p-4 lg:p-5 text-xs sm:text-[13px] text-text-soft leading-relaxed align-top border-r border-border">
                           {row.basic}
                         </td>
-                        <td className="p-4 lg:p-5 text-xs sm:text-[13px] text-[#3E3832] leading-relaxed align-top border-r border-[#DFD6CB]">
+                        <td className="p-4 lg:p-5 text-xs sm:text-[13px] text-text-soft leading-relaxed align-top border-r border-border">
                           {row.standard}
                         </td>
-                        <td className="p-4 lg:p-5 text-xs sm:text-[13px] text-[#3E3832] leading-relaxed align-top border-r border-[#DFD6CB]">
+                        <td className="p-4 lg:p-5 text-xs sm:text-[13px] text-text-soft leading-relaxed align-top border-r border-border">
                           {row.advanced}
                         </td>
-                        <td className="p-4 lg:p-5 text-xs sm:text-[13px] text-[#14171A] font-medium leading-relaxed align-top">
+                        <td className="p-4 lg:p-5 text-xs sm:text-[13px] text-dark font-medium leading-relaxed align-top">
                           {row.expert}
                         </td>
                       </tr>
@@ -495,7 +502,7 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                   </tbody>
                 </table>
               </div>
-              <div className="lg:hidden px-4 py-2 bg-[#F2EDE5] border-t border-[#DFD6CB] text-[11px] font-mono text-[#7D7164] text-center">
+              <div className="lg:hidden px-4 py-2 bg-surface border-t border-border text-[11px] font-mono text-subtle text-center">
                 Scroll horizontally to compare all four learning modes →
               </div>
             </motion.div>
@@ -511,11 +518,11 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: mIdx * 0.06 }}
-                    className="rounded-[16px] card-thick-border border-2 border-[#14171A] bg-[#FAF8F5] overflow-hidden shadow-xs"
+                    className="rounded-[16px] card-thick-border border-border bg-light overflow-hidden shadow-xs"
                   >
-                    <div className="px-5 py-4 bg-[#0E2E54] text-[#FAF8F5] flex items-center justify-between">
+                    <div className="px-5 py-4 bg-accent text-light flex items-center justify-between">
                       <div>
-                        <span className="text-[10px] font-mono uppercase tracking-widest text-[#F3C7B0] block">
+                        <span className="text-[10px] font-mono uppercase tracking-widest text-primary-soft block">
                           {m.moduleNumber}
                         </span>
                         <h4 className="font-serif text-xl text-white">
@@ -525,18 +532,18 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                       <button
                         type="button"
                         onClick={() => openEnquiryModal(m)}
-                        className="px-3 py-1.5 rounded-[8px] bg-[#E85D1A] text-[#FAF8F5] hover:text-[#14171A] text-[11px] font-semibold uppercase tracking-wider cursor-pointer min-h-[36px]"
+                        className="px-3 py-1.5 rounded-[8px] bg-primary text-light hover:text-dark text-[11px] font-semibold uppercase tracking-wider cursor-pointer min-h-[44px]"
                       >
                         Enquire
                       </button>
                     </div>
-                    <dl className="divide-y divide-[#EAE1D5] p-5 space-y-0">
+                    <dl className="divide-y divide-surface-2 p-5 space-y-0">
                       {ACADEMY_COMPARISON_ROWS.map((row) => (
                         <div key={`${m.id}-${row.criteria}`} className="py-2.5 first:pt-0 last:pb-0">
-                          <dt className="text-[10px] font-mono uppercase tracking-wider text-[#7D7164] font-semibold">
+                          <dt className="text-[10px] font-mono uppercase tracking-wider text-subtle font-semibold">
                             {row.criteria}
                           </dt>
-                          <dd className="mt-0.5 text-xs text-[#14171A] leading-relaxed">
+                          <dd className="mt-0.5 text-xs text-dark leading-relaxed">
                             {row[modeKey]}
                           </dd>
                         </div>
@@ -581,7 +588,7 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
         <AnimatePresence>
           {modalState.isOpen && (
             <div
-              className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-[#14171A]/65 backdrop-blur-xs"
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-dark/65 backdrop-blur-xs"
               role="dialog"
               aria-modal="true"
               aria-labelledby="academy-enquiry-title"
@@ -591,33 +598,33 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.96, y: 12 }}
                 transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[18px] card-thick-border border-2 border-[#14171A] bg-[#FAF8F5] shadow-2xl p-6 sm:p-8 text-[#14171A]"
+                className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[18px] card-thick-border border-border bg-light shadow-2xl p-6 sm:p-8 text-dark"
               >
                 <button
                   type="button"
                   onClick={closeEnquiryModal}
                   aria-label="Close Academy enquiry dialog"
-                  className="absolute top-4 right-4 h-9 w-9 rounded-full bg-[#EFE8DF] text-[#14171A] hover:bg-[#0E2E54] hover:text-[#FAF8F5] flex items-center justify-center transition-colors cursor-pointer"
+                  className="absolute top-4 right-4 h-11 w-11 rounded-full bg-surface text-dark hover:bg-accent hover:text-light flex items-center justify-center transition-colors cursor-pointer"
                 >
                   <X className="h-4 w-4" />
                 </button>
 
                 {submittedPayload ? (
                   <div className="space-y-5 text-center pt-2">
-                    <div className="mx-auto h-14 w-14 rounded-full bg-[#E8F5E9] text-[#2E7D32] flex items-center justify-center">
+                    <div className="mx-auto h-14 w-14 rounded-full bg-success-soft text-success flex items-center justify-center">
                       <CheckCircle2 className="h-8 w-8" />
                     </div>
                     <div className="space-y-2">
-                      <h4 id="academy-enquiry-title" className="font-serif text-2xl sm:text-3xl text-[#14171A]">
+                      <h4 id="academy-enquiry-title" className="font-serif text-2xl sm:text-3xl text-dark">
                         WhatsApp Enquiry Ready
                       </h4>
-                      <p className="text-xs sm:text-sm text-[#524B43] leading-relaxed">
+                      <p className="text-xs sm:text-sm text-muted leading-relaxed">
                         Your prefilled enquiry for{' '}
-                        <strong className="text-[#14171A] font-semibold">
+                        <strong className="text-dark font-semibold">
                           {modalState.selectedMode.moduleNumber}: {modalState.selectedMode.title}
                         </strong>{' '}
                         opens in WhatsApp directed to YOUR SOUL Academy (+{submittedPayload.businessNumber}). Please tap{' '}
-                        <strong className="font-semibold text-[#14171A]">Send</strong> inside WhatsApp to deliver your message.
+                        <strong className="font-semibold text-dark">Send</strong> inside WhatsApp to deliver your message.
                       </p>
                     </div>
 
@@ -654,7 +661,7 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                     <button
                       type="button"
                       onClick={() => setSubmittedPayload(null)}
-                      className="text-xs text-[#7D7164] hover:text-[#14171A] underline underline-offset-4 cursor-pointer"
+                      className="text-xs text-subtle hover:text-dark underline underline-offset-4 cursor-pointer"
                     >
                       Edit Enquiry Details
                     </button>
@@ -662,13 +669,13 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                 ) : (
                   <form onSubmit={handleEnquirySubmit} className="space-y-4">
                     <div className="pr-8">
-                      <span className="font-mono text-[11px] uppercase tracking-wider text-[#E85D1A] font-semibold">
+                      <span className="font-mono text-[11px] uppercase tracking-wider text-primary font-semibold">
                         Academy Seat Reservation &amp; Enquiry
                       </span>
-                      <h4 id="academy-enquiry-title" className="mt-1 font-serif text-2xl sm:text-3xl text-[#14171A]">
+                      <h4 id="academy-enquiry-title" className="mt-1 font-serif text-2xl sm:text-3xl text-dark">
                         Enquire via WhatsApp
                       </h4>
-                      <p className="mt-1 text-xs text-[#524B43]">
+                      <p className="mt-1 text-xs text-muted">
                         Complete your details below to open a prefilled WhatsApp message directly with our Guntur Admissions Desk (+91 9553888432).
                       </p>
                     </div>
@@ -683,7 +690,7 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                     <div>
                       <label
                         htmlFor="acad-mode-select"
-                        className="block text-xs font-mono uppercase tracking-wider text-[#14171A] font-semibold mb-1"
+                        className="block text-xs font-mono uppercase tracking-wider text-dark font-semibold mb-1"
                       >
                         Selected Learning Mode *
                       </label>
@@ -691,7 +698,7 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                         id="acad-mode-select"
                         value={modalState.selectedMode.id}
                         onChange={(e) => handleModeChangeInModal(e.target.value)}
-                        className="w-full rounded-[10px] card-thick-border border-2 border-[#14171A] bg-[#FAF8F5] px-3.5 py-2.5 text-sm text-[#14171A] min-h-[44px] cursor-pointer"
+                        className="w-full rounded-[10px] card-thick-border border-border bg-light px-3.5 py-2.5 text-sm text-dark min-h-[44px] cursor-pointer"
                       >
                         {ACADEMY_LEARNING_MODES.map((m) => (
                           <option key={m.id} value={m.id}>
@@ -704,7 +711,7 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                     <div>
                       <label
                         htmlFor="acad-course-select"
-                        className="block text-xs font-mono uppercase tracking-wider text-[#14171A] font-semibold mb-1"
+                        className="block text-xs font-mono uppercase tracking-wider text-dark font-semibold mb-1"
                       >
                         Course / Focus Track *
                       </label>
@@ -714,7 +721,7 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                         onChange={(e) =>
                           setModalState((prev) => ({ ...prev, selectedCourse: e.target.value }))
                         }
-                        className="w-full rounded-[10px] card-thick-border border-2 border-[#14171A] bg-[#FAF8F5] px-3.5 py-2.5 text-sm text-[#14171A] min-h-[44px] cursor-pointer"
+                        className="w-full rounded-[10px] card-thick-border border-border bg-light px-3.5 py-2.5 text-sm text-dark min-h-[44px] cursor-pointer"
                       >
                         <option value={`Complete ${modalState.selectedMode.title} Module (All Tracks)`}>
                           Complete {modalState.selectedMode.title} Module (All Tracks)
@@ -731,7 +738,7 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                       <div>
                         <label
                           htmlFor="acad-student-name"
-                          className="block text-xs font-mono uppercase tracking-wider text-[#14171A] font-semibold mb-1"
+                          className="block text-xs font-mono uppercase tracking-wider text-dark font-semibold mb-1"
                         >
                           Your Full Name *
                         </label>
@@ -742,14 +749,14 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                           value={customerName}
                           onChange={(e) => setCustomerName(e.target.value)}
                           placeholder="e.g. Ananya Sharma"
-                          className="w-full rounded-[10px] card-thick-border border-2 border-[#14171A] bg-[#FAF8F5] px-3.5 py-2.5 text-sm text-[#14171A] min-h-[44px]"
+                          className="w-full rounded-[10px] card-thick-border border-border bg-light px-3.5 py-2.5 text-sm text-dark min-h-[44px]"
                         />
                       </div>
 
                       <div>
                         <label
                           htmlFor="acad-student-phone"
-                          className="block text-xs font-mono uppercase tracking-wider text-[#14171A] font-semibold mb-1"
+                          className="block text-xs font-mono uppercase tracking-wider text-dark font-semibold mb-1"
                         >
                           Mobile Number *
                         </label>
@@ -760,7 +767,7 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                           value={customerPhone}
                           onChange={(e) => setCustomerPhone(e.target.value)}
                           placeholder="95538 88432"
-                          className="w-full rounded-[10px] card-thick-border border-2 border-[#14171A] bg-[#FAF8F5] px-3.5 py-2.5 text-sm font-mono text-[#14171A] min-h-[44px]"
+                          className="w-full rounded-[10px] card-thick-border border-border bg-light px-3.5 py-2.5 text-sm font-mono text-dark min-h-[44px]"
                         />
                       </div>
                     </div>
@@ -768,7 +775,7 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                     <div>
                       <label
                         htmlFor="acad-enquiry-notes"
-                        className="block text-xs font-mono uppercase tracking-wider text-[#14171A] font-semibold mb-1"
+                        className="block text-xs font-mono uppercase tracking-wider text-dark font-semibold mb-1"
                       >
                         Enquiry Details (Optional)
                       </label>
@@ -778,7 +785,7 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                         value={enquiryDetails}
                         onChange={(e) => setEnquiryDetails(e.target.value)}
                         placeholder="Preferred batch start month, prior experience, or fee & campus tour questions..."
-                        className="w-full rounded-[10px] card-thick-border border-2 border-[#14171A] bg-[#FAF8F5] px-3.5 py-2.5 text-sm text-[#14171A] resize-none"
+                        className="w-full rounded-[10px] card-thick-border border-border bg-light px-3.5 py-2.5 text-sm text-dark resize-none"
                       />
                     </div>
 
@@ -790,7 +797,7 @@ export const AcademyModulesSection: React.FC<AcademyModulesSectionProps> = memo(
                       <span>Continue to WhatsApp Admissions</span>
                     </button>
 
-                    <p className="text-[11px] text-center text-[#7D7164]">
+                    <p className="text-[11px] text-center text-subtle">
                       Opens official WhatsApp Click-to-Chat with prefilled details. Press Send inside WhatsApp to connect.
                     </p>
                   </form>

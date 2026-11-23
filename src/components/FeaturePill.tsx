@@ -22,15 +22,15 @@ export const FeaturePill: React.FC<FeaturePillProps> = ({
   className = '',
 }) => {
   const variantStyles = {
-    warm: 'bg-[#F2EDE5] text-[#14171A] border-[#DFD6CB] hover:bg-[#EAE2D7] hover:border-[#CFC3B4] active:bg-[#E2D8CC]',
-    orange: 'bg-[#E85D1A]/10 text-[#CF4E12] border-[#E85D1A]/25 hover:bg-[#E85D1A]/18 hover:border-[#E85D1A]/40 active:bg-[#E85D1A]/25',
-    navy: 'bg-[#0E2E54]/8 text-[#0E2E54] border-[#0E2E54]/20 hover:bg-[#0E2E54]/14 hover:border-[#0E2E54]/35 active:bg-[#0E2E54]/20',
-    charcoal: 'bg-[#14171A]/6 text-[#14171A] border-[#14171A]/15 hover:bg-[#14171A]/12 hover:border-[#14171A]/25 active:bg-[#14171A]/18',
+    warm: 'bg-surface text-dark border-border hover:bg-surface-2 hover:border-border-strong active:bg-border',
+    orange: 'bg-primary/10 text-primary-hover border-primary/25 hover:bg-primary/18 hover:border-primary/40 active:bg-primary/25',
+    navy: 'bg-accent/8 text-accent border-accent/20 hover:bg-accent/14 hover:border-accent/35 active:bg-accent/20',
+    charcoal: 'bg-dark/6 text-dark border-dark/15 hover:bg-dark/12 hover:border-dark/25 active:bg-dark/18',
   };
 
   const sizeStyles = {
-    sm: 'text-[11px] px-2.5 py-1 min-h-[28px] gap-1.5',
-    md: 'text-xs px-3.5 py-1.5 min-h-[34px] gap-2',
+    sm: 'text-[11px] px-3 py-1.5 min-h-[44px] gap-1.5',
+    md: 'text-xs px-3.5 py-2 min-h-[44px] gap-2',
   };
 
   const Component = interactive ? motion.button : motion.div;
@@ -41,14 +41,14 @@ export const FeaturePill: React.FC<FeaturePillProps> = ({
       onClick={onClick}
       whileHover={interactive ? { y: -1.5, transition: { duration: 0.15 } } : undefined}
       whileTap={interactive ? { scale: 0.97, transition: { duration: 0.1 } } : undefined}
-      className={`inline-flex items-center font-medium font-sans border rounded-[8px] transition-all duration-150 select-none text-left tracking-wide cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#E85D1A] ${
+      className={`inline-flex items-center font-medium font-sans border rounded-[8px] transition-all duration-150 select-none text-left tracking-wide cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary ${
         variantStyles[variant]
       } ${sizeStyles[size]} ${className}`}
     >
       {icon ? (
         <span className="shrink-0">{icon}</span>
       ) : (
-        <span className="h-1.5 w-1.5 rounded-full bg-[#E85D1A] shrink-0 opacity-80" aria-hidden="true" />
+        <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0 opacity-80" aria-hidden="true" />
       )}
       <span className="whitespace-normal leading-tight">{label}</span>
     </Component>

@@ -166,38 +166,38 @@ const TestimonialCard: React.FC<{ item: TestimonialCardData }> = memo(({ item })
   return (
     <motion.div
       whileHover={{ y: -6, scale: 1.015, transition: { duration: 0.25, ease: 'easeOut' } }}
-      className="w-[340px] sm:w-[400px] shrink-0 rounded-[14px] bg-[#FAF8F5] card-thick-border border-2 border-[#14171A] p-6 sm:p-7 shadow-xs flex flex-col justify-between transition-colors duration-200 hover:border-[#E85D1A] hover:shadow-lg cursor-default select-none"
+      className="w-[340px] sm:w-[400px] shrink-0 rounded-[14px] bg-light card-thick-border border-border p-6 sm:p-7 shadow-xs flex flex-col justify-between transition-colors duration-200 hover:border-primary hover:shadow-lg cursor-default select-none"
     >
       <div>
         {/* Rating stars & verified chip */}
         <div className="flex items-center justify-between mb-3.5">
-          <div className="flex items-center gap-1 text-[#E85D1A]" aria-label="5 out of 5 stars">
+          <div className="flex items-center gap-1 text-primary" role="img" aria-label="5 out of 5 stars">
             {[...Array(item.rating)].map((_, i) => (
-              <Star key={i} className="h-3.5 w-3.5 fill-[#E85D1A]" />
+              <Star key={i} className="h-3.5 w-3.5 fill-primary" />
             ))}
           </div>
-          <div className="flex items-center gap-1 text-[11px] font-mono text-[#0E2E54]">
-            <ShieldCheck className="h-3.5 w-3.5 text-[#0E2E54]" />
+          <div className="flex items-center gap-1 text-[11px] font-mono text-accent">
+            <ShieldCheck className="h-3.5 w-3.5 text-accent" />
             <span>Verified Client</span>
           </div>
         </div>
 
         {/* Quote */}
-        <p className="text-xs sm:text-sm text-[#3A332C] font-light leading-relaxed font-sans line-clamp-4">
+        <p className="text-xs sm:text-sm text-text-soft font-light leading-relaxed font-sans line-clamp-4">
           “{item.quote}”
         </p>
       </div>
 
       {/* Author & Service metadata */}
-      <div className="mt-5 pt-4 border-t border-[#EAE1D5] flex items-center justify-between text-xs">
+      <div className="mt-5 pt-4 border-t border-surface-2 flex items-center justify-between text-xs">
         <div>
-          <div className="font-semibold text-[#14171A] font-sans">{item.name}</div>
-          <div className="text-[11px] font-mono text-[#7D7164]">{item.location}</div>
+          <div className="font-semibold text-dark font-sans">{item.name}</div>
+          <div className="text-[11px] font-mono text-subtle">{item.location}</div>
         </div>
         <div className="text-right">
-          <div className="text-[11px] font-mono text-[#0E2E54] font-medium">{item.service}</div>
+          <div className="text-[11px] font-mono text-accent font-medium">{item.service}</div>
           {item.stylist && (
-            <div className="text-[10px] font-mono text-[#8C8072]">{item.stylist}</div>
+            <div className="text-[10px] font-mono text-subtle">{item.stylist}</div>
           )}
         </div>
       </div>
@@ -210,23 +210,23 @@ export const DualRowTestimonials: React.FC = memo(() => {
   const row2List = [...ROW_2_TESTIMONIALS, ...ROW_2_TESTIMONIALS];
 
   return (
-    <section className="w-full py-20 sm:py-28 bg-[#FAF8F5] border-t border-[#DFD6CB] overflow-hidden">
+    <section className="w-full py-20 sm:py-28 bg-light border-t border-border overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-12 text-center">
-        <span className="font-editorial-kicker text-xs text-[#7D7164]">
+        <span className="font-editorial-kicker text-xs text-subtle">
           Real Voices · Unhurried Experiences
         </span>
-        <h2 className="mt-2 font-editorial-heading text-3xl sm:text-4xl text-[#14171A]">
+        <h2 className="mt-2 font-editorial-heading text-3xl sm:text-4xl text-dark">
           Client Reflections &amp; Stories
         </h2>
-        <p className="mt-3 text-sm sm:text-base text-[#524B43] max-w-2xl mx-auto">
+        <p className="mt-3 text-sm sm:text-base text-muted max-w-2xl mx-auto">
           From Guntur & Andhra Pradesh brides to regular atelier visitors, explore unfiltered experiences across hair design, scalp therapy, and dermal science.
         </p>
       </div>
 
       {/* Row 1: Right to Left Marquee */}
       <div className="relative w-full overflow-hidden group mb-6">
-        <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-r from-[#FAF8F5] to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-l from-[#FAF8F5] to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-r from-light to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-l from-light to-transparent z-10 pointer-events-none" />
         <div className="flex w-max gap-6 animate-marquee group-hover:[animation-play-state:paused] py-2">
           {row1List.map((item, idx) => (
             <TestimonialCard key={`r1-${item.id}-${idx}`} item={item} />
@@ -236,8 +236,8 @@ export const DualRowTestimonials: React.FC = memo(() => {
 
       {/* Row 2: Left to Right Marquee */}
       <div className="relative w-full overflow-hidden group">
-        <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-r from-[#FAF8F5] to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-l from-[#FAF8F5] to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-r from-light to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-l from-light to-transparent z-10 pointer-events-none" />
         <div className="flex w-max gap-6 animate-marquee-reverse group-hover:[animation-play-state:paused] py-2">
           {row2List.map((item, idx) => (
             <TestimonialCard key={`r2-${item.id}-${idx}`} item={item} />
