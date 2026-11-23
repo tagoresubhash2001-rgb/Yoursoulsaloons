@@ -31,6 +31,8 @@ export interface ServiceBookingData {
   /** Preferred time, e.g. "11:00 AM" */
   time: string;
   note?: string;
+  /** Booking reference, e.g. "YS-BK-482913" — printed as the LAST line ("Ref: …") */
+  ref?: string;
 }
 
 export interface CourseEnquiryData {
@@ -95,6 +97,7 @@ export function buildWhatsAppMessage<T extends WhatsAppMessageType>(type: T, dat
         ['Preferred Date', formatReadableDateIST(d.date)],
         ['Preferred Time', d.time],
         ['Note', d.note],
+        ['Ref', d.ref],
       ]);
     }
     case 'course': {
@@ -130,6 +133,11 @@ export function buildWhatsAppLink<T extends WhatsAppMessageType>(type: T, data?:
   const base = `https://wa.me/${getBusinessWhatsAppNumber()}`;
   const message = buildWhatsAppMessage(type, data);
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
+}
+
+/** New salon booking reference: "YS-BK-" + 6 digits (same format as bookings saved from the Contact page). */
+export function generateBookingRef(): string {
+  return `YS-BK-${Math.floor(100000 + Math.random() * 900000)}`;
 }
 
 /** Spread onto any <a> that opens WhatsApp: new tab, no opener access. */

@@ -15,11 +15,11 @@ import { buildWhatsAppLink, buildWhatsAppMessage, getBusinessWhatsAppNumber, nor
 import { catalogCategory } from '../config/bookingMenu';
 
 const OPTION_GROUP_CATEGORY: Record<string, ServiceCategory> = {
-  'Hair Artistry': 'Hair',
+  'Hair Artistry': 'Women',
   'Occasion & Runway': 'Bridal',
   'Atelier Nail Lounge': 'Nails',
-  'Dermal Sanctuary': 'Skin',
-  'Diagnostic Intake': 'Hair',
+  'Dermal Sanctuary': 'Women',
+  'Diagnostic Intake': 'Women',
 };
 
 /** Service category for the WhatsApp message, from the catalogue or the quick-option list. */
@@ -27,10 +27,11 @@ function categoryForServiceName(serviceName: string): ServiceCategory {
   const item = SALON_SERVICES.find((s) => s.name === serviceName);
   if (item) return catalogCategory(item.category);
   const opt = SALON_SERVICE_OPTIONS.find((o) => o.name === serviceName);
-  return (opt && OPTION_GROUP_CATEGORY[opt.group]) || 'Hair';
+  return (opt && OPTION_GROUP_CATEGORY[opt.group]) || 'Women';
 }
 
 interface BookingSummary {
+  bookingId: string;
   customerName: string;
   customerPhone: string;
   serviceName: string;
@@ -49,6 +50,7 @@ function buildBookingWhatsApp(b: BookingSummary) {
     date: b.appointmentDate,
     time: b.startTime,
     note: b.additionalMessage,
+    ref: b.bookingId,
   };
   return {
     url: buildWhatsAppLink('service', data),

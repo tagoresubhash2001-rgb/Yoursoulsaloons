@@ -9,6 +9,7 @@ import { useNavigation } from '../context/NavigationContext';
 import { AppointmentBookingForm } from './AppointmentBookingForm';
 import { buildWhatsAppLink, buildWhatsAppMessage, normalizeIndianPhone, openWhatsAppLink } from '../utils/whatsapp';
 import { COURSE_LEVELS } from '../config/bookingMenu';
+import { SHOW_SPECIALIST_COURSES } from '../config/features';
 import { GOOGLE_REVIEW_URL } from '../config/siteContent';
 import {
   MapPin,
@@ -207,6 +208,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ mode }) => {
                     <ExternalLink className="h-3 w-3 ml-1" />
                   </a>
 
+                  {GOOGLE_REVIEW_URL && (
                   <a
                     href={GOOGLE_REVIEW_URL}
                     target="_blank"
@@ -217,6 +219,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ mode }) => {
                     <span>Google Reviews</span>
                     <ExternalLink className="h-3 w-3 ml-1" />
                   </a>
+                  )}
                 </div>
 
               </div>
@@ -394,6 +397,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ mode }) => {
                             </option>
                           ))}
                         </optgroup>
+                        {SHOW_SPECIALIST_COURSES && (
                         <optgroup label="── Specialized Diplomas & Masterclasses ──">
                           {ACADEMY_COURSES.map((c) => (
                             <option key={c.id} value={c.title}>
@@ -401,6 +405,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ mode }) => {
                             </option>
                           ))}
                         </optgroup>
+                        )}
                       </select>
                     </div>
 

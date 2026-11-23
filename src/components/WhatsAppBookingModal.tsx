@@ -6,6 +6,7 @@ import {
   buildWhatsAppLink,
   buildWhatsAppMessage,
   normalizeIndianPhone,
+  generateBookingRef,
   openWhatsAppLink,
   WHATSAPP_LINK_PROPS,
   type ServiceCategory,
@@ -54,7 +55,7 @@ export const WhatsAppBookingModal: React.FC<Props> = ({ preset, onClose }) => {
   const [batch, setBatch] = useState('');
   const [note, setNote] = useState(preset?.note ?? '');
   const [errors, setErrors] = useState<Errors>({});
-  const [sent, setSent] = useState<{ url: string; message: string } | null>(null);
+  const [sent, setSent] = useState<{ url: string; message: string; ref?: string } | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const today = nowIST();
 
@@ -92,7 +93,7 @@ export const WhatsAppBookingModal: React.FC<Props> = ({ preset, onClose }) => {
 
   const serviceOptions = useMemo(() => {
     const known = [...SIGNATURE_SERVICES, ...TREATMENT_MENU];
-    const extra = service && !known.some((o) => o.name === service) ? [{ name: service, category: presetCategory ?? 'Hair' }] : [];
+    const extra = service && !known.some((o) => o.name === service) ? [{ name: service, category: presetCategory ?? 'Women' }] : [];
     return { extra, known };
   }, [service, presetCategory]);
 
@@ -102,7 +103,7 @@ export const WhatsAppBookingModal: React.FC<Props> = ({ preset, onClose }) => {
   const availableTimes = TIME_SLOTS.filter((t) => date !== today.date || t.h24 > today.hour);
 
   const categoryFor = (svc: string): ServiceCategory =>
-    [...serviceOptions.extra, ...serviceOptions.known].find((o) => o.name === svc)?.category ?? presetCategory ?? 'Hair';
+    [...serviceOptions.extra, ...serviceOptions.known].find((o) => o.name === svc)?.category ?? presetCategory ?? 'Women';
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -123,16 +124,13 @@ export const WhatsAppBookingModal: React.FC<Props> = ({ preset, onClose }) => {
       dialogRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
       return;
     }
-    const url =
-      kind === 'service'
-        ? buildWhatsAppLink('service', { service, category: categoryFor(service), name, phone: cleanPhone!, date, time, note })
-        : buildWhatsAppLink('course', { course, name, phone: cleanPhone!, batch, note });
-    const message =
-      kind === 'service'
-        ? buildWhatsAppMessage('service', { service, category: categoryFor(service), name, phone: cleanPhone!, date, time, note })
-        : buildWhatsAppMessage('course', { course, name, phone: cleanPhone!, batch, note });
+    const ref = kind === 'service' ? generateBookingRef() : undefined;
+    const serviceData = { service, category: categoryFor(service), name, phone: cleanPhone!, date, time, note, ref };
+    const courseData = { course, name, phone: cleanPhone!, batch, note };
+    const url = kind === 'service' ? buildWhatsAppLink('service', serviceData) : buildWhatsAppLink('course', courseData);
+    const message = kind === 'service' ? buildWhatsAppMessage('service', serviceData) : buildWhatsAppMessage('course', courseData);
     openWhatsAppLink(url); // synchronous inside the submit gesture → not blocked as a pop-up
-    setSent({ url, message });
+    setSent({ url, message, ref });
   };
 
   const errId = (f: keyof Errors) => `${uid}-${f}-err`;
@@ -196,6 +194,11 @@ export const WhatsAppBookingModal: React.FC<Props> = ({ preset, onClose }) => {
                     <CheckCircle2 className="h-6 w-6 text-success shrink-0 mt-0.5" />
                     <p className="text-sm text-muted leading-relaxed">
                       We opened WhatsApp with your details. Just tap <strong className="text-dark">Send</strong> and our team will confirm shortly.
+                      {sent.ref && (
+                        <span className="block mt-1">
+                          Your booking reference: <strong className="font-mono text-accent">{sent.ref}</strong>
+                        </span>
+                      )}
                     </p>
                   </div>
                   <pre className="whitespace-pre-wrap break-words rounded-[12px] bg-surface border border-border p-4 text-xs leading-relaxed text-text-soft font-sans">{sent.message}</pre>

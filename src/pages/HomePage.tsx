@@ -9,6 +9,7 @@ import { TestimonialCarousel } from '../components/TestimonialCarousel';
 import { AcademyModulesSection } from '../components/AcademyModulesSection';
 import { BANNERS, ACADEMY_COURSES, ACADEMY_ABOUT_SECTIONS } from '../config/siteContent';
 import { IMAGES, SiteImage } from '../config/images';
+import { SHOW_SPECIALIST_COURSES } from '../config/features';
 import { buildWhatsAppLink, openWhatsAppLink, normalizeIndianPhone, validateIndianPhone } from '../utils/whatsapp';
 import { useBooking, prefetchBookingModal } from '../context/BookingContext';
 import { WhatsAppIcon } from '../components/WhatsAppIcon';
@@ -291,7 +292,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenBookingModal }) => {
         {/* Academy 4 Learning Mode Cards + Comparison Section */}
         <AcademyModulesSection onExploreCourses={() => navigateTo('services', 'academy')} />
 
-        {/* Academy Flagship Programs */}
+        {/* Academy Flagship Programs — the 6 specialist diplomas (hidden while SHOW_SPECIALIST_COURSES is off) */}
+        {SHOW_SPECIALIST_COURSES && (
         <section className="w-full py-20 sm:py-28 border-t border-surface-2 bg-surface">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <ScrollReveal direction="up" distance={20} duration={0.6}>
@@ -358,6 +360,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenBookingModal }) => {
             </div>
           </div>
         </section>
+        )}
 
         {/* Academy Alternating Storytelling */}
         {academyEditorialSections.map((section, idx) => (

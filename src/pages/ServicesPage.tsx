@@ -6,6 +6,7 @@ import { AcademyModulesSection } from '../components/AcademyModulesSection';
 import { BANNERS, ACADEMY_SYLLABUS_PDF_PATH } from '../config/siteContent';
 import { motion } from 'motion/react';
 import { ScrollReveal } from '../components/ScrollReveal';
+import { SHOW_SPECIALIST_COURSES } from '../config/features';
 
 interface ServicesPageProps {
   onOpenBookingModal: (serviceId?: string, courseId?: string) => void;
@@ -48,11 +49,14 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onOpenBookingModal }
       {!isSalon && <AcademyModulesSection showExploreButton={false} photoVariant="services" />}
 
       {/* 2. SERVICES & COURSES INTERACTIVE LISTING */}
-      <ServicesListing
-        mode={mode}
-        onSelectService={handleSelectService}
-        onSelectCourse={handleSelectCourse}
-      />
+      {/* Academy mode lists the 6 specialist diplomas — hidden while SHOW_SPECIALIST_COURSES is off */}
+      {(isSalon || SHOW_SPECIALIST_COURSES) && (
+        <ServicesListing
+          mode={mode}
+          onSelectService={handleSelectService}
+          onSelectCourse={handleSelectCourse}
+        />
+      )}
 
       {/* 3. FOUR SERVICE COMMITMENT CARDS (Additional Cards) */}
       <section className="w-full py-16 sm:py-20 border-t border-surface-2 bg-light">

@@ -653,7 +653,7 @@ export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
     levelBadge: 'Beginner Level',
     description:
       'Learn the foundations and perform basic salon services safely and hygienically across hair, skin, and body care.',
-    duration: 'Foundation Track (Batch schedule confirmed on admissions)',
+    duration: 'Contact for details',
     learningFormat: 'In-Studio Foundational Theory + Guided Demonstration',
     availableCourses: [
       'Salon Hygiene, Sterilization & Safety Etiquette',
@@ -706,7 +706,7 @@ export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
       'Supervised studio practice on essential salon prep, patch testing, CTM routines, basic cuts, waxing, and manicure/pedicure procedures.',
     certification: 'YOUR SOUL Academy Certificate of Completion — Basic (Salon Assistant Level)',
     eligibility: 'Open to absolute beginners with passion for beauty; no prior salon experience required.',
-    courseFeeNote: 'Shared upon admissions enquiry',
+    courseFeeNote: 'Contact for details',
     benefits: [
       'Build safe, hygienic salon habits from day one',
       'Master essential Hair, Skin & Body fundamentals',
@@ -726,7 +726,7 @@ export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
     description:
       'Independently perform the most popular salon services on real clients with strong product knowledge and client communication.',
     includesPreviousNote: 'Includes everything in Basic',
-    duration: 'Core Career Track (Full-time & structured batch options)',
+    duration: 'Contact for details',
     learningFormat: 'Classroom Science + Supervised Real-Client Floor Sessions',
     availableCourses: [
       'Skin Concerns, Fruit/Gold/D-Tan Facials & Rica Waxing',
@@ -782,7 +782,7 @@ export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
       'Hands-on execution of popular salon facials, global hair colour, layered cuts, fades, spa therapies, and real-client consultations.',
     certification: 'YOUR SOUL Academy Diploma — Standard (Junior Stylist / Beautician Level)',
     eligibility: 'Beginners enrolling in full career track or Basic-level learners advancing to independent client services.',
-    courseFeeNote: 'Shared upon admissions enquiry',
+    courseFeeNote: 'Contact for details',
     benefits: [
       'Perform high-demand salon services independently',
       'Understand colour levels, tones & skincare ingredients',
@@ -802,7 +802,7 @@ export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
     description:
       'Master premium treatments, chemical hair services, therapeutic body work, and occasion/bridal styling.',
     includesPreviousNote: 'Includes everything in Basic & Standard',
-    duration: 'Specialist Mastery Track (Modular & intensive schedules)',
+    duration: 'Contact for details',
     learningFormat: 'Specialist Workshops + Chemical Lab + Live Model Clinic',
     availableCourses: [
       'O3+, HydraFacial, Pigmentation, Acne & Anti-Ageing Plans',
@@ -853,7 +853,7 @@ export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
       'Live model execution across balayage, keratin/botox, HydraFacial/O3+, therapeutic massage, occasion makeup, and saree draping.',
     certification: 'YOUR SOUL Academy Specialist Diploma — Advanced (Stylist / Specialist Level)',
     eligibility: 'Aspiring specialists enrolling directly in comprehensive training or practicing junior stylists upgrading skills.',
-    courseFeeNote: 'Shared upon admissions enquiry',
+    courseFeeNote: 'Contact for details',
     benefits: [
       'Command high-value chemical colour & texture services',
       'Deliver targeted clinical-grade facial & scalp plans',
@@ -873,7 +873,7 @@ export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
     description:
       'Graduate with the skill, speed and confidence of a professional with 1+ year of salon experience, backed by live salon internship.',
     includesPreviousNote: 'Includes everything in Basic, Standard & Advanced',
-    duration: 'Comprehensive Pro Track + Live Salon Internship',
+    duration: 'Contact for details',
     learningFormat: 'Master Mentorship + Clinical Science + Live Salon Internship',
     availableCourses: [
       'Skin Science, Chemical Peels, Microdermabrasion & First Aid',
@@ -934,7 +934,7 @@ export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
       'Mandatory live salon internship at Your Soul serving real clients, verified service logbook, timed assessments, and commercial portfolio shoot.',
     certification: 'YOUR SOUL Academy Master Certification — Expert (Senior Stylist Industry Level)',
     eligibility: 'Career-focused candidates targeting senior stylist placement, freelance bridal mastery, or salon ownership.',
-    courseFeeNote: 'Shared upon admissions enquiry',
+    courseFeeNote: 'Contact for details',
     benefits: [
       'Graduate with 1+ year equivalent speed & floor confidence',
       'Complete live salon internship at Your Soul with real clients',
@@ -948,7 +948,7 @@ export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
 ];
 
 // Skill-by-skill comparison of the four learning modes (✓ = covered at this level, — = not covered).
-// Built only from the curriculum above; the last two rows are the existing duration / fee notes.
+// Built only from the curriculum above; duration and fee show "Contact for details" until confirmed by the salon.
 export const ACADEMY_COMPARISON_ROWS: AcademyComparisonRow[] = [
   {
     criteria: 'Skin Care',
@@ -1022,17 +1022,17 @@ export const ACADEMY_COMPARISON_ROWS: AcademyComparisonRow[] = [
   },
   {
     criteria: 'Course duration',
-    basic: 'Foundation Track (Batch schedule confirmed on enquiry)',
-    standard: 'Core Career Track (Full-time & batch schedules)',
-    advanced: 'Specialist Mastery Track (Modular & intensive schedules)',
-    expert: 'Complete Pro Track + Live Salon Internship',
+    basic: 'Contact for details',
+    standard: 'Contact for details',
+    advanced: 'Contact for details',
+    expert: 'Contact for details',
   },
   {
     criteria: 'Course fee',
-    basic: 'Shared on admissions enquiry',
-    standard: 'Shared on admissions enquiry',
-    advanced: 'Shared on admissions enquiry',
-    expert: 'Shared on admissions enquiry',
+    basic: 'Contact for details',
+    standard: 'Contact for details',
+    advanced: 'Contact for details',
+    expert: 'Contact for details',
   },
 ];
 

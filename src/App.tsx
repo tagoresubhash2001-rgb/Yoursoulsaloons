@@ -11,6 +11,7 @@ import { FloatingWhatsApp } from './components/FloatingWhatsApp';
 import { ACADEMY_COURSES, SALON_SERVICES } from './config/catalog';
 import { BookingProvider, useBooking } from './context/BookingContext';
 import { catalogCategory } from './config/bookingMenu';
+import { SHOW_SPECIALIST_COURSES } from './config/features';
 
 // Route-based and modal code splitting — defers heavy chunks (including Firebase SDK on ContactPage)
 const HomePage = lazy(() =>
@@ -43,7 +44,8 @@ function AppContent() {
   const handleOpenBooking = useCallback(
     (serviceId?: string, courseId?: string) => {
       if (courseId) {
-        const course = ACADEMY_COURSES.find((c) => c.id === courseId);
+        // Specialist diplomas are hidden (SHOW_SPECIALIST_COURSES): fall back to choosing one of the 4 levels.
+        const course = SHOW_SPECIALIST_COURSES ? ACADEMY_COURSES.find((c) => c.id === courseId) : undefined;
         openBooking({ kind: 'course', course: course?.title });
         return;
       }

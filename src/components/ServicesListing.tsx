@@ -17,12 +17,15 @@ interface ServicesListingProps {
 }
 
 type SalonGroup = 'Hair' | 'Colour' | 'Bridal & Makeup' | 'Skin & Scalp' | 'Nails';
-const GROUP_CATEGORY: Record<SalonGroup, ServiceCategory> = {
-  Hair: 'Hair',
-  Colour: 'Hair',
-  'Bridal & Makeup': 'Bridal',
-  'Skin & Scalp': 'Skin',
-  Nails: 'Nails',
+// WhatsApp "Category:" for each service row (women's hair/skin → Women; scalp/trichology → Hair).
+const ROW_CATEGORY: Record<string, ServiceCategory> = {
+  'grp-hair-cut': 'Women',
+  'grp-hair-colour': 'Women',
+  'grp-bridal': 'Bridal',
+  'grp-extensions': 'Women',
+  'grp-dermal': 'Women',
+  'grp-trichology': 'Hair',
+  'grp-nails': 'Nails',
 };
 const SALON_GROUPS: Array<'All' | SalonGroup> = ['All', 'Hair', 'Colour', 'Bridal & Makeup', 'Skin & Scalp', 'Nails'];
 
@@ -374,7 +377,7 @@ export const ServicesListing: React.FC<ServicesListingProps> = ({
                             label={feat}
                             variant={fIdx % 2 === 0 ? 'warm' : 'charcoal'}
                             size="md"
-                            onClick={() => openBooking({ kind: 'service', service: item.category, category: GROUP_CATEGORY[item.group] })}
+                            onClick={() => openBooking({ kind: 'service', service: item.category, category: ROW_CATEGORY[item.id] ?? 'Women' })}
                           />
                         ))}
                       </div>
@@ -384,7 +387,7 @@ export const ServicesListing: React.FC<ServicesListingProps> = ({
                     <div className="pt-3 flex flex-wrap items-center gap-3">
                       <button
                         type="button"
-                        onClick={() => openBooking({ kind: 'service', service: item.category, category: GROUP_CATEGORY[item.group] })}
+                        onClick={() => openBooking({ kind: 'service', service: item.category, category: ROW_CATEGORY[item.id] ?? 'Women' })}
                         onPointerEnter={prefetchBookingModal}
                         aria-label={`${item.ctaLabel} on WhatsApp`}
                         className="btn-brand-primary"
