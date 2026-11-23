@@ -6,6 +6,58 @@
       "**/.*",
       "**/node_modules/**"
     ],
+    "redirects": [
+      {
+        "source": "/banners/salon_home_hero.jpg",
+        "destination": "/images/salon-interior/salon-interior-monochrome-1280.webp",
+        "type": 301
+      },
+      {
+        "source": "/banners/salon_about_banner.jpg",
+        "destination": "/images/women-hair/women-hair-long-waves-1280.webp",
+        "type": 301
+      },
+      {
+        "source": "/banners/salon_services_banner.jpg",
+        "destination": "/images/women-hair/women-hair-blowdry-styling-1280.webp",
+        "type": 301
+      },
+      {
+        "source": "/banners/salon_contact_banner.jpg",
+        "destination": "/images/salon-tools/salon-styling-tools-1280.webp",
+        "type": 301
+      },
+      {
+        "source": "/banners/academy_home_hero.jpg",
+        "destination": "/images/academy/academy-blowdry-training-1280.webp",
+        "type": 301
+      },
+      {
+        "source": "/banners/academy_about_banner.jpg",
+        "destination": "/images/salon-interior/salon-interior-rose-chairs-1280.webp",
+        "type": 301
+      },
+      {
+        "source": "/banners/academy_services_banner.jpg",
+        "destination": "/images/makeup/makeup-brushes-studio-1280.webp",
+        "type": 301
+      },
+      {
+        "source": "/banners/academy_contact_banner.jpg",
+        "destination": "/images/salon-interior/salon-interior-reception-hall-1280.webp",
+        "type": 301
+      },
+      {
+        "source": "/assets/aistudio/Your_Soul_Academy_Modules_07bb08b1.pdf",
+        "destination": "/downloads/your-soul-academy-modules.pdf",
+        "type": 301
+      },
+      {
+        "source": "/assets/aistudio/OurSoul_Beauty_Salon_Logo_b48198f6.png",
+        "destination": "/images/brand/your-soul-logo-full.png",
+        "type": 301
+      }
+    ],
     "rewrites": [
       {
         "source": "**",

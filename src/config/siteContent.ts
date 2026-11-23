@@ -642,7 +642,7 @@ export const TESTIMONIALS: Testimonial[] = [
 // Hair | Skin | Body — Structured Progression: Basic -> Standard -> Advanced -> Expert
 // ==========================================
 
-export const ACADEMY_SYLLABUS_PDF_PATH = '/assets/aistudio/Your_Soul_Academy_Modules_07bb08b1.pdf';
+export const ACADEMY_SYLLABUS_PDF_PATH = '/downloads/your-soul-academy-modules.pdf';
 
 export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
   {
