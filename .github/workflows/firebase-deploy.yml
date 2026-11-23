@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -36,6 +36,16 @@ jobs:
 
       - name: Build (includes image audit)
         run: bun run build
+
+      - name: Check Firebase credentials
+        id: creds
+        env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$SA" ]; then
+            echo "::error title=Missing secret::Add the FIREBASE_SERVICE_ACCOUNT repository secret (see FIREBASE_DEPLOYMENT.md → Automatic deploys). The site was built but NOT deployed."
+            exit 1
+          fi
 
       # Pull requests from this repo get a temporary preview URL (posted as a PR comment).
       - name: Deploy preview channel
