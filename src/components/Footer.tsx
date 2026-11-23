@@ -75,6 +75,7 @@ export const Footer: React.FC = memo(() => {
                 <span>WhatsApp: 095538 88432</span>
               </motion.a>
 
+              {GOOGLE_REVIEW_URL && (
               <motion.a
                 whileHover={{ y: -2, transition: { duration: 0.15 } }}
                 whileTap={{ scale: 0.98 }}
@@ -88,6 +89,7 @@ export const Footer: React.FC = memo(() => {
                 <span>Google Reviews</span>
                 <ExternalLink className="h-3 w-3 text-subtle" />
               </motion.a>
+              )}
             </div>
           </div>
 
