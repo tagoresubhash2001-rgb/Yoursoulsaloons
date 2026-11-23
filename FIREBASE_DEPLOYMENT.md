@@ -107,3 +107,20 @@ All 8 mandatory banners are independently configurable in `src/config/siteConten
 8. **Slot 8 (Academy Contact Banner)**: `public/banners/academy_contact_banner.jpg` (16:9, 2560 × 1440px)
 
 Site owners can also use the live **Photo Asset Slot Inspector** button in the footer or in each banner frame to paste image URLs or local paths with immediate live preview.
+
+---
+
+## Automatic deploys (GitHub Actions)
+
+`.github/workflows/firebase-deploy.yml` builds the site with Bun (`bun install --frozen-lockfile`,
+type-check, `bun run build` incl. the image audit) and deploys to the **yoursoulsaloons** Firebase project:
+
+- **Push to `main`** (or *Run workflow* manually) → deploys to the live site (https://yoursoulsaloons.web.app).
+- **Pull request to `main`** → deploys a 7-day preview URL and posts it as a PR comment.
+
+### One-time setup: the `FIREBASE_SERVICE_ACCOUNT` secret
+1. In the Firebase console → Project settings → **Service accounts** → *Generate new private key* (downloads a JSON file).
+   Alternatively run `firebase init hosting:github` locally, which creates the account and secret for you.
+2. In GitHub → repo **Settings → Secrets and variables → Actions → New repository secret**:
+   name `FIREBASE_SERVICE_ACCOUNT`, value = the full contents of that JSON file.
+3. Delete the downloaded JSON file afterwards. Never commit it.
