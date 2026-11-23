@@ -11,6 +11,7 @@
 //      every srcset candidate, CSS background-image, <link rel=icon|preload|apple-touch-icon> and og:image.
 //
 // Usage: npm run build && node scripts/check-images.mjs
+//        node scripts/check-images.mjs --base=https://yoursoulsaloons.web.app   (check the LIVE site instead)
 import { createServer } from 'node:http';
 import { readFileSync, existsSync, statSync, readdirSync } from 'node:fs';
 import { join, extname, relative } from 'node:path';
@@ -18,7 +19,8 @@ import { createRequire } from 'node:module';
 
 const root = new URL('..', import.meta.url).pathname;
 const dist = join(root, 'dist');
-if (!existsSync(join(dist, 'index.html'))) {
+const baseArg = process.argv.find((a) => a.startsWith('--base='))?.slice(7).replace(/\/$/, '');
+if (!baseArg && !existsSync(join(dist, 'index.html'))) {
   console.error('dist/ not found — run `npm run build` first.');
   process.exit(1);
 }
@@ -53,8 +55,8 @@ const server = createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/html' }); // SPA rewrite, exactly like firebase.json "** → /index.html"
   res.end(readFileSync(join(dist, 'index.html')));
 });
-await new Promise((ok) => server.listen(0, ok));
-const origin = `http://localhost:${server.address().port}`;
+if (!baseArg) await new Promise((ok) => server.listen(0, ok));
+const origin = baseArg ?? `http://localhost:${server.address().port}`;
 
 const found = new Map(); // url → Set(where)
 const add = (u, where) => {
@@ -67,9 +69,17 @@ const add = (u, where) => {
 };
 const IMG_RE = /["'(\s,](\/(?:images|assets|downloads)?\/?[\w./-]+\.(?:webp|png|jpe?g|gif|svg|ico|avif))/gi;
 
-// 1. Static scan of build output
+// 1. Static scan of build output (live mode: the deployed index.html and the JS/CSS it references)
+if (baseArg) {
+  const html = await (await fetch(origin + '/')).text();
+  for (const m of html.matchAll(IMG_RE)) add(m[1], 'static:live index.html');
+  for (const m of html.matchAll(/(?:src|href)="(\/assets\/[^"]+\.(?:js|css))"/g)) {
+    const text = await (await fetch(origin + m[1])).text();
+    for (const x of text.matchAll(IMG_RE)) add(x[1], `static:live ${m[1]}`);
+  }
+}
 const walk = (d) => readdirSync(d).flatMap((f) => (statSync(join(d, f)).isDirectory() ? walk(join(d, f)) : [join(d, f)]));
-for (const f of walk(dist).filter((f) => /\.(html|js|css|webmanifest)$/.test(f))) {
+for (const f of (baseArg ? [] : walk(dist)).filter((f) => /\.(html|js|css|webmanifest)$/.test(f))) {
   const text = readFileSync(f, 'utf8');
   for (const m of text.matchAll(IMG_RE)) add(m[1], `static:${relative(dist, f)}`);
 }
@@ -132,10 +142,10 @@ for (const r of redirects) {
   const tType = target.headers.get('content-type') ?? '';
   redirectResults.push({ from: r.source, to: r.destination, status: res.status, targetStatus: target.status, ok: res.status === 301 && target.status === 200 && !tType.startsWith('text/html') });
 }
-server.close();
+if (!baseArg) server.close();
 
 const bad = results.filter((r) => !r.ok);
-console.log(`\nIMAGE CHECK — ${results.length} unique image URLs (${rendered ? 'static scan + 8 routes rendered at 360px & 1280px' : 'static scan only'})\n`);
+console.log(`\nIMAGE CHECK${baseArg ? ` (LIVE: ${baseArg})` : ''} — ${results.length} unique image URLs (${rendered ? 'static scan + 8 routes rendered at 360px & 1280px' : 'static scan only'})\n`);
 for (const r of results) console.log(`${r.ok ? '200 ✓' : `${r.status} ✗`}  ${r.type.padEnd(12)} ${r.path}${r.kebab ? '' : '   ← not lowercase-kebab-case'}`);
 console.log(`\nREDIRECTS (old URLs) — ${redirectResults.length}`);
 for (const r of redirectResults) console.log(`${r.ok ? '✓' : '✗'} ${r.status} ${r.from} → ${r.to} (${r.targetStatus})`);
