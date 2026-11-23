@@ -38,7 +38,7 @@ jobs:
         run: bun run build
 
       - name: Check Firebase credentials
-        id: creds
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         env:
           SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
