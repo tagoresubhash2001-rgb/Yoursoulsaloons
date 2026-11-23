@@ -14,6 +14,19 @@ import {
   onSnapshot
 } from 'firebase/firestore';
 import firebaseConfig from '../firebase-applet-config.json';
+import {
+  getBusinessWhatsAppNumber,
+  buildWhatsAppAppointmentMessage,
+  buildWhatsAppClickToChatUrl,
+  formatReadableDateIST,
+} from './utils/whatsapp';
+
+export {
+  getBusinessWhatsAppNumber,
+  buildWhatsAppAppointmentMessage,
+  buildWhatsAppClickToChatUrl,
+  formatReadableDateIST,
+};
 
 // 1. Initialize Firebase and Firestore Enterprise instance
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
@@ -160,22 +173,6 @@ export function getDayOfWeekIST(dateStr: string): string {
     return date.toLocaleDateString('en-IN', { weekday: 'long', timeZone: 'Asia/Kolkata' });
   } catch {
     return 'Monday';
-  }
-}
-
-export function formatReadableDateIST(dateStr: string): string {
-  try {
-    const [y, m, d] = dateStr.split('-').map(Number);
-    const date = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
-    return date.toLocaleDateString('en-IN', {
-      timeZone: 'Asia/Kolkata',
-      weekday: 'long',
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    });
-  } catch {
-    return dateStr;
   }
 }
 
@@ -343,68 +340,5 @@ export function subscribeToDateReservations(
   );
 }
 
-// 10. WhatsApp Integration & Message Generator
-export function getBusinessWhatsAppNumber(): string {
-  let envNumber: string | undefined;
-  if (typeof import.meta !== 'undefined' && import.meta.env) {
-    envNumber = import.meta.env.VITE_YOUR_SOUL_WHATSAPP_NUMBER as string | undefined;
-  } else if (typeof process !== 'undefined' && process.env) {
-    envNumber = process.env.VITE_YOUR_SOUL_WHATSAPP_NUMBER;
-  }
-  const sanitized = (envNumber?.trim() || '919553888432').replace(/[^0-9]/g, '');
-  return sanitized;
-}
+// 10. WhatsApp Integration & Message Generator re-exported from ./utils/whatsapp above
 
-export function buildWhatsAppAppointmentMessage(booking: {
-  customerName: string;
-  customerPhone: string;
-  serviceName: string;
-  appointmentDate: string;
-  dayOfWeek: string;
-  startTime: string;
-  endTime: string;
-  additionalMessage?: string;
-  bookingId: string;
-}): string {
-  const msgNote = booking.additionalMessage?.trim() || 'None provided';
-  const formattedDate = formatReadableDateIST(booking.appointmentDate);
-
-  return (
-    `YOUR SOUL — NEW APPOINTMENT REQUEST\n\n` +
-    `Hello YOUR SOUL Team,\n\n` +
-    `I would like to request an appointment.\n\n` +
-    `CUSTOMER DETAILS\n\n` +
-    `Name: ${booking.customerName}\n` +
-    `Mobile: ${booking.customerPhone}\n\n` +
-    `APPOINTMENT DETAILS\n\n` +
-    `Service: ${booking.serviceName}\n` +
-    `Date: ${formattedDate} (${booking.appointmentDate})\n` +
-    `Day: ${booking.dayOfWeek}\n` +
-    `Time: ${booking.startTime} – ${booking.endTime}\n\n` +
-    `Additional Message: ${msgNote}\n\n` +
-    `Booking Reference: ${booking.bookingId}\n\n` +
-    `Status: PENDING CONFIRMATION\n\n` +
-    `Please check availability and confirm my appointment.\n\n` +
-    `Thank you.\n` +
-    `YOUR SOUL Customer`
-  );
-}
-
-export function buildWhatsAppClickToChatUrl(booking: {
-  customerName: string;
-  customerPhone: string;
-  serviceName: string;
-  appointmentDate: string;
-  dayOfWeek: string;
-  startTime: string;
-  endTime: string;
-  additionalMessage?: string;
-  bookingId: string;
-}): { url: string; rawMessage: string; businessNumber: string } {
-  const businessNumber = getBusinessWhatsAppNumber();
-  const rawMessage = buildWhatsAppAppointmentMessage(booking);
-  const encodedText = encodeURIComponent(rawMessage);
-  const url = `https://wa.me/${businessNumber}?text=${encodedText}`;
-
-  return { url, rawMessage, businessNumber };
-}

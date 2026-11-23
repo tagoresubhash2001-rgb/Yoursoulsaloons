@@ -1,9 +1,30 @@
 import React, { useState } from 'react';
 import { DivisionMode } from '../types';
-import { SALON_CONTACT, ACADEMY_CONTACT, ACADEMY_COURSES } from '../config/siteContent';
+import {
+  SALON_CONTACT,
+  ACADEMY_CONTACT,
+  ACADEMY_COURSES,
+  ACADEMY_LEARNING_MODES,
+} from '../config/siteContent';
 import { useNavigation } from '../context/NavigationContext';
 import { AppointmentBookingForm } from './AppointmentBookingForm';
-import { MapPin, Phone, Mail, Clock, CheckCircle2, ArrowRight, MessageCircle, Instagram, ExternalLink } from 'lucide-react';
+import {
+  buildAcademyEnquiryWhatsAppUrl,
+  validateIndianPhone,
+  WhatsAppPayloadResult,
+} from '../utils/whatsapp';
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Clock,
+  CheckCircle2,
+  MessageCircle,
+  Instagram,
+  ExternalLink,
+  Copy,
+  Check,
+} from 'lucide-react';
 import { motion } from 'motion/react';
 import { ScrollReveal } from './ScrollReveal';
 
@@ -20,11 +41,13 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ mode }) => {
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [interest, setInterest] = useState('');
+  const [interest, setInterest] = useState('Module 01: BASIC — Salon Assistant · Beginner Level');
   const [intake, setIntake] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [academyWhatsapp, setAcademyWhatsapp] = useState<WhatsAppPayloadResult | null>(null);
+  const [copiedAcademy, setCopiedAcademy] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
   const handleAcademySubmit = (e: React.FormEvent) => {
@@ -33,14 +56,32 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ mode }) => {
       setErrorMsg('Please complete all marked contact fields.');
       return;
     }
+    if (!validateIndianPhone(phone)) {
+      setErrorMsg('Please enter a valid 10-digit Indian mobile number.');
+      return;
+    }
 
     setIsSubmitting(true);
     setErrorMsg('');
 
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmitted(true);
-    }, 600);
+    const payload = buildAcademyEnquiryWhatsAppUrl({
+      customerName: fullName,
+      customerPhone: phone,
+      learningMode: interest || 'General Academy Admissions',
+      courseName: interest || 'All Academy Modules',
+      enquiryDetails: [
+        email ? `Email: ${email.trim()}` : '',
+        intake ? `Anticipated Start: ${intake.trim()}` : '',
+        message ? `Notes: ${message.trim()}` : '',
+      ]
+        .filter(Boolean)
+        .join(' | '),
+    });
+
+    setAcademyWhatsapp(payload);
+    setIsSubmitting(false);
+    setSubmitted(true);
+    window.open(payload.url, '_blank', 'noopener,noreferrer');
   };
 
   const rawPhone = info.phone.replace(/[^0-9+]/g, '');
@@ -218,23 +259,56 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ mode }) => {
                   </p>
                 </div>
 
-                {submitted ? (
-                  <div className="py-10 text-center space-y-4">
+                {submitted && academyWhatsapp ? (
+                  <div className="py-8 text-center space-y-4">
                     <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#EAE2D7] text-[#0E2E54]">
                       <CheckCircle2 className="h-8 w-8 stroke-[1.5]" />
                     </div>
                     <h4 className="font-serif text-2xl text-[#14171A]">
-                      Application Logged
+                      Admissions WhatsApp Message Ready
                     </h4>
                     <p className="text-sm text-[#524B43] max-w-md mx-auto leading-relaxed">
-                      Thank you, {fullName}. Your admissions inquiry has been recorded. An academic mentor will follow up with syllabus packets and tour timings.
+                      Thank you, <strong className="text-[#14171A]">{fullName}</strong>. Please tap{' '}
+                      <strong className="text-[#14171A]">Send</strong> in the opened WhatsApp chat (+{academyWhatsapp.businessNumber}) so our academic mentors receive your enquiry immediately.
                     </p>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                      <a
+                        href={academyWhatsapp.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-brand-primary min-h-[46px] w-full sm:w-auto justify-center"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                        <span>Open WhatsApp Admissions</span>
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard?.writeText(academyWhatsapp.rawMessage);
+                          setCopiedAcademy(true);
+                          window.setTimeout(() => setCopiedAcademy(false), 3000);
+                        }}
+                        className="btn-brand-outline min-h-[46px] w-full sm:w-auto justify-center text-xs"
+                      >
+                        {copiedAcademy ? (
+                          <>
+                            <Check className="h-4 w-4 text-emerald-700" />
+                            <span>Copied!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="h-4 w-4" />
+                            <span>Copy Message</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
                     <motion.button
                       type="button"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => setSubmitted(false)}
-                      className="btn-brand-navy min-h-[44px] mt-4"
+                      className="text-xs text-[#7D7164] hover:text-[#14171A] underline underline-offset-4 cursor-pointer pt-2"
                     >
                       Submit Another Inquiry
                     </motion.button>
@@ -304,12 +378,23 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ mode }) => {
                         onChange={(e) => setInterest(e.target.value)}
                         className="w-full rounded-[8px] card-thick-border border-2 border-[#14171A] bg-[#FAF8F5] px-4 py-2.5 text-sm text-[#14171A] focus:outline-hidden min-h-[44px]"
                       >
-                        <option value="">Select an accredited diploma...</option>
-                        {ACADEMY_COURSES.map((c) => (
-                          <option key={c.id} value={c.title}>
-                            {c.title} ({c.level})
-                          </option>
-                        ))}
+                        <optgroup label="── Four Structured Learning Modes ──">
+                          {ACADEMY_LEARNING_MODES.map((m) => (
+                            <option
+                              key={m.id}
+                              value={`${m.moduleNumber}: ${m.title} — ${m.roleSubtitle}`}
+                            >
+                              {m.moduleNumber}: {m.title} — {m.roleSubtitle}
+                            </option>
+                          ))}
+                        </optgroup>
+                        <optgroup label="── Specialized Diplomas & Masterclasses ──">
+                          {ACADEMY_COURSES.map((c) => (
+                            <option key={c.id} value={c.title}>
+                              {c.title} ({c.level})
+                            </option>
+                          ))}
+                        </optgroup>
                       </select>
                     </div>
 

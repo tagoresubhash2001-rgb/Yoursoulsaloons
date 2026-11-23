@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { motion } from 'motion/react';
 
 interface Brand {
@@ -22,7 +22,7 @@ const BRANDS: Brand[] = [
   { name: 'YOUR SOUL Botanical Lab', tagline: 'Custom Dermal Formulations', country: 'In-House' },
 ];
 
-export const BrandMarquee: React.FC = () => {
+export const BrandMarquee: React.FC = memo(() => {
   // Double the array for seamless infinite marquee loop
   const marqueeList = [...BRANDS, ...BRANDS];
 
@@ -70,4 +70,6 @@ export const BrandMarquee: React.FC = () => {
       </div>
     </section>
   );
-};
+});
+
+BrandMarquee.displayName = 'BrandMarquee';

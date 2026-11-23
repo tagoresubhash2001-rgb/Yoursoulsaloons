@@ -3,7 +3,6 @@ import { useNavigation } from '../context/NavigationContext';
 import { BannerSlot } from '../components/BannerSlot';
 import { EditorialSection } from '../components/EditorialSection';
 import { BANNERS, SALON_ABOUT_SECTIONS, ACADEMY_ABOUT_SECTIONS } from '../config/siteContent';
-import { ArrowRight, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
 import { ScrollReveal } from '../components/ScrollReveal';
 

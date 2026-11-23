@@ -6,27 +6,22 @@ import { FAQSection } from '../components/FAQSection';
 import { BrandMarquee } from '../components/BrandMarquee';
 import { DualRowTestimonials } from '../components/DualRowTestimonials';
 import { TestimonialCarousel } from '../components/TestimonialCarousel';
-import { BANNERS, SALON_SERVICES, ACADEMY_COURSES, SALON_ABOUT_SECTIONS, ACADEMY_ABOUT_SECTIONS } from '../config/siteContent';
-import { 
-  ArrowRight, 
-  Clock, 
-  Sparkles, 
-  ShieldCheck, 
-  Phone, 
-  MapPin, 
-  Briefcase, 
-  Building2, 
-  CheckCircle2, 
-  Package, 
-  Send, 
+import { AcademyModulesSection } from '../components/AcademyModulesSection';
+import { BANNERS, ACADEMY_COURSES, ACADEMY_ABOUT_SECTIONS } from '../config/siteContent';
+import { buildServiceEnquiryWhatsAppUrl } from '../utils/whatsapp';
+import {
+  ArrowRight,
+  Sparkles,
+  Phone,
+  Building2,
+  CheckCircle2,
+  Send,
   ChevronRight,
   Scissors,
-  Palette,
-  HeartHandshake
+  MessageCircle,
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { ScrollReveal, ScrollRevealItem } from '../components/ScrollReveal';
-
 import { FeaturePill } from '../components/FeaturePill';
 
 interface HomePageProps {
@@ -51,7 +46,7 @@ const SALON_SIX_CATEGORIES: ServiceCategoryCard[] = [
     title: 'Hair Styling & Haircuts',
     subtitle: 'Architectural Cuts & Precision Shaping',
     description: 'Precision Vidal Sassoon and French atelier techniques calibrated to bone structure, growth whorls, and lifestyle for effortless home maintenance.',
-    image: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=800&q=75&fm=webp',
     highlights: ['Micro-texture evaluation', 'Sensory scalp shampoo', 'Editorial blowout finish'],
   },
   {
@@ -60,7 +55,7 @@ const SALON_SIX_CATEGORIES: ServiceCategoryCard[] = [
     title: 'Hair Colouring & Highlights',
     subtitle: 'French Balayage & Low-Damage Formulations',
     description: 'Artisanal hand-painted balayage, dimensional foilayage, root shadows, and acidic glosses with ammonia-free European pigments that safeguard hair fibers.',
-    image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=75&fm=webp',
     highlights: ['Olaplex bond protection', 'Soft natural regrowth', 'Custom tone calibration'],
   },
   {
@@ -69,7 +64,7 @@ const SALON_SIX_CATEGORIES: ServiceCategoryCard[] = [
     title: 'Bridal Makeup & Occasion Styling',
     subtitle: 'Signature Indian Bridal & High-Definition Artistry',
     description: 'Bespoke bridal consultations, airbrush HD makeup, dupatta draping, and jewelry setting designed to remain pristine through celebratory ceremonies.',
-    image: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=800&q=75&fm=webp',
     highlights: ['Pre-wedding skin prep', 'Water-resistant HD finish', 'Private bridal suite'],
   },
   {
@@ -78,7 +73,7 @@ const SALON_SIX_CATEGORIES: ServiceCategoryCard[] = [
     title: 'Hair Extensions & Enhancements',
     subtitle: '100% Remy Human Hair Integration',
     description: 'Seamless tape-in, micro-ring, and invisible weft human hair extensions that add natural volume, density, and length without straining natural roots.',
-    image: 'https://images.unsplash.com/photo-1560869713-7d0a29430803?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1560869713-7d0a29430803?auto=format&fit=crop&w=800&q=75&fm=webp',
     highlights: ['Exact shade blending', 'Undetectable flat bonds', 'Re-usable premium hair'],
   },
   {
@@ -87,7 +82,7 @@ const SALON_SIX_CATEGORIES: ServiceCategoryCard[] = [
     title: 'Nail Care & Extensions',
     subtitle: 'Russian Dry Manicures & BIAB Overlays',
     description: 'Sterile medical-grade cuticle restoration, Builder-In-A-Bottle (BIAB) nail strengthening, sculpted gel extensions, and artisanal minimalist nail art.',
-    image: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&w=800&q=75&fm=webp',
     highlights: ['Autoclaved instruments', 'Non-chipping 4-week wear', 'Nourishing keratin cuticle oil'],
   },
   {
@@ -96,7 +91,7 @@ const SALON_SIX_CATEGORIES: ServiceCategoryCard[] = [
     title: 'Skin Care & Beauty Treatments',
     subtitle: 'Cellular Facials & Lymphatic Buccal Sculpting',
     description: 'Deep pore hydro-infusions, probiotic resurfacing peels, and buccal intra-oral facial sculpting that drain fluid retention and awaken luminous dermal glow.',
-    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=800&q=75&fm=webp',
     highlights: ['Non-comedogenic botanicals', 'Facial lymphatic drainage', 'Barrier repair hydration'],
   },
   {
@@ -105,7 +100,7 @@ const SALON_SIX_CATEGORIES: ServiceCategoryCard[] = [
     title: 'Scalp Detox & Trichology Therapy',
     subtitle: 'Micro-Mist Steam & Basalt Head Spa',
     description: 'Microscopic scalp scanning, warm volcanic stone neck therapy, and high-frequency ozone steam that purifies follicular build-up and stimulates growth.',
-    image: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=800&q=75&fm=webp',
     highlights: ['Digital follicular scan', 'Volcanic basalt basin', 'Ozone peptide mist'],
   },
   {
@@ -114,7 +109,7 @@ const SALON_SIX_CATEGORIES: ServiceCategoryCard[] = [
     title: 'Texture Realignment & Cysteine',
     subtitle: 'Formaldehyde-Free Botanical Smoothing',
     description: 'Silk protein infusions and botanical keratin that tame coastal humidity frizz while preserving hair body, bounce, and natural wave integrity.',
-    image: 'https://images.unsplash.com/photo-1522337094346-2187659543e3?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1522337094346-2187659543e3?auto=format&fit=crop&w=800&q=75&fm=webp',
     highlights: ['Zero harsh chemicals', 'Monsoon humidity guard', 'High-gloss mirror finish'],
   },
   {
@@ -123,7 +118,7 @@ const SALON_SIX_CATEGORIES: ServiceCategoryCard[] = [
     title: "Men's Atelier Grooming & Beard Design",
     subtitle: 'Hot Towel Rituals & Bespoke Scissor Shaping',
     description: 'Precision scissor fades, botanical hot towel shaves, beard contour sculpting, and calming scalp clarify rituals designed for the modern gentleman.',
-    image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=800&q=75&fm=webp',
     highlights: ['Hot botanical compress', 'Razor precision lines', 'Scalp invigorating tonic'],
   },
 ];
@@ -154,7 +149,7 @@ const APPROACH_STEPS: ApproachStep[] = [
   {
     step: '04',
     title: 'Personalised Planning',
-    description: 'Custom formulation formulation strategy and precision cut blueprint shared with complete transparent pricing upfront.',
+    description: 'Custom formulation strategy and precision cut blueprint shared transparently during your consultation.',
   },
   {
     step: '05',
@@ -238,6 +233,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenBookingModal }) => {
             </ScrollReveal>
           </div>
         </section>
+
+        {/* Academy 4 Learning Mode Cards + Comparison Section */}
+        <AcademyModulesSection onExploreCourses={() => navigateTo('services', 'academy')} />
 
         {/* Academy Flagship Programs */}
         <section className="w-full py-20 sm:py-28 border-t border-[#E8E1D7] bg-[#F2EDE5]">
@@ -411,6 +409,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenBookingModal }) => {
                     <img
                       src={cat.image}
                       alt={cat.title}
+                      width={800}
+                      height={500}
+                      referrerPolicy="no-referrer"
+                      decoding="async"
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       loading="lazy"
                     />
@@ -457,15 +459,25 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenBookingModal }) => {
                 </div>
 
                 {/* Card Action Footer */}
-                <div className="p-6 pt-0">
+                <div className="p-6 pt-0 flex items-center gap-2.5">
                   <button
                     type="button"
                     onClick={() => onOpenBookingModal(cat.serviceId)}
-                    className="w-full btn-brand-primary min-h-[42px] text-xs justify-between"
+                    className="flex-1 btn-brand-primary min-h-[44px] text-xs justify-between"
                   >
                     <span>Book Slot Now</span>
                     <ArrowRight className="h-3.5 w-3.5" />
                   </button>
+                  <a
+                    href={buildServiceEnquiryWhatsAppUrl({ serviceName: cat.title, category: cat.subtitle }).url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Enquire about ${cat.title} on WhatsApp`}
+                    title="Enquire via WhatsApp"
+                    className="btn-brand-outline min-h-[44px] px-3.5 shrink-0"
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                  </a>
                 </div>
               </motion.div>
             ))}
@@ -653,8 +665,12 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenBookingModal }) => {
                   className="group relative rounded-[16px] overflow-hidden card-thick-border border-2 border-[#14171A] aspect-[4/3] bg-[#EAE1D5] shadow-md hover:shadow-xl hover:border-[#E85D1A] transition-all duration-300"
                 >
                   <img
-                    src="https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=800&q=80"
+                    src="https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=800&q=75&fm=webp"
                     alt="Atelier Aftercare & Formulations Desk"
+                    width={800}
+                    height={600}
+                    referrerPolicy="no-referrer"
+                    decoding="async"
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     loading="lazy"
                   />
@@ -741,6 +757,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenBookingModal }) => {
                 <img
                   src="/banners/salon_about_banner.jpg"
                   alt="Precision Diagnostic Haircut Consultation"
+                  width={1200}
+                  height={900}
+                  decoding="async"
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   loading="lazy"
                 />
@@ -762,6 +781,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenBookingModal }) => {
                 <img
                   src="/banners/salon_services_banner.jpg"
                   alt="Restorative Basin and Ozone Steam Treatment"
+                  width={1200}
+                  height={900}
+                  decoding="async"
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   loading="lazy"
                 />
@@ -968,6 +990,12 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenBookingModal }) => {
           </ScrollReveal>
         </div>
       </section>
+
+      {/* -------------------------------------------------------------------
+          ACADEMY COURSES MODULE (4 Learning Modes + 4-Mode Comparison)
+          Accessible directly on landing & routes to full Academy Courses page
+          ------------------------------------------------------------------- */}
+      <AcademyModulesSection onExploreCourses={() => navigateTo('services', 'academy')} />
 
       {/* -------------------------------------------------------------------
           SECTION 11: FRANCHISE OPPORTUNITY BLOCK

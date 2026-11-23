@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { EditorialSectionData } from '../types';
 import { useAssets } from '../context/AssetContext';
-import { SlidersHorizontal, Image as ImageIcon } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface EditorialSectionProps {
@@ -9,19 +8,14 @@ interface EditorialSectionProps {
   isFirst?: boolean;
 }
 
-export const EditorialSection: React.FC<EditorialSectionProps> = ({ section, isFirst = false }) => {
-  const { customSlots, setSelectedSlotId, setIsAssetDrawerOpen } = useAssets();
+export const EditorialSection: React.FC<EditorialSectionProps> = memo(({ section, isFirst = false }) => {
+  const { customSlots } = useAssets();
   const [imgError, setImgError] = useState(false);
 
   const customUrl = customSlots[section.imageSlot.slotId];
   const effectiveSrc = !imgError && (customUrl || section.imageSlot.imageSrc);
 
   const isLeft = section.imagePosition === 'left';
-
-  const handleOpenSlotConfig = () => {
-    setSelectedSlotId(section.imageSlot.slotId);
-    setIsAssetDrawerOpen(true);
-  };
 
   return (
     <article className="w-full py-20 md:py-32 border-t border-[#E8E1D7] bg-[#FAF8F5] overflow-hidden">
@@ -52,6 +46,7 @@ export const EditorialSection: React.FC<EditorialSectionProps> = ({ section, isF
                     height={900}
                     referrerPolicy="no-referrer"
                     loading={isFirst ? 'eager' : 'lazy'}
+                    decoding="async"
                     onError={() => setImgError(true)}
                     className="h-full w-full object-cover transition-transform duration-700 ease-[0.16,1,0.3,1] group-hover:scale-[1.018]"
                   />
@@ -155,4 +150,6 @@ export const EditorialSection: React.FC<EditorialSectionProps> = ({ section, isF
       </div>
     </article>
   );
-};
+});
+
+EditorialSection.displayName = 'EditorialSection';

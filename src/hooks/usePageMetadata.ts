@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { DivisionMode, PageRoute } from '../types';
+import { FAQS } from '../config/siteContent';
 
 interface MetaConfig {
   title: string;
@@ -88,6 +89,9 @@ export function usePageMetadata(mode: DivisionMode, page: PageRoute) {
     setMetaTag('name', 'twitter:title', meta.title);
     setMetaTag('name', 'twitter:description', meta.description);
 
+    const canonicalUrl =
+      window.location.origin + (page === 'home' ? `/${mode}` : `/${mode}/${page}`);
+
     // Canonical link
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     if (!canonical) {
@@ -95,6 +99,40 @@ export function usePageMetadata(mode: DivisionMode, page: PageRoute) {
       canonical.setAttribute('rel', 'canonical');
       document.head.appendChild(canonical);
     }
-    canonical.setAttribute('href', window.location.origin + (page === 'home' ? `/${mode}` : `/${mode}/${page}`));
+    canonical.setAttribute('href', canonicalUrl);
+
+    // Synchronize single FAQPage JSON-LD structured data block (ordered with active division first)
+    const prioritizedFaqs = [
+      ...FAQS.filter((item) => item.category === mode),
+      ...FAQS.filter((item) => item.category !== mode),
+    ];
+
+    const faqSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      name:
+        mode === 'academy'
+          ? 'YOUR SOUL Academy — Beauty & Cosmetology Education FAQs'
+          : 'YOUR SOUL Salon & Academy — Frequently Asked Questions',
+      url: canonicalUrl,
+      inLanguage: 'en-IN',
+      mainEntity: prioritizedFaqs.map((faq) => ({
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: faq.answer,
+        },
+      })),
+    };
+
+    let faqScript = document.getElementById('yoursoul-faq-jsonld') as HTMLScriptElement | null;
+    if (!faqScript) {
+      faqScript = document.createElement('script');
+      faqScript.id = 'yoursoul-faq-jsonld';
+      faqScript.type = 'application/ld+json';
+      document.head.appendChild(faqScript);
+    }
+    faqScript.textContent = JSON.stringify(faqSchema);
   }, [mode, page]);
 }

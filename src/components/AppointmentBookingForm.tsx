@@ -11,25 +11,19 @@ import {
   subscribeToDateReservations,
   buildWhatsAppClickToChatUrl,
   SlotReservationRecord,
-  getBusinessWhatsAppNumber
 } from '../firebase';
 import { SALON_SERVICES } from '../config/siteContent';
 import {
   Calendar,
-  Clock,
-  User,
-  Phone,
-  Mail,
-  FileText,
   Sparkles,
   CheckCircle2,
   AlertCircle,
   Copy,
   Check,
   MessageCircle,
-  ArrowRight
+  ArrowRight,
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 
 interface AppointmentBookingFormProps {
   preselectedServiceId?: string;

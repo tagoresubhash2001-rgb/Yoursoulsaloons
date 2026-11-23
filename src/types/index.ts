@@ -108,4 +108,41 @@ export interface Testimonial {
   verified: boolean;
 }
 
+export interface AcademyCurriculumGroup {
+  name: string;
+  topics: string[];
+}
+
+export interface AcademyLearningMode {
+  id: string;
+  moduleNumber: string;
+  title: string;
+  roleSubtitle: string;
+  levelBadge: string;
+  description: string;
+  includesPreviousNote?: string;
+  duration: string;
+  learningFormat: string;
+  availableCourses: string[];
+  curriculumGroups: AcademyCurriculumGroup[];
+  trainingMethodology: string;
+  practicalTraining: string;
+  certification: string;
+  eligibility: string;
+  courseFeeNote: string;
+  benefits: string[];
+  image: string;
+  imageAlt: string;
+  accentColor: 'navy' | 'orange';
+}
+
+export interface AcademyComparisonRow {
+  criteria: string;
+  basic: string;
+  standard: string;
+  advanced: string;
+  expert: string;
+}
+
+
 

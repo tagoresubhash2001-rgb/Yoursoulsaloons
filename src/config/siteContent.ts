@@ -6,6 +6,8 @@ import {
   ContactInfo,
   FAQItem,
   Testimonial,
+  AcademyLearningMode,
+  AcademyComparisonRow,
 } from '../types';
 
 // ==========================================
@@ -832,4 +834,360 @@ export const TESTIMONIALS: Testimonial[] = [
     verified: true,
   },
 ];
+
+// ==========================================
+// ACADEMY 4 LEARNING MODES (Verified from Your_Soul_Academy_Modules.pdf)
+// Hair | Skin | Body — Structured Progression: Basic -> Standard -> Advanced -> Expert
+// ==========================================
+
+export const ACADEMY_SYLLABUS_PDF_PATH = '/assets/aistudio/Your_Soul_Academy_Modules_07bb08b1.pdf';
+
+export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
+  {
+    id: 'mode-basic',
+    moduleNumber: 'Module 01',
+    title: 'BASIC',
+    roleSubtitle: 'Salon Assistant · Beginner Level',
+    levelBadge: 'Beginner Level',
+    description:
+      'Learn the foundations and perform basic salon services safely and hygienically across hair, skin, and body care.',
+    duration: 'Foundation Track (Batch schedule confirmed on admissions)',
+    learningFormat: 'In-Studio Foundational Theory + Guided Demonstration',
+    availableCourses: [
+      'Salon Hygiene, Sterilization & Safety Etiquette',
+      'Skin Basics, CTM, Threading & Waxing',
+      'Hair Basics, Shampoo, Blow-Dry & Straight/U/V Cuts',
+      'Basic Manicure, Pedicure & Nail Care',
+    ],
+    curriculumGroups: [
+      {
+        name: 'Foundation',
+        topics: [
+          'Salon hygiene & sterilization',
+          'Tools: scissors & trimmers (types, parts, care)',
+          'Client consultation & patch test',
+          'Salon safety & etiquette',
+        ],
+      },
+      {
+        name: 'Skin',
+        topics: [
+          'Skin layers & skin types identification',
+          'CTM routine (cleanse, tone, moisturise)',
+          'Clean-up & bleach',
+          'Threading & normal / honey waxing',
+          'Basic face massage',
+        ],
+      },
+      {
+        name: 'Hair',
+        topics: [
+          'Hair & follicle structure, scalp types',
+          'Shampoo, conditioning & head massage',
+          'Blow-dry basics',
+          'Basic cuts: straight, U, V',
+          "Men's basic cut, beard trim & shave",
+        ],
+      },
+      {
+        name: 'Body',
+        topics: [
+          'Basic manicure & pedicure',
+          'Hand & foot massage',
+          'Nail shaping & cuticle care',
+        ],
+      },
+    ],
+    trainingMethodology:
+      'Step-by-step foundational demonstrations covering hygiene protocols, tool handling, skin & scalp anatomy, and guided mannequin/partner drills.',
+    practicalTraining:
+      'Supervised studio practice on essential salon prep, patch testing, CTM routines, basic cuts, waxing, and manicure/pedicure procedures.',
+    certification: 'YOUR SOUL Academy Certificate of Completion — Basic (Salon Assistant Level)',
+    eligibility: 'Open to absolute beginners with passion for beauty; no prior salon experience required.',
+    courseFeeNote: 'Shared upon admissions enquiry',
+    benefits: [
+      'Build safe, hygienic salon habits from day one',
+      'Master essential Hair, Skin & Body fundamentals',
+      'Entry-ready skillset for Salon Assistant roles',
+    ],
+    image: '/banners/academy_home_hero.jpg',
+    imageAlt: 'Your Soul Academy Basic module foundational studio training',
+    accentColor: 'navy',
+  },
+  {
+    id: 'mode-standard',
+    moduleNumber: 'Module 02',
+    title: 'STANDARD',
+    roleSubtitle: 'Junior Stylist · Beautician Level',
+    levelBadge: 'Junior Stylist',
+    description:
+      'Independently perform the most popular salon services on real clients with strong product knowledge and client communication.',
+    includesPreviousNote: 'Includes everything in Basic',
+    duration: 'Core Career Track (Full-time & structured batch options)',
+    learningFormat: 'Classroom Science + Supervised Real-Client Floor Sessions',
+    availableCourses: [
+      'Skin Concerns, Fruit/Gold/D-Tan Facials & Rica Waxing',
+      'Layer/Step/Feather/Bob Cuts, Fades & Colour Theory',
+      'Spa Manicure/Pedicure, Swedish Massage & Body Polishing',
+      'Client Handling, Service Recommendation & Billing Basics',
+    ],
+    curriculumGroups: [
+      {
+        name: 'Skin',
+        topics: [
+          'Skin problems: whiteheads, blackheads, pimples, tan',
+          'Why & how skin concerns form',
+          'Facials: fruit, gold, D-tan, hydrating',
+          'Rica / chocolate wax & full body waxing',
+          'Reading products & ingredients',
+        ],
+      },
+      {
+        name: 'Hair',
+        topics: [
+          'Layer, step, feather & bob cuts',
+          "Men's fade & taper cuts",
+          'Colour theory: levels & tones',
+          'Global colour & root touch-up',
+          'Hair spa, ironing & curling',
+        ],
+      },
+      {
+        name: 'Body',
+        topics: [
+          'Spa manicure & pedicure',
+          'Swedish body massage',
+          'Body polishing & scrubs',
+          'Back treatment',
+        ],
+      },
+      {
+        name: 'Client Skills',
+        topics: [
+          'Client handling & communication',
+          'Service recommendation & upselling',
+          'Billing & appointment basics',
+        ],
+      },
+    ],
+    trainingMethodology:
+      'Ingredient-led skin & colour theory combined with structured chair drills and commercial client-handling roleplays.',
+    practicalTraining:
+      'Hands-on execution of popular salon facials, global hair colour, layered cuts, fades, spa therapies, and real-client consultations.',
+    certification: 'YOUR SOUL Academy Diploma — Standard (Junior Stylist / Beautician Level)',
+    eligibility: 'Beginners enrolling in full career track or Basic-level learners advancing to independent client services.',
+    courseFeeNote: 'Shared upon admissions enquiry',
+    benefits: [
+      'Perform high-demand salon services independently',
+      'Understand colour levels, tones & skincare ingredients',
+      'Develop consultation, billing & client retention skills',
+    ],
+    image: '/banners/academy_about_banner.jpg',
+    imageAlt: 'Your Soul Academy Standard module junior stylist hands-on mentoring',
+    accentColor: 'orange',
+  },
+  {
+    id: 'mode-advanced',
+    moduleNumber: 'Module 03',
+    title: 'ADVANCED',
+    roleSubtitle: 'Stylist · Specialist Level',
+    levelBadge: 'Specialist Level',
+    description:
+      'Master premium treatments, chemical hair services, therapeutic body work, and occasion/bridal styling.',
+    includesPreviousNote: 'Includes everything in Basic & Standard',
+    duration: 'Specialist Mastery Track (Modular & intensive schedules)',
+    learningFormat: 'Specialist Workshops + Chemical Lab + Live Model Clinic',
+    availableCourses: [
+      'O3+, HydraFacial, Pigmentation, Acne & Anti-Ageing Plans',
+      'Highlights, Balayage, Ombré, Keratin, Botox & Rebonding',
+      'Deep Tissue, Aromatherapy & Detox Body Wraps',
+      'Day/Party Makeup, Saree Draping & Basic Nail Art',
+    ],
+    curriculumGroups: [
+      {
+        name: 'Skin',
+        topics: [
+          'Advanced facials: O3+, HydraFacial',
+          'Pigmentation & de-tan treatments',
+          'Acne care & skin-type based treatment plans',
+          'Under-eye & anti-ageing treatments',
+        ],
+      },
+      {
+        name: 'Hair',
+        topics: [
+          'Highlights, balayage & ombré',
+          'Keratin, smoothening & hair botox',
+          'Rebonding & perming',
+          'Dandruff & hair-fall treatments',
+          'Bridal & party hairstyles',
+        ],
+      },
+      {
+        name: 'Body',
+        topics: [
+          'Deep tissue massage',
+          'Aromatherapy massage',
+          'Body wraps & detox treatments',
+        ],
+      },
+      {
+        name: 'Makeup & Styling',
+        topics: [
+          'Day & party makeup',
+          'Saree draping styles',
+          'Basic nail art',
+        ],
+      },
+    ],
+    trainingMethodology:
+      'Advanced formulation labs, skin-type treatment planning, chemical hair texture control, and supervised specialist assessments.',
+    practicalTraining:
+      'Live model execution across balayage, keratin/botox, HydraFacial/O3+, therapeutic massage, occasion makeup, and saree draping.',
+    certification: 'YOUR SOUL Academy Specialist Diploma — Advanced (Stylist / Specialist Level)',
+    eligibility: 'Aspiring specialists enrolling directly in comprehensive training or practicing junior stylists upgrading skills.',
+    courseFeeNote: 'Shared upon admissions enquiry',
+    benefits: [
+      'Command high-value chemical colour & texture services',
+      'Deliver targeted clinical-grade facial & scalp plans',
+      'Expand into party makeup, draping & specialist body therapy',
+    ],
+    image: '/banners/academy_services_banner.jpg',
+    imageAlt: 'Your Soul Academy Advanced module specialist chemical and makeup lab',
+    accentColor: 'navy',
+  },
+  {
+    id: 'mode-expert',
+    moduleNumber: 'Module 04',
+    title: 'EXPERT',
+    roleSubtitle: 'Senior Stylist · 1 Year+ Industry Level',
+    levelBadge: 'Senior Industry Level',
+    description:
+      'Graduate with the skill, speed and confidence of a professional with 1+ year of salon experience, backed by live salon internship.',
+    includesPreviousNote: 'Includes everything in Basic, Standard & Advanced',
+    duration: 'Comprehensive Pro Track + Live Salon Internship',
+    learningFormat: 'Master Mentorship + Clinical Science + Live Salon Internship',
+    availableCourses: [
+      'Skin Science, Chemical Peels, Microdermabrasion & First Aid',
+      'Precision/Razor Cuts, Colour Correction, Extensions & Trichology',
+      'Reflexology, Potli Massage & Bridal Body Packages',
+      'Bridal & HD Makeup, Gel/Acrylic Nails & Salon Management',
+    ],
+    curriculumGroups: [
+      {
+        name: 'Skin Science',
+        topics: [
+          'Hormones & vitamins and their effect on skin',
+          'Acne grading & skin analysis',
+          'Chemical peels & microdermabrasion',
+          'Reactions, contraindications & first aid',
+          'Cosmetic science & ingredients',
+        ],
+      },
+      {
+        name: 'Hair Mastery',
+        topics: [
+          'Precision, razor & texturizing cuts',
+          'Skin fade & hair designs',
+          'Colour correction',
+          'Hair extensions',
+          'Trichology basics: hair-fall types',
+        ],
+      },
+      {
+        name: 'Body Therapy',
+        topics: [
+          'Reflexology & pressure points',
+          'Potli massage',
+          'Complete bridal body packages',
+        ],
+      },
+      {
+        name: 'Bridal & Nails',
+        topics: [
+          'Bridal & HD makeup',
+          'Gel & acrylic nails',
+          'Advanced nail art',
+        ],
+      },
+      {
+        name: 'Professional Training',
+        topics: [
+          'Live salon internship at Your Soul with real clients',
+          'Service logbook & timed practical assessment',
+          'Treatment planning, complaint handling & salon management',
+          'Portfolio building & social media presence',
+        ],
+      },
+    ],
+    trainingMethodology:
+      'Intensive 1-on-1 master mentorship combining cosmetic biology, high-stakes colour correction, timed floor speed drills, and salon operations.',
+    practicalTraining:
+      'Mandatory live salon internship at Your Soul serving real clients, verified service logbook, timed assessments, and commercial portfolio shoot.',
+    certification: 'YOUR SOUL Academy Master Certification — Expert (Senior Stylist Industry Level)',
+    eligibility: 'Career-focused candidates targeting senior stylist placement, freelance bridal mastery, or salon ownership.',
+    courseFeeNote: 'Shared upon admissions enquiry',
+    benefits: [
+      'Graduate with 1+ year equivalent speed & floor confidence',
+      'Complete live salon internship at Your Soul with real clients',
+      'Includes portfolio building, salon management & social media training',
+    ],
+    image: '/banners/academy_contact_banner.jpg',
+    imageAlt: 'Your Soul Academy Expert module live salon internship and bridal mastery',
+    accentColor: 'orange',
+  },
+];
+
+export const ACADEMY_COMPARISON_ROWS: AcademyComparisonRow[] = [
+  {
+    criteria: 'Course duration',
+    basic: 'Foundation Track (Batch schedule confirmed on enquiry)',
+    standard: 'Core Career Track (Full-time & batch schedules)',
+    advanced: 'Specialist Mastery Track (Modular & intensive schedules)',
+    expert: 'Complete Pro Track + Live Salon Internship',
+  },
+  {
+    criteria: 'Learning format',
+    basic: 'In-Studio Theory + Guided Foundation Drills',
+    standard: 'Ingredient Theory + Supervised Floor Practice',
+    advanced: 'Specialist Chemical Labs + Live Model Clinic',
+    expert: 'Master Mentorship + Live Salon Floor Internship',
+  },
+  {
+    criteria: 'Practical training',
+    basic: 'Hygiene, CTM, threading, waxing, basic cuts & manicure/pedicure',
+    standard: 'Real-client facials, layer/fade cuts, global colour & spa rituals',
+    advanced: 'O3+/HydraFacial, balayage, keratin/botox, massage & party makeup',
+    expert: 'Live Your Soul internship, peels, extensions, HD bridal, gel/acrylic nails & timed logbook',
+  },
+  {
+    criteria: 'Trainer interaction',
+    basic: 'Guided step-by-step faculty supervision (1:8 cohort cap)',
+    standard: 'Active floor critique on technique & client handling',
+    advanced: 'Specialist trainer oversight on chemical & aesthetic protocols',
+    expert: 'Direct senior director mentorship, logbook audits & business coaching',
+  },
+  {
+    criteria: 'Flexibility',
+    basic: 'Scheduled studio intake batches',
+    standard: 'Structured weekday / batch options',
+    advanced: 'Modular specialist tracks & intensive batches',
+    expert: 'Structured full immersion with scheduled clinic & internship hours',
+  },
+  {
+    criteria: 'Certification',
+    basic: 'Basic Certificate (Salon Assistant Level)',
+    standard: 'Standard Diploma (Junior Stylist / Beautician Level)',
+    advanced: 'Advanced Specialist Diploma (Stylist Level)',
+    expert: 'Expert Master Certification (Senior Stylist · 1 Yr+ Level)',
+  },
+  {
+    criteria: 'Course fee',
+    basic: 'Shared on admissions enquiry',
+    standard: 'Shared on admissions enquiry',
+    advanced: 'Shared on admissions enquiry',
+    expert: 'Shared on admissions enquiry',
+  },
+];
+
 

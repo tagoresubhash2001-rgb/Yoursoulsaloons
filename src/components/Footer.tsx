@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useNavigation } from '../context/NavigationContext';
 import { useMotionPreferences } from '../context/MotionContext';
 import { Instagram, Phone, MessageCircle, MapPin, ExternalLink, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
 
-export const Footer: React.FC = () => {
+export const Footer: React.FC = memo(() => {
   const { setMode, navigateTo } = useNavigation();
   const { reducedMotion, toggleReducedMotion } = useMotionPreferences();
 
@@ -33,6 +33,8 @@ export const Footer: React.FC = () => {
                   className="h-11 sm:h-12 w-auto object-contain transition-opacity hover:opacity-90"
                   width={156}
                   height={52}
+                  loading="lazy"
+                  decoding="async"
                 />
               </button>
             </div>
@@ -249,4 +251,6 @@ export const Footer: React.FC = () => {
       </div>
     </footer>
   );
-};
+});
+
+Footer.displayName = 'Footer';

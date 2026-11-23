@@ -2,7 +2,8 @@ import React from 'react';
 import { useNavigation } from '../context/NavigationContext';
 import { BannerSlot } from '../components/BannerSlot';
 import { ServicesListing } from '../components/ServicesListing';
-import { BANNERS } from '../config/siteContent';
+import { AcademyModulesSection } from '../components/AcademyModulesSection';
+import { BANNERS, ACADEMY_SYLLABUS_PDF_PATH } from '../config/siteContent';
 import { motion } from 'motion/react';
 import { ScrollReveal } from '../components/ScrollReveal';
 
@@ -31,11 +32,20 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onOpenBookingModal }
       <BannerSlot
         banner={servicesBanner}
         priority={true}
-        ctaText={isSalon ? 'Consultation & Service Guide' : 'Download Complete Prospectus'}
-        onCtaClick={() => (isSalon ? onOpenBookingModal() : navigateTo('contact'))}
+        ctaText={isSalon ? 'Consultation & Service Guide' : 'View Official Syllabus PDF'}
+        onCtaClick={() => {
+          if (isSalon) {
+            onOpenBookingModal();
+          } else {
+            window.open(ACADEMY_SYLLABUS_PDF_PATH, '_blank', 'noopener,noreferrer');
+          }
+        }}
         secondaryCtaText={isSalon ? 'Speak to Concierge' : 'Admissions Inquiries'}
         onSecondaryCtaClick={() => navigateTo('contact')}
       />
+
+      {/* 1B. ACADEMY 4 LEARNING MODES & COMPARISON (Academy Mode Only) */}
+      {!isSalon && <AcademyModulesSection showExploreButton={false} />}
 
       {/* 2. SERVICES & COURSES INTERACTIVE LISTING */}
       <ServicesListing

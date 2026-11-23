@@ -1,7 +1,8 @@
 import React from 'react';
 import { DivisionMode } from '../types';
 import { FeaturePill } from './FeaturePill';
-import { ArrowRight, Clock, ShieldCheck, Sparkles, CheckCircle2 } from 'lucide-react';
+import { buildServiceEnquiryWhatsAppUrl, buildAcademyEnquiryWhatsAppUrl } from '../utils/whatsapp';
+import { ArrowRight, Clock, CheckCircle2, MessageCircle } from 'lucide-react';
 import { motion } from 'motion/react';
 import { ScrollReveal } from './ScrollReveal';
 
@@ -46,7 +47,7 @@ const SALON_EDITORIAL_CATEGORIES: EditorialServiceCategory[] = [
     subtitle: 'Precision French Atelier & Vidal Sassoon Sculpting',
     description: 'Every haircut is sculpted to your individual bone structure, hairline whorls, and hair density. We combine dry geometric analysis before washing with hand-honed shears, concluding with an unhurried blowout that maintains shape effortlessly for weeks.',
     duration: '75 min',
-    image: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=1000&q=80',
+    image: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=900&q=75&fm=webp',
     alt: 'Master stylist performing precision haircutting in modern luxury salon',
     features: [
       'Micro-Texture Diagnostic',
@@ -63,7 +64,7 @@ const SALON_EDITORIAL_CATEGORIES: EditorialServiceCategory[] = [
     subtitle: 'Freehand Highlighting & Low-Damage Formulations',
     description: 'Artisanal hand-painted dimensional balayage, subtle root melting, and acidic toner glazes calibrated for dark and warm undertones. Formulated with ammonia-free European pigments and bond rebuilders that safeguard hair vitality and mirror shine.',
     duration: '180 min',
-    image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1000&q=80',
+    image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=900&q=75&fm=webp',
     alt: 'Master colorist hand-painting dimensional French balayage highlights',
     features: [
       'Porosity Pre-Balancing Treatment',
@@ -80,7 +81,7 @@ const SALON_EDITORIAL_CATEGORIES: EditorialServiceCategory[] = [
     subtitle: '4K Camera Longevity & Personalized Dupatta Draping',
     description: 'Comprehensive styling exploration for wedding celebrations (Sangeet, Muhurtham, and Reception). We ensure waterproof HD airbrush longevity, custom veil and dupatta draping, and jewelry setting designed to withstand ceremony lights and cameras.',
     duration: '120 min',
-    image: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=1000&q=80',
+    image: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=900&q=75&fm=webp',
     alt: 'Luxury bridal hair and makeup artistry session in private studio suite',
     features: [
       'Pre-Wedding Dermal Preparation',
@@ -97,7 +98,7 @@ const SALON_EDITORIAL_CATEGORIES: EditorialServiceCategory[] = [
     subtitle: '100% Remy Human Hair Integration',
     description: 'Undetectable tape-in, micro-ring, and invisible weft human hair integration that adds natural volume, length, and movement without mechanical tension on native follicles. Each set is individually toned and texturized to blend seamlessly.',
     duration: '120 min',
-    image: 'https://images.unsplash.com/photo-1560869713-7d0a29430803?auto=format&fit=crop&w=1000&q=80',
+    image: 'https://images.unsplash.com/photo-1560869713-7d0a29430803?auto=format&fit=crop&w=900&q=75&fm=webp',
     alt: 'Luxurious long natural hair extensions styling',
     features: [
       'Exact Shade & Texture Blending',
@@ -114,7 +115,7 @@ const SALON_EDITORIAL_CATEGORIES: EditorialServiceCategory[] = [
     subtitle: 'Lymphatic Gua Sha & Buccal Facial Sculpting',
     description: 'Deep pore ultrasound infusions, probiotic herbal enzyme resurfacing, and sculpting buccal massage that release facial clenching, drain lymphatic congestion, and restore glowing cellular barrier hydration.',
     duration: '90 min',
-    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=1000&q=80',
+    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=900&q=75&fm=webp',
     alt: 'Restorative cellular dermal treatment with facial lymphatic massage',
     features: [
       'Double Botanical Oil Cleanse',
@@ -131,7 +132,7 @@ const SALON_EDITORIAL_CATEGORIES: EditorialServiceCategory[] = [
     subtitle: 'Volcanic Clay Exfoliation & Japanese Head Spa',
     description: 'Microscopic trichoscope imaging paired with detoxifying volcanic ash, ozone micro-steam, and warmed Icelandic basalt stones positioned along the neck and shoulders in our quiet basin sanctuary.',
     duration: '60 min',
-    image: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=1000&q=80',
+    image: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=900&q=75&fm=webp',
     alt: 'Restorative Japanese head spa basin and scalp detoxification treatment',
     features: [
       'Digital Trichoscope Diagnostic',
@@ -148,7 +149,7 @@ const SALON_EDITORIAL_CATEGORIES: EditorialServiceCategory[] = [
     subtitle: 'Russian Cuticle Precision & BIAB Gel Overlays',
     description: 'Hospital-grade autoclave sterilization, precision electric filing, Builder-In-A-Bottle (BIAB) nail strengthening, and minimalist editorial nail art designed for durable, chip-resistant wear.',
     duration: '60 min',
-    image: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&w=1000&q=80',
+    image: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&w=900&q=75&fm=webp',
     alt: 'Precision dry manicure and BIAB gel overlay application',
     features: [
       'Autoclave Pouched Implements',
@@ -293,6 +294,10 @@ export const ServicesListing: React.FC<ServicesListingProps> = ({
                       <img
                         src={item.image}
                         alt={item.alt}
+                        width={900}
+                        height={675}
+                        referrerPolicy="no-referrer"
+                        decoding="async"
                         className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
                         loading="lazy"
                       />
@@ -346,8 +351,8 @@ export const ServicesListing: React.FC<ServicesListingProps> = ({
                       </div>
                     </div>
 
-                    {/* Single Clear CTA Button */}
-                    <div className="pt-3">
+                    {/* Primary Booking CTA + Direct WhatsApp Service Enquiry */}
+                    <div className="pt-3 flex flex-wrap items-center gap-3">
                       <button
                         type="button"
                         onClick={() => onSelectService(item.serviceId)}
@@ -356,6 +361,19 @@ export const ServicesListing: React.FC<ServicesListingProps> = ({
                         <span>{item.ctaLabel}</span>
                         <ArrowRight className="h-4 w-4" />
                       </button>
+
+                      <a
+                        href={buildServiceEnquiryWhatsAppUrl({
+                          serviceName: item.category,
+                          category: item.subtitle,
+                        }).url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-brand-outline min-h-[44px]"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                        <span>WhatsApp Enquiry</span>
+                      </a>
                     </div>
                   </motion.div>
                 </div>
@@ -396,6 +414,9 @@ export const ServicesListing: React.FC<ServicesListingProps> = ({
                       <img
                         src={item.image}
                         alt={item.alt}
+                        width={900}
+                        height={675}
+                        decoding="async"
                         className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
                         loading="lazy"
                       />
@@ -451,8 +472,8 @@ export const ServicesListing: React.FC<ServicesListingProps> = ({
                       </div>
                     </div>
 
-                    {/* Single Clear CTA Button */}
-                    <div className="pt-3">
+                    {/* Primary Admissions CTA + WhatsApp Course Enquiry */}
+                    <div className="pt-3 flex flex-wrap items-center gap-3">
                       <button
                         type="button"
                         onClick={() => onSelectCourse(item.courseId)}
@@ -461,6 +482,22 @@ export const ServicesListing: React.FC<ServicesListingProps> = ({
                         <span>{item.ctaLabel}</span>
                         <ArrowRight className="h-4 w-4" />
                       </button>
+
+                      <a
+                        href={buildAcademyEnquiryWhatsAppUrl({
+                          customerName: 'Prospective Student',
+                          customerPhone: 'Via WhatsApp',
+                          learningMode: 'Academy Diploma / Masterclass',
+                          courseName: item.title,
+                          enquiryDetails: `Interested in ${item.title} (${item.duration}). Please share upcoming batch dates and admissions details.`,
+                        }).url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-brand-outline min-h-[44px]"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                        <span>Enquire on WhatsApp</span>
+                      </a>
                     </div>
                   </motion.div>
                 </div>

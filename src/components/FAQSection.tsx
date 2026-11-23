@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { FAQS } from '../config/siteContent';
-import { FAQItem } from '../types';
-import { ChevronDown, HelpCircle, Phone, MessageSquare, ShieldCheck, Sparkles, CheckCircle2 } from 'lucide-react';
+import { ChevronDown, HelpCircle, Phone, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ScrollReveal } from './ScrollReveal';
 
@@ -10,8 +9,7 @@ interface FAQSectionProps {
   onOpenBookingModal?: () => void;
 }
 
-export const FAQSection: React.FC<FAQSectionProps> = ({
-  currentMode = 'salon',
+export const FAQSection: React.FC<FAQSectionProps> = memo(({
   onOpenBookingModal,
 }) => {
   const [activeTab, setActiveTab] = useState<'all' | 'salon' | 'academy'>('all');
@@ -195,7 +193,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
                 Speak directly with our Vijayapuri Colony team
               </h4>
               <p className="text-xs sm:text-sm text-[#524B43]">
-                Available Monday – Sunday, 09:30 AM – 8:30 PM IST · 1st Floor, JKC College Rd, 6th Line, Vijayapuri Colony, Guntur
+                Available Monday – Sunday, 09:00 AM – 09:00 PM IST · 1st Floor, JKC College Rd, 6th Line, Vijayapuri Colony, Guntur
               </p>
             </div>
 
@@ -224,4 +222,6 @@ export const FAQSection: React.FC<FAQSectionProps> = ({
       </div>
     </section>
   );
-};
+});
+
+FAQSection.displayName = 'FAQSection';

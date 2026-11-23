@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Star, ShieldCheck } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -162,7 +162,7 @@ const ROW_2_TESTIMONIALS: TestimonialCardData[] = [
   },
 ];
 
-const TestimonialCard: React.FC<{ item: TestimonialCardData }> = ({ item }) => {
+const TestimonialCard: React.FC<{ item: TestimonialCardData }> = memo(({ item }) => {
   return (
     <motion.div
       whileHover={{ y: -6, scale: 1.015, transition: { duration: 0.25, ease: 'easeOut' } }}
@@ -203,9 +203,9 @@ const TestimonialCard: React.FC<{ item: TestimonialCardData }> = ({ item }) => {
       </div>
     </motion.div>
   );
-};
+});
 
-export const DualRowTestimonials: React.FC = () => {
+export const DualRowTestimonials: React.FC = memo(() => {
   const row1List = [...ROW_1_TESTIMONIALS, ...ROW_1_TESTIMONIALS];
   const row2List = [...ROW_2_TESTIMONIALS, ...ROW_2_TESTIMONIALS];
 
@@ -246,4 +246,6 @@ export const DualRowTestimonials: React.FC = () => {
       </div>
     </section>
   );
-};
+});
+
+DualRowTestimonials.displayName = 'DualRowTestimonials';

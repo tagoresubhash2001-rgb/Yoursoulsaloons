@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { BannerConfig } from '../types';
 import { useAssets } from '../context/AssetContext';
-import { SlidersHorizontal, ArrowDown, ArrowUpRight, Sparkles } from 'lucide-react';
+import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface BannerSlotProps {
@@ -15,7 +15,7 @@ interface BannerSlotProps {
   showScrollIndicator?: boolean;
 }
 
-export const BannerSlot: React.FC<BannerSlotProps> = ({
+export const BannerSlot: React.FC<BannerSlotProps> = memo(({
   banner,
   priority = false,
   isHero = false,
@@ -25,16 +25,11 @@ export const BannerSlot: React.FC<BannerSlotProps> = ({
   onSecondaryCtaClick,
   showScrollIndicator = false,
 }) => {
-  const { customSlots, setSelectedSlotId, setIsAssetDrawerOpen } = useAssets();
+  const { customSlots } = useAssets();
   const [imgError, setImgError] = useState(false);
 
   const customUrl = customSlots[banner.slotId];
   const effectiveSrc = !imgError && (customUrl || banner.imageSrc);
-
-  const handleOpenConfig = () => {
-    setSelectedSlotId(banner.slotId);
-    setIsAssetDrawerOpen(true);
-  };
 
   return (
     <section className="relative w-full overflow-hidden bg-[#FAF8F5] px-4 sm:px-6 lg:px-8 py-3 sm:py-5">
@@ -59,13 +54,15 @@ export const BannerSlot: React.FC<BannerSlotProps> = ({
         >
           {/* Real High-Resolution Photographic Canvas */}
           {effectiveSrc ? (
-            <img
+              <img
               src={effectiveSrc}
               alt={banner.altText}
               width={1920}
               height={1080}
               referrerPolicy="no-referrer"
               loading={priority ? 'eager' : 'lazy'}
+              decoding="async"
+              fetchPriority={priority ? 'high' : 'auto'}
               onError={() => setImgError(true)}
               className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 ease-[0.16,1,0.3,1] group-hover:scale-[1.018]"
               style={{
@@ -198,4 +195,6 @@ export const BannerSlot: React.FC<BannerSlotProps> = ({
       </div>
     </section>
   );
-};
+});
+
+BannerSlot.displayName = 'BannerSlot';

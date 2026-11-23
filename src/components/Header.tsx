@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { useNavigation } from '../context/NavigationContext';
 import { PageRoute, DivisionMode } from '../types';
-import { Menu, X, ArrowUpRight, Phone, Sparkles } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface HeaderProps {
   onOpenBookingModal: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onOpenBookingModal }) => {
+export const Header: React.FC<HeaderProps> = memo(({ onOpenBookingModal }) => {
   const { mode, page, setMode, navigateTo } = useNavigation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -75,6 +75,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenBookingModal }) => {
                 className="h-8 sm:h-9 md:h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-[1.02]"
                 width={136}
                 height={40}
+                decoding="async"
               />
             </button>
           </div>
@@ -305,4 +306,6 @@ export const Header: React.FC<HeaderProps> = ({ onOpenBookingModal }) => {
       </header>
     </>
   );
-};
+});
+
+Header.displayName = 'Header';
