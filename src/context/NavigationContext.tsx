@@ -7,9 +7,47 @@ interface NavigationContextType {
   setMode: (newMode: DivisionMode) => void;
   navigateTo: (page: PageRoute, targetMode?: DivisionMode) => void;
   navigateToBooking: (serviceId?: string) => void;
+  /** Navigate to a page and smoothly scroll to an element id on it (e.g. 'academy-courses'). */
+  navigateToSection: (page: PageRoute, mode: DivisionMode, sectionId: string) => void;
   selectedServiceId?: string;
   setSelectedServiceId: (serviceId?: string) => void;
   currentPath: string;
+}
+
+/**
+ * Scroll to #id once it has rendered on the NEW page.
+ * Pages are lazy-loaded and cross-fade (the old page stays mounted for ~240ms), and the same section id
+ * can exist on both pages — so wait out the transition, scroll only once the target's position is stable,
+ * then do one correction pass in case images/fonts above it changed the layout.
+ */
+function scrollToIdWhenReady(id: string, { initialDelay = 320, timeoutMs = 4000 } = {}) {
+  const start = Date.now();
+  let lastTop: number | null = null;
+  const headerOffset = () => {
+    const el = document.getElementById(id);
+    return el ? parseFloat(getComputedStyle(el).scrollMarginTop) || 0 : 0;
+  };
+  const scrollNow = (behavior: ScrollBehavior) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior, block: 'start' });
+  };
+  const tick = () => {
+    const el = document.getElementById(id);
+    if (el) {
+      const top = Math.round(el.getBoundingClientRect().top + window.scrollY);
+      if (lastTop !== null && Math.abs(top - lastTop) <= 2) {
+        scrollNow('smooth');
+        window.setTimeout(() => {
+          const now = document.getElementById(id)?.getBoundingClientRect().top ?? 0;
+          if (Math.abs(now - headerOffset()) > 8) scrollNow('smooth');
+        }, 900);
+        return;
+      }
+      lastTop = top;
+    }
+    if (Date.now() - start < timeoutMs) window.setTimeout(tick, 120);
+  };
+  window.setTimeout(tick, initialDelay);
 }
 
 const NavigationContext = createContext<NavigationContextType | undefined>(undefined);
@@ -92,14 +130,9 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       setSelectedServiceId(serviceParam);
     }
 
-    // Scroll to appointment-booking if hash is present
-    if (window.location.hash === '#appointment-booking') {
-      setTimeout(() => {
-        const el = document.getElementById('appointment-booking');
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 150);
+    // Scroll to any #section in the URL (e.g. #appointment-booking, #academy-courses)
+    if (window.location.hash.length > 1) {
+      scrollToIdWhenReady(decodeURIComponent(window.location.hash.slice(1)));
     }
 
     // Update document title and meta description
@@ -197,6 +230,19 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     []
   );
 
+  const navigateToSection = useCallback(
+    (targetPage: PageRoute, targetMode: DivisionMode, sectionId: string) => {
+      const nextPath = `${buildPath(targetMode, targetPage)}#${sectionId}`;
+      window.history.pushState(null, '', nextPath);
+      setModeState(targetMode);
+      setPageState(targetPage);
+      setCurrentPath(nextPath);
+      document.title = PAGE_TITLES[targetMode][targetPage];
+      scrollToIdWhenReady(sectionId);
+    },
+    []
+  );
+
   // Switch mode while retaining the current page
   const setMode = useCallback(
     (newMode: DivisionMode) => {
@@ -214,6 +260,7 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         setMode,
         navigateTo,
         navigateToBooking,
+        navigateToSection,
         selectedServiceId,
         setSelectedServiceId,
         currentPath,

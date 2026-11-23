@@ -3,11 +3,11 @@ import { useNavigation } from '../context/NavigationContext';
 import { useMotionPreferences } from '../context/MotionContext';
 import { Instagram, Phone, MessageCircle, MapPin, ExternalLink, Sparkles, Star } from 'lucide-react';
 import { INSTAGRAM_URL, INSTAGRAM_HANDLE, GOOGLE_REVIEW_URL } from '../config/links';
-import { buildBookingLink } from '../utils/whatsapp';
+import { buildWhatsAppLink } from '../utils/whatsapp';
 import { motion } from 'motion/react';
 
 export const Footer: React.FC = memo(() => {
-  const { setMode, navigateTo } = useNavigation();
+  const { setMode, navigateTo, navigateToSection } = useNavigation();
   const { reducedMotion, toggleReducedMotion } = useMotionPreferences();
 
   return (
@@ -65,7 +65,7 @@ export const Footer: React.FC = memo(() => {
               <motion.a
                 whileHover={{ y: -2, transition: { duration: 0.15 } }}
                 whileTap={{ scale: 0.98 }}
-                href={buildBookingLink()}
+                href={buildWhatsAppLink('chat')}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 min-h-[44px] px-3.5 py-1.5 rounded-[8px] bg-light border border-border text-xs font-mono uppercase tracking-wider text-dark hover:text-accent hover:border-accent/50 transition-colors shadow-2xs hover:shadow-xs"
@@ -158,6 +158,15 @@ export const Footer: React.FC = memo(() => {
                   className="min-h-[44px] inline-flex items-center hover:text-accent transition-colors cursor-pointer text-left"
                 >
                   About Our Trainers
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => navigateToSection('services', 'academy', 'academy-courses')}
+                  className="min-h-[44px] inline-flex items-center hover:text-dark transition-colors cursor-pointer text-left"
+                >
+                  Academy Courses (Basic – Expert)
                 </button>
               </li>
               <li>

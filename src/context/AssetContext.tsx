@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { BANNERS } from '../config/siteContent';
 
 interface AssetContextType {
   customSlots: Record<string, string>;

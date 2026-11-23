@@ -9,7 +9,7 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = memo(({ onOpenBookingModal }) => {
-  const { mode, page, setMode, navigateTo } = useNavigation();
+  const { mode, page, setMode, navigateTo, navigateToSection } = useNavigation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -22,15 +22,19 @@ export const Header: React.FC<HeaderProps> = memo(({ onOpenBookingModal }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navItems: { label: string; pageId: PageRoute }[] = [
+  // 'academy' = jump to the Academy courses (Basic → Expert) section; shown in Salon mode
+  // (in Academy mode, "Courses & Programs" is the same destination).
+  const navItems: { label: string; pageId: PageRoute | 'academy' }[] = [
     { label: 'Home', pageId: 'home' },
     { label: 'About', pageId: 'about' },
     { label: mode === 'salon' ? 'Services' : 'Courses & Programs', pageId: 'services' },
+    ...(mode === 'salon' ? [{ label: 'Academy', pageId: 'academy' as const }] : []),
     { label: 'Contact Us', pageId: 'contact' },
   ];
 
-  const handleNavClick = (pageId: PageRoute) => {
-    navigateTo(pageId);
+  const handleNavClick = (pageId: PageRoute | 'academy') => {
+    if (pageId === 'academy') navigateToSection('services', 'academy', 'academy-courses');
+    else navigateTo(pageId);
     setMobileMenuOpen(false);
   };
 

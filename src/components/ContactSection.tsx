@@ -4,15 +4,11 @@ import {
   SALON_CONTACT,
   ACADEMY_CONTACT,
   ACADEMY_COURSES,
-  ACADEMY_LEARNING_MODES,
 } from '../config/siteContent';
 import { useNavigation } from '../context/NavigationContext';
 import { AppointmentBookingForm } from './AppointmentBookingForm';
-import {
-  buildAcademyEnquiryWhatsAppUrl,
-  validateIndianPhone,
-  WhatsAppPayloadResult,
-} from '../utils/whatsapp';
+import { buildWhatsAppLink, buildWhatsAppMessage, normalizeIndianPhone, openWhatsAppLink } from '../utils/whatsapp';
+import { COURSE_LEVELS } from '../config/bookingMenu';
 import { GOOGLE_REVIEW_URL } from '../config/siteContent';
 import {
   MapPin,
@@ -43,12 +39,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ mode }) => {
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [interest, setInterest] = useState('Module 01: BASIC — Salon Assistant · Beginner Level');
+  const [interest, setInterest] = useState<string>(COURSE_LEVELS[0].label);
   const [intake, setIntake] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [academyWhatsapp, setAcademyWhatsapp] = useState<WhatsAppPayloadResult | null>(null);
+  const [academyWhatsapp, setAcademyWhatsapp] = useState<{ url: string; rawMessage: string; businessNumber: string } | null>(null);
   const [copiedAcademy, setCopiedAcademy] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -58,7 +54,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ mode }) => {
       setErrorMsg('Please complete all marked contact fields.');
       return;
     }
-    if (!validateIndianPhone(phone)) {
+    const cleanPhone = normalizeIndianPhone(phone);
+    if (!cleanPhone) {
       setErrorMsg('Please enter a valid 10-digit Indian mobile number.');
       return;
     }
@@ -66,24 +63,23 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ mode }) => {
     setIsSubmitting(true);
     setErrorMsg('');
 
-    const payload = buildAcademyEnquiryWhatsAppUrl({
-      customerName: fullName,
-      customerPhone: phone,
-      learningMode: interest || 'General Academy Admissions',
-      courseName: interest || 'All Academy Modules',
-      enquiryDetails: [
-        email ? `Email: ${email.trim()}` : '',
-        intake ? `Anticipated Start: ${intake.trim()}` : '',
-        message ? `Notes: ${message.trim()}` : '',
-      ]
-        .filter(Boolean)
-        .join(' | '),
-    });
+    const data = {
+      course: interest || COURSE_LEVELS[0].label,
+      name: fullName,
+      phone: cleanPhone,
+      batch: intake,
+      note: [message.trim(), email.trim() ? `Email: ${email.trim()}` : ''].filter(Boolean).join(' · '),
+    };
+    const payload = {
+      url: buildWhatsAppLink('course', data),
+      rawMessage: buildWhatsAppMessage('course', data),
+      businessNumber: '919553888432',
+    };
 
     setAcademyWhatsapp(payload);
     setIsSubmitting(false);
     setSubmitted(true);
-    window.open(payload.url, '_blank', 'noopener,noreferrer');
+    openWhatsAppLink(payload.url);
   };
 
   const rawPhone = info.phone.replace(/[^0-9+]/g, '');
@@ -392,12 +388,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ mode }) => {
                         className="w-full rounded-[8px] card-thick-border border-border bg-light px-4 py-2.5 text-sm text-dark focus:outline-hidden min-h-[44px]"
                       >
                         <optgroup label="── Four Structured Learning Modes ──">
-                          {ACADEMY_LEARNING_MODES.map((m) => (
-                            <option
-                              key={m.id}
-                              value={`${m.moduleNumber}: ${m.title} — ${m.roleSubtitle}`}
-                            >
-                              {m.moduleNumber}: {m.title} — {m.roleSubtitle}
+                          {COURSE_LEVELS.map((l) => (
+                            <option key={l.id} value={l.label}>
+                              {l.label}
                             </option>
                           ))}
                         </optgroup>

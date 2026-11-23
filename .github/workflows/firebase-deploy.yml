@@ -34,8 +34,14 @@ jobs:
       - name: Type-check
         run: bun run lint
 
+      - name: Test WhatsApp message helper
+        run: bun run test:whatsapp
+
       - name: Build (includes image audit)
         run: bun run build
+
+      - name: Check every built image returns 200
+        run: bun run check:images
 
       - name: Check Firebase credentials
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository

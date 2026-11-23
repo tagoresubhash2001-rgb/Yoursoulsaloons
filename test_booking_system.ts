@@ -4,11 +4,11 @@ import {
   getDayOfWeekIST,
   formatReadableDateIST,
   isSlotPastCurrentIST,
-  buildWhatsAppClickToChatUrl,
   reserveAppointmentSlot,
   db
 } from './src/firebase';
 import { doc, getDoc, deleteDoc } from 'firebase/firestore';
+import { buildWhatsAppLink, buildWhatsAppMessage, getBusinessWhatsAppNumber } from './src/utils/whatsapp';
 
 async function runTests() {
   console.log('====================================================');
@@ -69,39 +69,32 @@ async function runTests() {
 
   // 6. WhatsApp Link Generation & Message Template
   const testBooking = {
-    customerName: 'Pooja Reddy',
-    customerPhone: '09553888432',
-    serviceName: 'Dimensional French Balayage & Gloss Melting',
-    appointmentDate: '2026-11-20',
-    dayOfWeek: 'Friday',
-    startTime: '10:00 AM',
-    endTime: '11:00 AM',
-    additionalMessage: 'Sensitive scalp, low heat requested',
-    bookingId: 'YS-BK-998877',
+    service: 'Dimensional French Balayage & Gloss Melting',
+    category: 'Hair' as const,
+    name: 'Pooja Reddy',
+    phone: '9553888432',
+    date: '2026-11-20',
+    time: '10:00 AM',
+    note: 'Sensitive scalp, low heat requested',
   };
 
-  const { url, rawMessage, businessNumber } = buildWhatsAppClickToChatUrl(testBooking);
+  const url = buildWhatsAppLink('service', testBooking);
+  const rawMessage = buildWhatsAppMessage('service', testBooking);
+  const businessNumber = getBusinessWhatsAppNumber();
 
   assert(
     businessNumber === '919553888432',
     `Verified WhatsApp business number is 919553888432 (found: ${businessNumber})`
   );
   assert(
-    rawMessage.includes('YOUR SOUL — NEW APPOINTMENT REQUEST'),
+    rawMessage.startsWith('*New Appointment Request – Your Soul Salon*'),
     'WhatsApp message includes headline'
   );
   assert(
-    rawMessage.includes('Pooja Reddy') && rawMessage.includes('YS-BK-998877'),
-    'WhatsApp message contains customer name and booking ID'
+    rawMessage.includes('Name: Pooja Reddy') && rawMessage.includes('Type: Salon Service'),
+    'WhatsApp message contains customer name and type'
   );
-  assert(
-    rawMessage.includes('10:00 AM – 11:00 AM'),
-    'WhatsApp message contains exact slot timing'
-  );
-  assert(
-    rawMessage.includes('Status: PENDING CONFIRMATION'),
-    'WhatsApp message contains PENDING CONFIRMATION status'
-  );
+  assert(rawMessage.includes('Preferred Time: 10:00 AM'), 'WhatsApp message contains preferred time');
   assert(
     url.startsWith('https://wa.me/919553888432?text='),
     'Click-to-chat URL is properly formatted'

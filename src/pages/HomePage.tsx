@@ -9,7 +9,8 @@ import { TestimonialCarousel } from '../components/TestimonialCarousel';
 import { AcademyModulesSection } from '../components/AcademyModulesSection';
 import { BANNERS, ACADEMY_COURSES, ACADEMY_ABOUT_SECTIONS } from '../config/siteContent';
 import { IMAGES, SiteImage } from '../config/images';
-import { buildBookingLink, buildBookingMessage, openWhatsApp, validateIndianPhone, WHATSAPP_LINK_PROPS } from '../utils/whatsapp';
+import { buildWhatsAppLink, openWhatsAppLink, normalizeIndianPhone, validateIndianPhone } from '../utils/whatsapp';
+import { useBooking, prefetchBookingModal } from '../context/BookingContext';
 import { WhatsAppIcon } from '../components/WhatsAppIcon';
 import {
   ArrowRight,
@@ -190,6 +191,7 @@ const APPROACH_STEPS: ApproachStep[] = [
 
 export const HomePage: React.FC<HomePageProps> = ({ onOpenBookingModal }) => {
   const { mode, navigateTo } = useNavigation();
+  const { openBooking } = useBooking();
   const isSalon = mode === 'salon';
   const [activeGroup, setActiveGroup] = useState<'All' | ServiceGroup>('All');
   const visibleCategories =
@@ -218,14 +220,15 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenBookingModal }) => {
       return;
     }
     setFranchiseError('');
-    openWhatsApp(
-      `Hi Your Soul, I'd like to discuss a franchise opportunity.\n\n` +
-        `Name: ${franchiseForm.name.trim()}\n` +
-        `Phone: ${franchiseForm.phone.trim()}\n` +
-        (franchiseForm.email.trim() ? `Email: ${franchiseForm.email.trim()}\n` : '') +
-        `City: ${franchiseForm.city.trim()}\n` +
-        `Background: ${franchiseForm.experience}\n` +
-        (franchiseForm.notes.trim() ? `Vision: ${franchiseForm.notes.trim()}\n` : '')
+    openWhatsAppLink(
+      buildWhatsAppLink('franchise', {
+        name: franchiseForm.name,
+        phone: normalizeIndianPhone(franchiseForm.phone) ?? franchiseForm.phone,
+        email: franchiseForm.email,
+        city: franchiseForm.city,
+        background: franchiseForm.experience,
+        note: franchiseForm.notes,
+      })
     );
     setFranchiseSubmitted(true);
   };
@@ -380,7 +383,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenBookingModal }) => {
             <div className="pt-4 flex flex-wrap justify-center gap-4">
               <button
                 type="button"
-                onClick={() => openWhatsApp("Hi Your Soul Academy, I'd like to schedule a campus walkthrough. Please share available slots.")}
+                onClick={() => openBooking({ kind: 'course', note: 'I would like to schedule a campus walkthrough.' })}
                 className="btn-brand-primary"
               >
                 Schedule Campus Walkthrough
@@ -515,7 +518,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenBookingModal }) => {
                             label={item}
                             variant="warm"
                             size="sm"
-                            onClick={() => openWhatsApp(buildBookingMessage(cat.title, cat.group))}
+                            onClick={() => openBooking({ kind: 'service', service: cat.title })}
                           />
                         ))}
                       </div>
@@ -524,15 +527,16 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenBookingModal }) => {
                 </div>
 
                 <div className="p-6 pt-0">
-                  <a
-                    href={buildBookingLink(cat.title, cat.group)}
-                    {...WHATSAPP_LINK_PROPS}
-                    aria-label={`Book ${cat.title} on WhatsApp (opens in a new tab)`}
+                  <button
+                    type="button"
+                    onClick={() => openBooking({ kind: 'service', service: cat.title })}
+                    onPointerEnter={prefetchBookingModal}
+                    aria-label={`Book ${cat.title} on WhatsApp`}
                     className="w-full btn-brand-primary text-xs justify-between"
                   >
                     <span className="inline-flex items-center gap-2"><WhatsAppIcon className="h-4 w-4" />Book Slot Now</span>
                     <ArrowRight className="h-3.5 w-3.5 transition-transform duration-250 group-hover:translate-x-1" />
-                  </a>
+                  </button>
                 </div>
               </motion.article>
             ))}
@@ -794,7 +798,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenBookingModal }) => {
               <div className="pt-2">
                 <button
                   type="button"
-                  onClick={() => openWhatsApp(buildBookingMessage('Precision Haircut', 'Hair Design & Cut'))}
+                  onClick={() => openBooking({ kind: 'service', service: 'Bespoke Architectural Haircut & Blow-Dry' })}
                   className="btn-brand-primary"
                 >
                   Book Precision Haircut Slot
@@ -879,7 +883,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenBookingModal }) => {
               <div className="pt-2">
                 <button
                   type="button"
-                  onClick={() => openWhatsApp(buildBookingMessage('Scalp & Basin Ritual', 'Trichology & Scalp'))}
+                  onClick={() => openBooking({ kind: 'service', service: 'Microbiome Scalp Detox & High-Frequency Therapy' })}
                   className="btn-brand-navy"
                 >
                   Book Scalp &amp; Basin Ritual

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { DivisionMode } from '../types';
 import { FeaturePill } from './FeaturePill';
-import { buildBookingLink, buildBookingMessage, buildCourseEnquiryLink, buildCourseEnquiryMessage, openWhatsApp, WHATSAPP_LINK_PROPS } from '../utils/whatsapp';
+import type { ServiceCategory } from '../utils/whatsapp';
+import { useBooking, prefetchBookingModal } from '../context/BookingContext';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { ACADEMY_SYLLABUS_PDF_PATH } from '../config/siteContent';
 import { ArrowRight, Clock, CheckCircle2, Phone, FileText } from 'lucide-react';
@@ -16,6 +17,13 @@ interface ServicesListingProps {
 }
 
 type SalonGroup = 'Hair' | 'Colour' | 'Bridal & Makeup' | 'Skin & Scalp' | 'Nails';
+const GROUP_CATEGORY: Record<SalonGroup, ServiceCategory> = {
+  Hair: 'Hair',
+  Colour: 'Hair',
+  'Bridal & Makeup': 'Bridal',
+  'Skin & Scalp': 'Skin',
+  Nails: 'Nails',
+};
 const SALON_GROUPS: Array<'All' | SalonGroup> = ['All', 'Hair', 'Colour', 'Bridal & Makeup', 'Skin & Scalp', 'Nails'];
 
 interface EditorialServiceCategory {
@@ -243,6 +251,7 @@ export const ServicesListing: React.FC<ServicesListingProps> = ({
   onSelectCourse,
 }) => {
   const isSalon = mode === 'salon';
+  const { openBooking } = useBooking();
   const [activeGroup, setActiveGroup] = useState<'All' | SalonGroup>('All');
   const visibleSalon =
     activeGroup === 'All' ? SALON_EDITORIAL_CATEGORIES : SALON_EDITORIAL_CATEGORIES.filter((c) => c.group === activeGroup);
@@ -365,7 +374,7 @@ export const ServicesListing: React.FC<ServicesListingProps> = ({
                             label={feat}
                             variant={fIdx % 2 === 0 ? 'warm' : 'charcoal'}
                             size="md"
-                            onClick={() => openWhatsApp(buildBookingMessage(item.category, item.group))}
+                            onClick={() => openBooking({ kind: 'service', service: item.category, category: GROUP_CATEGORY[item.group] })}
                           />
                         ))}
                       </div>
@@ -373,16 +382,17 @@ export const ServicesListing: React.FC<ServicesListingProps> = ({
 
                     {/* Primary: book on WhatsApp · Secondary: call the salon */}
                     <div className="pt-3 flex flex-wrap items-center gap-3">
-                      <a
-                        href={buildBookingLink(item.category, item.group)}
-                        {...WHATSAPP_LINK_PROPS}
-                        aria-label={`${item.ctaLabel} on WhatsApp (opens in a new tab)`}
+                      <button
+                        type="button"
+                        onClick={() => openBooking({ kind: 'service', service: item.category, category: GROUP_CATEGORY[item.group] })}
+                        onPointerEnter={prefetchBookingModal}
+                        aria-label={`${item.ctaLabel} on WhatsApp`}
                         className="btn-brand-primary"
                       >
                         <WhatsAppIcon className="h-4 w-4" />
                         <span>{item.ctaLabel}</span>
                         <ArrowRight className="h-4 w-4" />
-                      </a>
+                      </button>
                       <a href="tel:+919553888432" className="btn-brand-outline">
                         <Phone className="h-4 w-4" />
                         <span>Call 095538 88432</span>
@@ -482,7 +492,7 @@ export const ServicesListing: React.FC<ServicesListingProps> = ({
                             label={feat}
                             variant={fIdx % 2 === 0 ? 'navy' : 'warm'}
                             size="md"
-                            onClick={() => openWhatsApp(buildCourseEnquiryMessage(item.title, item.duration))}
+                            onClick={() => openBooking({ kind: 'course', course: item.title })}
                           />
                         ))}
                       </div>
@@ -490,16 +500,17 @@ export const ServicesListing: React.FC<ServicesListingProps> = ({
 
                     {/* Primary: enquire on WhatsApp · Secondary: download the syllabus */}
                     <div className="pt-3 flex flex-wrap items-center gap-3">
-                      <a
-                        href={buildCourseEnquiryLink(item.title, item.duration)}
-                        {...WHATSAPP_LINK_PROPS}
-                        aria-label={`${item.ctaLabel} on WhatsApp (opens in a new tab)`}
+                      <button
+                        type="button"
+                        onClick={() => openBooking({ kind: 'course', course: item.title })}
+                        onPointerEnter={prefetchBookingModal}
+                        aria-label={`${item.ctaLabel} on WhatsApp`}
                         className="btn-brand-navy"
                       >
                         <WhatsAppIcon className="h-4 w-4" />
                         <span>{item.ctaLabel}</span>
                         <ArrowRight className="h-4 w-4" />
-                      </a>
+                      </button>
                       <a
                         href={ACADEMY_SYLLABUS_PDF_PATH}
                         target="_blank"

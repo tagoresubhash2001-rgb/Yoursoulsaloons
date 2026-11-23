@@ -14,19 +14,9 @@ import {
   onSnapshot
 } from 'firebase/firestore';
 import firebaseConfig from '../firebase-applet-config.json';
-import {
-  getBusinessWhatsAppNumber,
-  buildWhatsAppAppointmentMessage,
-  buildWhatsAppClickToChatUrl,
-  formatReadableDateIST,
-} from './utils/whatsapp';
+import { getBusinessWhatsAppNumber, formatReadableDateIST } from './utils/whatsapp';
 
-export {
-  getBusinessWhatsAppNumber,
-  buildWhatsAppAppointmentMessage,
-  buildWhatsAppClickToChatUrl,
-  formatReadableDateIST,
-};
+export { getBusinessWhatsAppNumber, formatReadableDateIST };
 
 // 1. Initialize Firebase and Firestore Enterprise instance
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);

@@ -1,208 +1,154 @@
 // ============================================================================
-// OFFICIAL WHATSAPP CLICK-TO-CHAT UTILITIES (wa.me ONLY — NO PAID APIs)
-// Verified Business Number: +91 9553888432 (919553888432)
+// WHATSAPP CLICK-TO-CHAT (wa.me only — no API key, no backend)
+// Business number: +91 95538 88432 → 919553888432
+//
+// ONE helper builds every WhatsApp link on the site:
+//   buildWhatsAppLink('service', {...})   → "New Appointment Request" message
+//   buildWhatsAppLink('course', {...})    → "New Course Enquiry" message
+//   buildWhatsAppLink('franchise', {...}) → "New Franchise Enquiry" message
+//   buildWhatsAppLink('chat')             → plain chat, no pre-filled text
+// Empty optional fields are left out of the message entirely.
 // ============================================================================
 
 export function getBusinessWhatsAppNumber(): string {
   let envNumber: string | undefined;
   if (typeof import.meta !== 'undefined' && import.meta.env) {
     envNumber = import.meta.env.VITE_YOUR_SOUL_WHATSAPP_NUMBER as string | undefined;
-  } else if (typeof process !== 'undefined' && process.env) {
-    envNumber = process.env.VITE_YOUR_SOUL_WHATSAPP_NUMBER;
   }
   return (envNumber?.trim() || '919553888432').replace(/[^0-9]/g, '');
 }
 
-// ----------------------------------------------------------------------------
-// CORE HELPERS — every WhatsApp link on the site is built through these.
-// ----------------------------------------------------------------------------
+/** Service categories shown to the salon in the message. */
+export type ServiceCategory = 'Women' | 'Men' | 'Bridal' | 'Nails' | 'Skin' | 'Hair';
 
-/** Build a wa.me click-to-chat URL with an optional pre-filled message. */
-export function buildWhatsAppLink(message?: string): string {
+export interface ServiceBookingData {
+  service: string;
+  category: ServiceCategory;
+  name: string;
+  phone: string;
+  /** Preferred date — ISO yyyy-mm-dd (formatted for the message) or already-readable text */
+  date: string;
+  /** Preferred time, e.g. "11:00 AM" */
+  time: string;
+  note?: string;
+}
+
+export interface CourseEnquiryData {
+  course: string;
+  name: string;
+  phone: string;
+  batch?: string;
+  note?: string;
+}
+
+export interface FranchiseEnquiryData {
+  name: string;
+  phone: string;
+  email?: string;
+  city?: string;
+  background?: string;
+  note?: string;
+}
+
+export type WhatsAppMessageType = 'service' | 'course' | 'franchise' | 'chat';
+
+type DataFor<T extends WhatsAppMessageType> = T extends 'service'
+  ? ServiceBookingData
+  : T extends 'course'
+    ? CourseEnquiryData
+    : T extends 'franchise'
+      ? FranchiseEnquiryData
+      : undefined;
+
+/** "Label: value" lines, skipping empty values. */
+function lines(title: string, fields: Array<[string, string | undefined]>): string {
+  const body = fields
+    .map(([label, value]) => [label, value?.trim()] as const)
+    .filter(([, value]) => !!value)
+    .map(([label, value]) => `${label}: ${value}`);
+  return [title, ...body].join('\n');
+}
+
+const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+/** "2026-12-01" → "Tue, 1 Dec 2026" (locale-independent). Non-ISO input is returned unchanged. */
+export function formatReadableDateIST(dateStr: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr);
+  if (!m) return dateStr;
+  const [y, mo, d] = [Number(m[1]), Number(m[2]), Number(m[3])];
+  const wd = new Date(Date.UTC(y, mo - 1, d)).getUTCDay();
+  return `${WEEKDAYS[wd]}, ${d} ${MONTHS[mo - 1]} ${y}`;
+}
+
+/** Build the plain-text message (with WhatsApp *bold* title). */
+export function buildWhatsAppMessage<T extends WhatsAppMessageType>(type: T, data?: DataFor<T>): string {
+  switch (type) {
+    case 'service': {
+      const d = data as ServiceBookingData;
+      return lines('*New Appointment Request – Your Soul Salon*', [
+        ['Type', 'Salon Service'],
+        ['Service', d.service],
+        ['Category', d.category],
+        ['Name', d.name],
+        ['Phone', d.phone],
+        ['Preferred Date', formatReadableDateIST(d.date)],
+        ['Preferred Time', d.time],
+        ['Note', d.note],
+      ]);
+    }
+    case 'course': {
+      const d = data as CourseEnquiryData;
+      return lines('*New Course Enquiry – Your Soul Academy*', [
+        ['Type', 'Academy Course'],
+        ['Course', d.course],
+        ['Name', d.name],
+        ['Phone', d.phone],
+        ['Preferred Batch / Start', d.batch],
+        ['Note', d.note],
+      ]);
+    }
+    case 'franchise': {
+      const d = data as FranchiseEnquiryData;
+      return lines('*New Franchise Enquiry – Your Soul*', [
+        ['Type', 'Franchise / Partnership'],
+        ['Name', d.name],
+        ['Phone', d.phone],
+        ['Email', d.email],
+        ['City', d.city],
+        ['Background', d.background],
+        ['Note', d.note],
+      ]);
+    }
+    default:
+      return '';
+  }
+}
+
+/** The single source of every wa.me link. Text is URI-encoded so line breaks and *bold* survive. */
+export function buildWhatsAppLink<T extends WhatsAppMessageType>(type: T, data?: DataFor<T>): string {
   const base = `https://wa.me/${getBusinessWhatsAppNumber()}`;
+  const message = buildWhatsAppMessage(type, data);
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 }
 
 /** Spread onto any <a> that opens WhatsApp: new tab, no opener access. */
 export const WHATSAPP_LINK_PROPS = { target: '_blank', rel: 'noopener noreferrer' } as const;
 
-/** "Hi Your Soul, I'd like to book: <Service> (<Category>). Please share available slots." */
-export function buildBookingMessage(serviceName?: string, category?: string): string {
-  if (!serviceName) {
-    return "Hi Your Soul, I'd like to book an appointment. Please share available slots.";
-  }
-  const cat = category && category !== serviceName ? ` (${category})` : '';
-  return `Hi Your Soul, I'd like to book: ${serviceName}${cat}. Please share available slots.`;
-}
-
-export function buildBookingLink(serviceName?: string, category?: string): string {
-  return buildWhatsAppLink(buildBookingMessage(serviceName, category));
-}
-
-/** Academy course / admissions enquiry message. */
-export function buildCourseEnquiryMessage(courseName?: string, discipline?: string): string {
-  if (!courseName) {
-    return "Hi Your Soul Academy, I'd like to enquire about your courses. Please share upcoming batch dates and admission details.";
-  }
-  const d = discipline ? ` (${discipline})` : '';
-  return `Hi Your Soul Academy, I'd like to enquire about: ${courseName}${d}. Please share upcoming batch dates and admission details.`;
-}
-
-export function buildCourseEnquiryLink(courseName?: string, discipline?: string): string {
-  return buildWhatsAppLink(buildCourseEnquiryMessage(courseName, discipline));
-}
-
-/** Open WhatsApp in a new tab. Call synchronously inside a click/submit handler so pop-up blockers allow it. */
-export function openWhatsApp(message?: string): void {
+/** Open a link in a new tab. Call synchronously inside a click/submit handler so pop-up blockers allow it. */
+export function openWhatsAppLink(url: string): void {
   if (typeof window === 'undefined') return;
-  window.open(buildWhatsAppLink(message), '_blank', 'noopener,noreferrer');
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+/** Strip spaces/dashes/+91/leading 0 → 10 digits, or null if not a valid Indian mobile. */
+export function normalizeIndianPhone(phoneStr: string): string | null {
+  let clean = phoneStr.replace(/[\s\-+()]/g, '');
+  if (/^91[6-9]\d{9}$/.test(clean)) clean = clean.slice(2);
+  else if (/^0[6-9]\d{9}$/.test(clean)) clean = clean.slice(1);
+  return /^[6-9]\d{9}$/.test(clean) ? clean : null;
 }
 
 export function validateIndianPhone(phoneStr: string): boolean {
-  const clean = phoneStr.replace(/[\s\-+()]/g, '');
-  if (/^[6-9]\d{9}$/.test(clean)) return true;
-  if (/^91[6-9]\d{9}$/.test(clean)) return true;
-  if (/^0[6-9]\d{9}$/.test(clean)) return true;
-  return false;
-}
-
-export function formatReadableDateIST(dateStr: string): string {
-  try {
-    const [y, m, d] = dateStr.split('-').map(Number);
-    const date = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
-    return date.toLocaleDateString('en-IN', {
-      timeZone: 'Asia/Kolkata',
-      weekday: 'long',
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    });
-  } catch {
-    return dateStr;
-  }
-}
-
-export interface WhatsAppPayloadResult {
-  url: string;
-  rawMessage: string;
-  businessNumber: string;
-}
-
-// A. ACADEMY ENQUIRY WHATSAPP MESSAGE
-export interface AcademyEnquiryPayload {
-  customerName: string;
-  customerPhone: string;
-  learningMode: string;
-  courseName: string;
-  enquiryDetails?: string;
-}
-
-export function buildAcademyEnquiryWhatsAppUrl(
-  enquiry: AcademyEnquiryPayload
-): WhatsAppPayloadResult {
-  const businessNumber = getBusinessWhatsAppNumber();
-  const details = enquiry.enquiryDetails?.trim() || 'Requesting batch schedule, curriculum details, and seat availability.';
-
-  const rawMessage =
-    `YOUR SOUL ACADEMY — COURSE ENQUIRY\n\n` +
-    `Hello YOUR SOUL Academy Admissions Team,\n\n` +
-    `I would like to enquire and reserve a seat for an Academy program.\n\n` +
-    `STUDENT DETAILS\n` +
-    `Customer Name: ${enquiry.customerName.trim()}\n` +
-    `Phone Number: ${enquiry.customerPhone.trim()}\n\n` +
-    `PROGRAM SELECTION\n` +
-    `Selected Learning Mode: ${enquiry.learningMode}\n` +
-    `Course / Track Name: ${enquiry.courseName}\n\n` +
-    `Enquiry Details: ${details}\n\n` +
-    `Please share upcoming batch dates, eligibility guidance, and fee structure.\n\n` +
-    `Thank you.\n` +
-    `YOUR SOUL Academy Applicant`;
-
-  const url = buildWhatsAppLink(rawMessage);
-  return { url, rawMessage, businessNumber };
-}
-
-// B. SALON SERVICE ENQUIRY WHATSAPP MESSAGE
-export interface ServiceEnquiryPayload {
-  serviceName: string;
-  category?: string;
-  customerName?: string;
-  customerPhone?: string;
-  notes?: string;
-}
-
-export function buildServiceEnquiryWhatsAppUrl(
-  enquiry: ServiceEnquiryPayload
-): WhatsAppPayloadResult {
-  const businessNumber = getBusinessWhatsAppNumber();
-  const customerLines =
-    enquiry.customerName || enquiry.customerPhone
-      ? `\nCUSTOMER DETAILS\n` +
-        (enquiry.customerName ? `Name: ${enquiry.customerName.trim()}\n` : '') +
-        (enquiry.customerPhone ? `Phone: ${enquiry.customerPhone.trim()}\n` : '')
-      : '';
-  const extraNotes = enquiry.notes?.trim()
-    ? `\nAdditional Notes: ${enquiry.notes.trim()}\n`
-    : '';
-
-  const rawMessage =
-    `YOUR SOUL SALON — SERVICE ENQUIRY\n\n` +
-    `Hello YOUR SOUL Salon Concierge,\n\n` +
-    `I would like to enquire about the following salon service:\n\n` +
-    `Selected Service: ${enquiry.serviceName}\n` +
-    (enquiry.category ? `Category: ${enquiry.category}\n` : '') +
-    customerLines +
-    extraNotes +
-    `\nPlease share consultation availability and treatment details.\n\n` +
-    `Thank you.`;
-
-  const url = buildWhatsAppLink(rawMessage);
-  return { url, rawMessage, businessNumber };
-}
-
-// C. APPOINTMENT BOOKING WHATSAPP MESSAGE
-export interface AppointmentWhatsAppPayload {
-  customerName: string;
-  customerPhone: string;
-  serviceName: string;
-  appointmentDate: string;
-  dayOfWeek: string;
-  startTime: string;
-  endTime: string;
-  additionalMessage?: string;
-  bookingId: string;
-}
-
-export function buildWhatsAppAppointmentMessage(booking: AppointmentWhatsAppPayload): string {
-  const msgNote = booking.additionalMessage?.trim() || 'None provided';
-  const formattedDate = formatReadableDateIST(booking.appointmentDate);
-
-  return (
-    `YOUR SOUL — NEW APPOINTMENT REQUEST\n\n` +
-    `Hello YOUR SOUL Team,\n\n` +
-    `I would like to request an appointment.\n\n` +
-    `CUSTOMER DETAILS\n\n` +
-    `Customer Name: ${booking.customerName}\n` +
-    `Phone Number: ${booking.customerPhone}\n\n` +
-    `APPOINTMENT DETAILS\n\n` +
-    `Selected Service: ${booking.serviceName}\n` +
-    `Appointment Date: ${formattedDate} (${booking.appointmentDate})\n` +
-    `Day: ${booking.dayOfWeek}\n` +
-    `Selected Time Slot: ${booking.startTime} – ${booking.endTime} IST\n\n` +
-    `Additional Details: ${msgNote}\n\n` +
-    `Booking Reference: ${booking.bookingId}\n\n` +
-    `Status: PENDING CONFIRMATION\n\n` +
-    `Please check availability and confirm my appointment.\n\n` +
-    `Thank you.\n` +
-    `YOUR SOUL Customer`
-  );
-}
-
-export function buildWhatsAppClickToChatUrl(
-  booking: AppointmentWhatsAppPayload
-): WhatsAppPayloadResult {
-  const businessNumber = getBusinessWhatsAppNumber();
-  const rawMessage = buildWhatsAppAppointmentMessage(booking);
-  const url = buildWhatsAppLink(rawMessage);
-  return { url, rawMessage, businessNumber };
+  return normalizeIndianPhone(phoneStr) !== null;
 }

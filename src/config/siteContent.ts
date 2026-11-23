@@ -15,7 +15,7 @@ import {
 // ==========================================
 
 import { IMAGES } from './images';
-import { buildBookingLink, buildCourseEnquiryLink } from '../utils/whatsapp';
+import { buildWhatsAppLink } from '../utils/whatsapp';
 
 
 export const LOGO_ASSET_PATH = '/images/brand/your-soul-logo-480.webp';
@@ -444,7 +444,7 @@ export const SALON_CONTACT: ContactInfo = {
   ],
   phone: '095538 88432',
   whatsappNumber: '095538 88432',
-  whatsappUrl: buildBookingLink(),
+  whatsappUrl: buildWhatsAppLink('chat'),
   instagramUrl: INSTAGRAM_URL,
   mapUrl: 'https://www.google.com/maps/search/?api=1&query=1st+Floor,+JKC+College+Rd,+Main+Rd,+6th+Line,+Vijayapuri+Colony,+Guntur,+Andhra+Pradesh+522006',
   email: 'salon@yoursoul.in',
@@ -466,7 +466,7 @@ export const ACADEMY_CONTACT: ContactInfo = {
   ],
   phone: '095538 88432',
   whatsappNumber: '095538 88432',
-  whatsappUrl: buildCourseEnquiryLink(),
+  whatsappUrl: buildWhatsAppLink('chat'),
   instagramUrl: INSTAGRAM_URL,
   mapUrl: 'https://www.google.com/maps/search/?api=1&query=1st+Floor,+JKC+College+Rd,+Main+Rd,+6th+Line,+Vijayapuri+Colony,+Guntur,+Andhra+Pradesh+522006',
   email: 'admissions@yoursoul.in',
@@ -739,6 +739,7 @@ export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
         name: 'Skin',
         topics: [
           'Skin problems: whiteheads, blackheads, pimples, tan',
+          'Pigmentation & acne basics',
           'Why & how skin concerns form',
           'Facials: fruit, gold, D-tan, hydrating',
           'Rica / chocolate wax & full body waxing',
@@ -752,7 +753,9 @@ export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
           "Men's fade & taper cuts",
           'Colour theory: levels & tones',
           'Global colour & root touch-up',
-          'Hair spa, ironing & curling',
+          'Highlights',
+          'Hair spa, dandruff & hair-fall treatments',
+          'Ironing, curling & basic updos',
         ],
       },
       {
@@ -944,48 +947,85 @@ export const ACADEMY_LEARNING_MODES: AcademyLearningMode[] = [
   },
 ];
 
+// Skill-by-skill comparison of the four learning modes (✓ = covered at this level, — = not covered).
+// Built only from the curriculum above; the last two rows are the existing duration / fee notes.
 export const ACADEMY_COMPARISON_ROWS: AcademyComparisonRow[] = [
+  {
+    criteria: 'Skin Care',
+    basic: '✓ CTM, clean-up, bleach, threading, waxing',
+    standard: '✓ Fruit, gold, D-tan & hydrating facials',
+    advanced: '✓ O3+ / HydraFacial, pigmentation & acne plans',
+    expert: '✓ Chemical peels, microdermabrasion, skin science',
+  },
+  {
+    criteria: 'Hair Cutting',
+    basic: '✓ Straight / U / V, men\'s basic cut, beard trim & shave',
+    standard: '✓ Layer, step, feather & bob; men\'s fade & taper',
+    advanced: '✓ Included from Standard',
+    expert: '✓ Precision, razor & texturizing cuts; skin fade & designs',
+  },
+  {
+    criteria: 'Hair Colour',
+    basic: '—',
+    standard: '✓ Colour theory, global colour, root touch-up, highlights',
+    advanced: '✓ Balayage & ombré',
+    expert: '✓ Colour correction',
+  },
+  {
+    criteria: 'Hair Treatments (keratin / smoothening)',
+    basic: '—',
+    standard: '✓ Hair spa, dandruff & hair-fall treatments',
+    advanced: '✓ Keratin, smoothening, botox, rebonding, perm',
+    expert: '✓ Hair extensions & trichology basics',
+  },
+  {
+    criteria: 'Body Massage & Spa',
+    basic: '✓ Hand & foot massage',
+    standard: '✓ Swedish massage, body polishing & scrubs',
+    advanced: '✓ Deep tissue, aromatherapy, body wraps',
+    expert: '✓ Reflexology, pressure points, potli, bridal body packages',
+  },
+  {
+    criteria: 'Makeup & Saree Draping',
+    basic: '—',
+    standard: '—',
+    advanced: '✓ Day / party makeup & saree draping',
+    expert: '✓ Bridal & HD makeup',
+  },
+  {
+    criteria: 'Nails (gel / acrylic / art)',
+    basic: '✓ Basic manicure & pedicure',
+    standard: '✓ Spa manicure & pedicure',
+    advanced: '✓ Basic nail art',
+    expert: '✓ Gel & acrylic nails, advanced nail art',
+  },
+  {
+    criteria: 'Live Salon Internship',
+    basic: '—',
+    standard: '—',
+    advanced: '—',
+    expert: '✓ At Your Soul, with real clients',
+  },
+  {
+    criteria: 'Practical Assessment & Certificate',
+    basic: '✓ Certificate of Completion',
+    standard: '✓ Standard Diploma',
+    advanced: '✓ Advanced Specialist Diploma',
+    expert: '✓ Service logbook, timed practical assessment & Expert Master Certification',
+  },
+  {
+    criteria: 'Career Level',
+    basic: 'Salon Assistant',
+    standard: 'Junior Stylist / Beautician',
+    advanced: 'Stylist',
+    expert: 'Senior Stylist (1 year+ level)',
+  },
   {
     criteria: 'Course duration',
     basic: 'Foundation Track (Batch schedule confirmed on enquiry)',
     standard: 'Core Career Track (Full-time & batch schedules)',
     advanced: 'Specialist Mastery Track (Modular & intensive schedules)',
     expert: 'Complete Pro Track + Live Salon Internship',
-  },
-  {
-    criteria: 'Learning format',
-    basic: 'In-Studio Theory + Guided Foundation Drills',
-    standard: 'Ingredient Theory + Supervised Floor Practice',
-    advanced: 'Specialist Chemical Labs + Live Model Clinic',
-    expert: 'Master Mentorship + Live Salon Floor Internship',
-  },
-  {
-    criteria: 'Practical training',
-    basic: 'Hygiene, CTM, threading, waxing, basic cuts & manicure/pedicure',
-    standard: 'Real-client facials, layer/fade cuts, global colour & spa rituals',
-    advanced: 'O3+/HydraFacial, balayage, keratin/botox, massage & party makeup',
-    expert: 'Live Your Soul internship, peels, extensions, HD bridal, gel/acrylic nails & timed logbook',
-  },
-  {
-    criteria: 'Trainer interaction',
-    basic: 'Guided step-by-step faculty supervision (1:8 cohort cap)',
-    standard: 'Active floor critique on technique & client handling',
-    advanced: 'Specialist trainer oversight on chemical & aesthetic protocols',
-    expert: 'Direct senior director mentorship, logbook audits & business coaching',
-  },
-  {
-    criteria: 'Flexibility',
-    basic: 'Scheduled studio intake batches',
-    standard: 'Structured weekday / batch options',
-    advanced: 'Modular specialist tracks & intensive batches',
-    expert: 'Structured full immersion with scheduled clinic & internship hours',
-  },
-  {
-    criteria: 'Certification',
-    basic: 'Basic Certificate (Salon Assistant Level)',
-    standard: 'Standard Diploma (Junior Stylist / Beautician Level)',
-    advanced: 'Advanced Specialist Diploma (Stylist Level)',
-    expert: 'Expert Master Certification (Senior Stylist · 1 Yr+ Level)',
   },
   {
     criteria: 'Course fee',

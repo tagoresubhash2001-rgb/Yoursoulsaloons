@@ -9,10 +9,54 @@ import {
   isSlotPastCurrentIST,
   reserveAppointmentSlot,
   subscribeToDateReservations,
-  buildWhatsAppClickToChatUrl,
   SlotReservationRecord,
 } from '../firebase';
-import { SALON_SERVICES } from '../config/siteContent';
+import { buildWhatsAppLink, buildWhatsAppMessage, getBusinessWhatsAppNumber, normalizeIndianPhone, type ServiceCategory } from '../utils/whatsapp';
+import { catalogCategory } from '../config/bookingMenu';
+
+const OPTION_GROUP_CATEGORY: Record<string, ServiceCategory> = {
+  'Hair Artistry': 'Hair',
+  'Occasion & Runway': 'Bridal',
+  'Atelier Nail Lounge': 'Nails',
+  'Dermal Sanctuary': 'Skin',
+  'Diagnostic Intake': 'Hair',
+};
+
+/** Service category for the WhatsApp message, from the catalogue or the quick-option list. */
+function categoryForServiceName(serviceName: string): ServiceCategory {
+  const item = SALON_SERVICES.find((s) => s.name === serviceName);
+  if (item) return catalogCategory(item.category);
+  const opt = SALON_SERVICE_OPTIONS.find((o) => o.name === serviceName);
+  return (opt && OPTION_GROUP_CATEGORY[opt.group]) || 'Hair';
+}
+
+interface BookingSummary {
+  customerName: string;
+  customerPhone: string;
+  serviceName: string;
+  appointmentDate: string;
+  startTime: string;
+  additionalMessage?: string;
+}
+
+/** Same message format as every other booking on the site (see utils/whatsapp.ts). */
+function buildBookingWhatsApp(b: BookingSummary) {
+  const data = {
+    service: b.serviceName,
+    category: categoryForServiceName(b.serviceName),
+    name: b.customerName,
+    phone: normalizeIndianPhone(b.customerPhone) ?? b.customerPhone,
+    date: b.appointmentDate,
+    time: b.startTime,
+    note: b.additionalMessage,
+  };
+  return {
+    url: buildWhatsAppLink('service', data),
+    rawMessage: buildWhatsAppMessage('service', data),
+    businessNumber: getBusinessWhatsAppNumber(),
+  };
+}
+import { SALON_SERVICES } from '../config/catalog';
 import {
   Calendar,
   Sparkles,
@@ -210,7 +254,7 @@ export const AppointmentBookingForm: React.FC<AppointmentBookingFormProps> = ({
 
     // 1) Open WhatsApp immediately, inside the submit gesture, so pop-up blockers allow it.
     //    WhatsApp is the booking channel — no backend is required for the request to reach the salon.
-    const { url } = buildWhatsAppClickToChatUrl(bookingDetails);
+    const { url } = buildBookingWhatsApp(bookingDetails);
     window.open(url, '_blank', 'noopener,noreferrer');
 
     setSubmittedBooking(bookingDetails);
@@ -246,7 +290,7 @@ export const AppointmentBookingForm: React.FC<AppointmentBookingFormProps> = ({
 
   const handleCopyWhatsAppMessage = () => {
     if (!submittedBooking) return;
-    const { rawMessage } = buildWhatsAppClickToChatUrl(submittedBooking);
+    const { rawMessage } = buildBookingWhatsApp(submittedBooking);
     navigator.clipboard.writeText(rawMessage);
     setCopiedText(true);
     setTimeout(() => setCopiedText(false), 3000);
@@ -264,7 +308,7 @@ export const AppointmentBookingForm: React.FC<AppointmentBookingFormProps> = ({
 
   // If successfully submitted, render the comprehensive Pending Confirmation screen
   if (submittedBooking) {
-    const { url, businessNumber } = buildWhatsAppClickToChatUrl(submittedBooking);
+    const { url, businessNumber } = buildBookingWhatsApp(submittedBooking);
 
     return (
       <div className="rounded-[18px] card-thick-border border-border bg-light p-6 sm:p-10 text-dark shadow-lg space-y-6">

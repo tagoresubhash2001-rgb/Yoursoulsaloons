@@ -1,4 +1,4 @@
-import React, { useState, useCallback, lazy, Suspense } from 'react';
+import React, { useCallback, lazy, Suspense } from 'react';
 import { AssetProvider } from './context/AssetContext';
 import { MotionProvider } from './context/MotionContext';
 import { NavigationProvider, useNavigation } from './context/NavigationContext';
@@ -9,7 +9,8 @@ import { usePageMetadata } from './hooks/usePageMetadata';
 import { motion, AnimatePresence } from 'motion/react';
 import { FloatingWhatsApp } from './components/FloatingWhatsApp';
 import { ACADEMY_COURSES, SALON_SERVICES } from './config/catalog';
-import { openWhatsApp, buildBookingMessage, buildCourseEnquiryMessage } from './utils/whatsapp';
+import { BookingProvider, useBooking } from './context/BookingContext';
+import { catalogCategory } from './config/bookingMenu';
 
 // Route-based and modal code splitting — defers heavy chunks (including Firebase SDK on ContactPage)
 const HomePage = lazy(() =>
@@ -24,9 +25,6 @@ const ServicesPage = lazy(() =>
 const ContactPage = lazy(() =>
   import('./pages/ContactPage').then((m) => ({ default: m.ContactPage }))
 );
-const AppointmentModal = lazy(() =>
-  import('./components/AppointmentModal').then((m) => ({ default: m.AppointmentModal }))
-);
 const AssetManagerDrawer = lazy(() =>
   import('./components/AssetManagerDrawer').then((m) => ({ default: m.AssetManagerDrawer }))
 );
@@ -37,34 +35,31 @@ function AppContent() {
   // Dynamically update document title and meta description per active mode and page
   usePageMetadata(mode, page);
 
-  const [bookingModalOpen, setBookingModalOpen] = useState(false);
-  const [preselectedService, setPreselectedService] = useState<string | undefined>(undefined);
-  const [preselectedCourse, setPreselectedCourse] = useState<string | undefined>(undefined);
+  const { openBooking } = useBooking();
 
-  // Every "Book" / "Enquire" CTA opens WhatsApp with a pre-filled message (no backend).
-  // Service / course IDs are resolved to their real names so the salon sees exactly what was chosen.
+  // Every "Book" / "Enquire" CTA opens the WhatsApp booking form.
+  // Service / course IDs are resolved to their real names so the right item is pre-selected;
+  // with no ID the form first asks "Salon Service or Academy Course?".
   const handleOpenBooking = useCallback(
     (serviceId?: string, courseId?: string) => {
       if (courseId) {
         const course = ACADEMY_COURSES.find((c) => c.id === courseId);
-        openWhatsApp(buildCourseEnquiryMessage(course?.title, course?.discipline));
+        openBooking({ kind: 'course', course: course?.title });
         return;
       }
       if (serviceId) {
         const service = SALON_SERVICES.find((s) => s.id === serviceId);
-        openWhatsApp(buildBookingMessage(service?.name, service?.category));
+        openBooking({
+          kind: 'service',
+          service: service?.name,
+          category: service ? catalogCategory(service.category) : undefined,
+        });
         return;
       }
-      openWhatsApp(mode === 'academy' ? buildCourseEnquiryMessage() : buildBookingMessage());
+      openBooking();
     },
-    [mode]
+    [openBooking]
   );
-
-  const handleCloseBooking = useCallback(() => {
-    setBookingModalOpen(false);
-    setPreselectedService(undefined);
-    setPreselectedCourse(undefined);
-  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-light text-dark selection:bg-surface-2 selection:text-dark">
@@ -102,21 +97,9 @@ function AppContent() {
       {/* Editorial Footer */}
       <Footer />
 
-      {/* Lazy-Loaded Interactive Modal (mounted only when needed) */}
-      {bookingModalOpen && (
-        <Suspense fallback={null}>
-          <AppointmentModal
-            isOpen={bookingModalOpen}
-            onClose={handleCloseBooking}
-            mode={mode}
-            preselectedServiceId={preselectedService}
-            preselectedCourseId={preselectedCourse}
-          />
-        </Suspense>
-      )}
 
       {/* Floating WhatsApp booking button (all pages) */}
-      <FloatingWhatsApp mode={mode} />
+      <FloatingWhatsApp />
 
       {/* Lazy-Loaded Asset Inspector Drawer */}
       <Suspense fallback={null}>
@@ -131,7 +114,9 @@ export default function App() {
     <AssetProvider>
       <MotionProvider>
         <NavigationProvider>
-          <AppContent />
+          <BookingProvider>
+            <AppContent />
+          </BookingProvider>
         </NavigationProvider>
       </MotionProvider>
     </AssetProvider>
